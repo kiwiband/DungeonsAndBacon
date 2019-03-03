@@ -16,11 +16,7 @@ open class Vec2M(var x: Int, var y: Int) {
         return super.equals(other)
     }
 
-    override fun hashCode(): Int {
-        var result = x
-        result = 31 * result + y
-        return result
-    }
+    override fun hashCode(): Int = 31 * x + y
 }
 
 operator fun Pair<Vec2M, Vec2M>.contains(v: Vec2M): Boolean {
