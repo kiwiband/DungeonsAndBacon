@@ -15,10 +15,14 @@ class EventDispatcher<T : Event> {
      */
     fun addHandler(handler: (T) -> Unit): Int {
         handlers[id++] = handler
-        return id - 1;
+        return id - 1
     }
 
     fun removeHandler(id: Int) = handlers.remove(id)
+
+    fun run(event: T) {
+        handlers.values.forEach { it(event) }
+    }
 }
 
 class EventMove(val direction: Vec2M) : Event() {
