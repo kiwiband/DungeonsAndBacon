@@ -5,10 +5,10 @@ import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.math.contains
 
-class LocalMap(x: Int, y: Int) {
+class LocalMap(val x: Int, val y: Int) {
     private val borders = Vec2M(0, 0) to Vec2M(x, y)
 
-    private val actors = mutableListOf<MapActor>()
+    val actors = mutableListOf<MapActor>()
 
     fun getActors(pos: Vec2M): Collection<MapActor> {
         if (pos in borders) {

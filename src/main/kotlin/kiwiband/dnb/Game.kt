@@ -25,12 +25,12 @@ class Game {
     }
 
     fun startGame() {
-        app.runLoop()
+        app.start()
     }
 
     companion object {
-        const val MAP_WIDTH = 36
-        const val MAP_HEIGHT = 24
+        const val MAP_WIDTH = 48
+        const val MAP_HEIGHT = 22
     }
 }
 
