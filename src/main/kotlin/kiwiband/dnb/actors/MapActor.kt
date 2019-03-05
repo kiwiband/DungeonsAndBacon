@@ -4,8 +4,16 @@ import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
 
+enum class ViewOrder(private val order: Int) {
+    Background(0), Default(1), Foreground(2);
+
+    fun compare(other: ViewOrder): Int = other.order - order
+}
+
 abstract class MapActor {
     private var eventTickId: Int = -1
+    open var viewOrder = ViewOrder.Default
+    open var viewPriority = 0
 
     protected open val collision = Collision.Block
     val position = Vec2()
@@ -33,5 +41,12 @@ abstract class MapActor {
 
     protected open fun onDestroy() {
         EventTick.dispatcher.removeHandler(eventTickId)
+    }
+
+    fun viewOrderCompare(other: MapActor): Int {
+        return when(val firstOrder = viewOrder.compare(other.viewOrder)) {
+            0 -> other.viewPriority - viewPriority
+            else -> firstOrder
+        }
     }
 }

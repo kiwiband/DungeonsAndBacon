@@ -7,6 +7,7 @@ import kiwiband.dnb.math.Vec2
 class Player(map: LocalMap) : Creature(map) {
     private var eventMoveId: Int = -1
     private val moveDirection: Vec2 = Vec2()
+    override var viewPriority: Int = 10000
 
     override fun onBeginGame() {
         super.onBeginGame()
