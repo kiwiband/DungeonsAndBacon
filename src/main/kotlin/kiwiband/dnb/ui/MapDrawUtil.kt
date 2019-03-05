@@ -50,4 +50,10 @@ object MapDrawUtil {
         scene[CENTER_Y][width] = T_LEFT
         scene[CENTER_Y][CENTER_X] = T_RIGHT
     }
+
+    fun writeText(scene: Array<CharArray>, text: String, offsetX: Int = 0, offsetY: Int = 0) {
+        text.forEachIndexed { i, c ->
+            scene[offsetY][offsetX + i] = c
+        }
+    }
 }

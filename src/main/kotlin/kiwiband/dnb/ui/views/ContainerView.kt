@@ -25,18 +25,3 @@ class ContainerView(width: Int, height: Int) : View(width, height) {
         return result
     }
 }
-/*
-fun printView(view: View) {
-    view.to2DArray().forEach {
-        it.forEach { print(it) }
-        println()
-    }
-}
-
-fun main() {
-    val view = ContainerView(10, 10)
-    view.addChild(0, 0, BoxView(3, 3))
-    view.addChild(2, 2, BoxView(2, 2))
-    printView(view)
-}
-        */

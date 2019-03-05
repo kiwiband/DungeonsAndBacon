@@ -1,6 +1,7 @@
 package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.map.LocalMap
+import kiwiband.dnb.ui.MapDrawUtil.writeText
 
 class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, height) {
 
@@ -14,7 +15,7 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
                 result[y][x] = it.getViewAppearance()
         }
 
-        result[height - 1][width - 1] = '#'
+        writeText(result, "THIS IS A MAP", 18, 10)
         return result
     }
 }

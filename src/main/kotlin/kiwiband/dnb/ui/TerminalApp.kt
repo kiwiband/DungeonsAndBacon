@@ -8,17 +8,18 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.InputManager
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.ui.MapDrawUtil.addBorders
-import kiwiband.dnb.ui.views.BoxView
+import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.ContainerView
 import kiwiband.dnb.ui.views.MapView
+import kiwiband.dnb.ui.views.PlayerView
 
 class TerminalApp(map: LocalMap,
                   private val inputManager: InputManager,
                   private val width: Int = 80, private val height: Int = 24): App(map, inputManager) {
 
     private val mapView = MapView(map, 48, 22)
-    private val playerView = BoxView(30,11)
-    private val enemyView = BoxView(30, 10)
+    private val playerView = PlayerView(29,11)
+    private val infoView = InfoView(29, 10)
 
     private val rootView = ContainerView(width, height)
 
@@ -70,8 +71,8 @@ class TerminalApp(map: LocalMap,
 
     fun start() {
         rootView.addChild(1, 1, mapView)
-        rootView.addChild(mapView.width + 2, 1, enemyView)
-        rootView.addChild(mapView.width + 2, enemyView.height + 2, playerView)
+        rootView.addChild(mapView.width + 2, 1, infoView)
+        rootView.addChild(mapView.width + 2, infoView.height + 2, playerView)
 
         runLoop()
     }
