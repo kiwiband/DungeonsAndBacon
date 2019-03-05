@@ -2,6 +2,7 @@ package kiwiband.dnb
 
 import com.googlecode.lanterna.input.KeyStroke
 import kiwiband.dnb.events.EventMove
+import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Vec2M
 
 class InputManager {
@@ -15,5 +16,7 @@ class InputManager {
             else -> null
         }
         movement?.also { EventMove.dispatcher.run(EventMove(it)) }
+
+        EventTick.dispatcher.run(EventTick())
     }
 }
