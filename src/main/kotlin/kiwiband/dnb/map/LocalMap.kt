@@ -19,6 +19,8 @@ class LocalMap(x: Int, y: Int) {
 
     companion object {
         private val endMap = object : MapActor() {
+            override fun getViewAppearance(): Char = ' '
+
             override val collision = Collision.Block
 
             override fun collide(actor: MapActor): Collision = Collision.Block
