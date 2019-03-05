@@ -6,22 +6,30 @@ import com.googlecode.lanterna.input.KeyType
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.ui.views.BoxView
 
-class App {
-    private var characterX = 5
-    private var characterY = 5
+class App(private val width: Int = 80, private val height: Int = 24) {
+    private val rootView = BoxView(width, height)
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val screen = TerminalScreen(terminal)
 
     private fun drawScene() {
         screen.clear()
-        screen.setCharacter(
-            characterX,
-            characterY,
-            TextCharacter(
-                '@',
-                TextColor.ANSI.BLACK,
-                TextColor.ANSI.WHITE))
+        val serialized = rootView.to2DArray()
+
+        serialized.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { columnIndex, character ->
+                screen.setCharacter(
+                    columnIndex,
+                    rowIndex,
+                    TextCharacter(
+                        character,
+                        TextColor.ANSI.DEFAULT,
+                        TextColor.ANSI.DEFAULT)
+                )
+            }
+        }
+
         screen.refresh()
     }
 
@@ -43,21 +51,8 @@ class App {
                 'd' -> Vec2(1, 0)
                 else -> Vec2(0, 0)
             }
-
-            moveCharacter(movement)
         }
     }
-
-    private fun moveCharacter(movement: Vec2) {
-        val newX = characterX + movement.x
-        val newY = characterY + movement.y
-        if (newX >= 0 && newX < screen.terminalSize.columns)
-            characterX = newX
-        if (newY >= 0 && newY < screen.terminalSize.rows)
-            characterY = newY
-    }
-
-
 }
 
 fun main(args: Array<String>) {
