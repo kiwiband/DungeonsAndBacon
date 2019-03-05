@@ -5,7 +5,7 @@ import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
 
 abstract class MapActor {
-    private val eventTickId: Int = EventTick.dispatcher.addHandler { onTick() }
+    private var eventTickId: Int = -1
 
     protected open val collision = Collision.Block
     val position = Vec2()
@@ -15,6 +15,11 @@ abstract class MapActor {
     open fun onBlock(actor: MapActor) {}
 
     open fun onOverlap(actor: MapActor) {}
+
+    // Should be called when actor spawns on local map
+    open fun onBeginGame() {
+        eventTickId = EventTick.dispatcher.addHandler { onTick() }
+    }
 
     protected open fun blockInteract(actor: MapActor) {
         actor.onBlock(this)
