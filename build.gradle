@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.0.1'
 }
 
 compileKotlin {
