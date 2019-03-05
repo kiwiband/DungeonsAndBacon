@@ -5,6 +5,10 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 
 class Player(map: LocalMap) : Creature(map) {
+    private val viewAppearance = '@'
+
+    override fun getViewAppearance(): Char = viewAppearance
+
     private var eventMoveId: Int = -1
     private val moveDirection: Vec2 = Vec2()
     override var viewPriority: Int = 10000

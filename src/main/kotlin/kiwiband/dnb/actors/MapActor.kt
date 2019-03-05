@@ -49,4 +49,6 @@ abstract class MapActor {
             else -> firstOrder
         }
     }
+
+    abstract fun getViewAppearance(): Char
 }
