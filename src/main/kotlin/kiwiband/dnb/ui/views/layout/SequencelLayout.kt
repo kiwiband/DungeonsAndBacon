@@ -1,4 +1,4 @@
-package kiwiband.dnb.ui.views
+package kiwiband.dnb.ui.views.layout
 
 import com.googlecode.lanterna.screen.Screen
 import kiwiband.dnb.math.Vec2
@@ -9,6 +9,7 @@ import kiwiband.dnb.ui.MapDrawUtil.drawHorizontalLine
 import kiwiband.dnb.ui.MapDrawUtil.drawTopLeftCorner
 import kiwiband.dnb.ui.MapDrawUtil.drawTopRightCorner
 import kiwiband.dnb.ui.MapDrawUtil.drawVerticalLine
+import kiwiband.dnb.ui.views.View
 
 class SequenceLayout(width: Int, height: Int, private val isHorizontal: Boolean = true) : Layout(width, height) {
     fun addChild(view: View) {

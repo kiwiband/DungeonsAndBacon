@@ -7,10 +7,11 @@ import kiwiband.dnb.InputManager
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.ui.views.*
+import kiwiband.dnb.ui.views.layout.SequenceLayout
 
 class TerminalApp(map: LocalMap,
                   private val inputManager: InputManager,
-                  private val width: Int = 80, private val height: Int = 24): App(map, inputManager) {
+                  width: Int = 80, height: Int = 24): App(map, inputManager) {
 
     private val mapView = MapView(map, 48, 22)
     private val playerView = PlayerView(28,10)
