@@ -1,43 +1,20 @@
 package kiwiband.dnb
 
-import kiwiband.dnb.actors.StaticActor
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.math.Collision
-import kiwiband.dnb.math.Vec2M
 
 class Game {
     var tickTime = 0
         private set
     val map = LocalMap(88, 32)
-    val player = Player(map)
-
-    // TODO: delete
-    fun addWall(x: Int, y: Int) {
-        val wall = StaticActor('#', Collision.Block)
-        wall.position.set(x, y)
-        map.actors.add(wall)
-    }
-
-    // TODO: delete
-    fun addSomeWalls() {
-        val walls = listOf(
-            3 to 3, 3 to 4, 3 to 5, 3 to 6,
-            8 to 3, 8 to 4, 8 to 5, 8 to 6,
-            4 to 7, 5 to 7, 6 to 7, 7 to 7
-        )
-        walls.forEach { addWall(it.first, it.second) }
-    }
+    val player: Player
 
     private var eventTickId: Int = 0
 
     init {
         // think about delete handler from dispatcher
-        player.position.set(Vec2M(5, 5))
-        map.actors.add(player)
-
-        addSomeWalls()
+        player = map.spawnPlayer()
     }
 
     private fun onTick() {

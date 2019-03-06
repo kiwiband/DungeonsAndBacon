@@ -15,8 +15,8 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
         val playerPosition = findPlayerPosition()
 
         val mapOffset = Vec2M(
-            Math.min(Math.max(playerPosition.x, width / 2), map.x - width / 2 + 1),
-            Math.min(Math.max(playerPosition.y, height / 2), map.y - height / 2 + 1)
+            Math.min(Math.max(playerPosition.x, width / 2), map.width - width / 2 + 1),
+            Math.min(Math.max(playerPosition.y, height / 2), map.height - height / 2 + 1)
         )
 
         map.actors.forEach {
