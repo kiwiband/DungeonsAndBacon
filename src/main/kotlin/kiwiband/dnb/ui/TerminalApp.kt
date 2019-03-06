@@ -34,8 +34,9 @@ class TerminalApp(private val map: LocalMap,
         screen.startScreen()
         screen.cursorPosition = null
 
+        drawScene()
+
         while (true) {
-            drawScene()
             val keyStroke = terminal.readInput()
 
             if (keyStroke.keyType == KeyType.EOF)
