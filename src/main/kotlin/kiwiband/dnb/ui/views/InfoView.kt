@@ -1,36 +1,13 @@
 package kiwiband.dnb.ui.views
 
+import com.googlecode.lanterna.screen.Screen
+import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.ui.MapDrawUtil.writeText
 
 class InfoView(width: Int, height: Int) : View(width, height) {
-
-    override fun to2DArray(): Array<CharArray> {
-        val result = Array(height) { CharArray(width) { ' ' } }
-        val bgRow = CharArray(width) { '·' }
-        val boxRow = CharArray(width) { '#' }
-        boxRow[0] = '·'
-        boxRow[1] = '·'
-        boxRow[width - 1] = '·'
-        boxRow[width - 2] = '·'
-        val wallRow = CharArray(width) { ' ' }
-        wallRow[0] = '·'
-        wallRow[1] = '·'
-        wallRow[width - 1] = '·'
-        wallRow[width - 2] = '·'
-        wallRow[2] = '#'
-        wallRow[width - 3] = '#'
-
-        result[0] = bgRow
-        result[1] = boxRow
-        result[height - 1] = bgRow
-        result[height - 2] = boxRow
-
-        for (i in 2..(height - 3)) {
-            result[i] = wallRow.clone()
-        }
-
-        writeText(result, "INFO HERE", 10, 4)
-
-        return result
+    override fun draw(screen: Screen, offset: Vec2M) {
+        writeText(screen, "DUNGEONS", offset + Vec2M(10, 4))
+        writeText(screen, "AND", offset + Vec2M(12, 5))
+        writeText(screen, "BACONS", offset + Vec2M(11, 6))
     }
 }

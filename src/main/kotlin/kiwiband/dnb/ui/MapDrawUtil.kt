@@ -1,5 +1,10 @@
 package kiwiband.dnb.ui
 
+import com.googlecode.lanterna.TextCharacter
+import com.googlecode.lanterna.TextColor
+import com.googlecode.lanterna.screen.Screen
+import kiwiband.dnb.math.Vec2M
+
 object MapDrawUtil {
 
     private const val BORDER_HORIZONTAL = '─'
@@ -10,50 +15,59 @@ object MapDrawUtil {
     private const val CORNER_BOTTOM_LEFT = '└'
     private const val CORNER_BOTTOM_RIGHT = '┘'
 
-    private const val T_UP = '┴'
-    private const val T_DOWN = '┬'
-    private const val T_LEFT = '┤'
-    private const val T_RIGHT = '├'
-
-    private const val CENTER_X = 49
-    private const val CENTER_Y = 11
-
-    private fun drawHorizontalLine(scene: Array<CharArray>, startX: Int, endX: Int, y: Int) {
-        for (x in startX..endX)
-            scene[y][x] = BORDER_HORIZONTAL
-    }
-    
-    private fun drawVerticalLine(scene: Array<CharArray>, x: Int, startY: Int, endY: Int) {
-        for (y in startY..endY)
-            scene[y][x] = BORDER_VERTICAL
+    fun writeCharacter(screen: Screen, character: Char, offset: Vec2M) {
+        screen.setCharacter(
+            offset.x,
+            offset.y,
+            TextCharacter(character, TextColor.ANSI.DEFAULT, TextColor.ANSI.DEFAULT)
+        )
     }
 
-    fun addBorders(scene: Array<CharArray>) {
-        val width = scene[0].size - 1
-        val height = scene.size - 1
-        
-        drawHorizontalLine(scene, 0, width, 0)
-        drawHorizontalLine(scene, 0, width, height)
-        drawVerticalLine(scene, 0, 0, height)
-        drawVerticalLine(scene, width, 0, height)
-
-        drawVerticalLine(scene, CENTER_X, 1, height - 1)
-        drawHorizontalLine(scene, CENTER_X + 1, width - 1, CENTER_Y)
-
-        scene[0][0] = CORNER_TOP_LEFT 
-        scene[0][width] = CORNER_TOP_RIGHT
-        scene[height][0] = CORNER_BOTTOM_LEFT
-        scene[height][width] = CORNER_BOTTOM_RIGHT
-
-        scene[0][CENTER_X] = T_DOWN
-        scene[height][CENTER_X] = T_UP
-        scene[CENTER_Y][width] = T_LEFT
-        scene[CENTER_Y][CENTER_X] = T_RIGHT
-    }
-
-    fun writeText(scene: Array<CharArray>, text: String, offsetX: Int = 0, offsetY: Int = 0) {
+    fun writeText(screen: Screen, text: String, offset: Vec2M) {
         text.forEachIndexed { i, c ->
-            scene[offsetY][offsetX + i] = c
+            writeCharacter(screen, c, offset + Vec2M(i, 0))
         }
+    }
+
+    fun drawHorizontalLine(screen: Screen, startX: Int, endX: Int, y: Int) {
+        for (x in startX..endX)
+            screen.setCharacter(
+                x,
+                y,
+                TextCharacter(
+                    BORDER_HORIZONTAL,
+                    TextColor.ANSI.DEFAULT,
+                    TextColor.ANSI.DEFAULT
+                )
+            )
+    }
+
+    fun drawVerticalLine(screen: Screen, x: Int, startY: Int, endY: Int) {
+        for (y in startY..endY)
+            screen.setCharacter(
+                x,
+                y,
+                TextCharacter(
+                    BORDER_VERTICAL,
+                    TextColor.ANSI.DEFAULT,
+                    TextColor.ANSI.DEFAULT
+                )
+            )
+    }
+
+    fun drawTopLeftCorner(screen: Screen, position: Vec2M) {
+        writeCharacter(screen, CORNER_TOP_LEFT, position)
+    }
+
+    fun drawTopRightCorner(screen: Screen, position: Vec2M) {
+        writeCharacter(screen, CORNER_TOP_RIGHT, position)
+    }
+
+    fun drawBottomLeftCorner(screen: Screen, position: Vec2M) {
+        writeCharacter(screen, CORNER_BOTTOM_LEFT, position)
+    }
+
+    fun drawBottomRightCorner(screen: Screen, position: Vec2M) {
+        writeCharacter(screen, CORNER_BOTTOM_RIGHT, position)
     }
 }

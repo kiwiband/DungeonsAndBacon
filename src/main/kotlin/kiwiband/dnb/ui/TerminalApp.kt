@@ -1,50 +1,30 @@
 package kiwiband.dnb.ui
 
-import com.googlecode.lanterna.TextCharacter
-import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.input.KeyType
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.InputManager
 import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.ui.MapDrawUtil.addBorders
-import kiwiband.dnb.ui.views.InfoView
-import kiwiband.dnb.ui.views.ContainerView
-import kiwiband.dnb.ui.views.MapView
-import kiwiband.dnb.ui.views.PlayerView
+import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.ui.views.*
 
 class TerminalApp(map: LocalMap,
                   private val inputManager: InputManager,
                   private val width: Int = 80, private val height: Int = 24): App(map, inputManager) {
 
     private val mapView = MapView(map, 48, 22)
-    private val playerView = PlayerView(29,11)
-    private val infoView = InfoView(29, 10)
+    private val playerView = PlayerView(28,10)
+    private val infoView = InfoView(28, 10)
 
-    private val rootView = ContainerView(width, height)
+    private val rootView = SequenceLayout(width, height)
 
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val screen = TerminalScreen(terminal)
 
     override fun drawScene() {
         screen.clear()
-        val serialized = rootView.to2DArray()
-
-        addBorders(serialized)
-
-        serialized.forEachIndexed { rowIndex, row ->
-            row.forEachIndexed { columnIndex, character ->
-                screen.setCharacter(
-                    columnIndex,
-                    rowIndex,
-                    TextCharacter(
-                        character,
-                        TextColor.ANSI.DEFAULT,
-                        TextColor.ANSI.DEFAULT)
-                )
-            }
-        }
-
+        rootView.draw(screen, Vec2M(0, 0))
+     
         screen.refresh()
     }
 
@@ -55,7 +35,7 @@ class TerminalApp(map: LocalMap,
         while (true) {
             drawScene()
             val keyStroke = terminal.readInput()
-            println(keyStroke)
+
             if (keyStroke.keyType == KeyType.EOF)
                 break
 
@@ -70,9 +50,12 @@ class TerminalApp(map: LocalMap,
     }
 
     fun start() {
-        rootView.addChild(1, 1, mapView)
-        rootView.addChild(mapView.width + 2, 1, infoView)
-        rootView.addChild(mapView.width + 2, infoView.height + 2, playerView)
+        rootView.addChild(mapView)
+
+        val verticalView = SequenceLayout(30, 24, false)
+        verticalView.addChild(infoView)
+        verticalView.addChild(playerView)
+        rootView.addChild(verticalView)
 
         runLoop()
     }
