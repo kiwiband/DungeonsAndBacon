@@ -1,19 +1,17 @@
 package kiwiband.dnb.ui.views
 
-import com.googlecode.lanterna.screen.Screen
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.math.contains
-import kiwiband.dnb.ui.MapDrawUtil
-import kiwiband.dnb.ui.MapDrawUtil.writeCharacter
+import kiwiband.dnb.ui.Renderer
 
 class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, height) {
 
     private val center = Vec2M(width / 2, height / 2)
     private val borders = Vec2M(0, 0) to Vec2M(width, height)
 
-    override fun draw(screen: Screen, offset: Vec2M) {
+    override fun draw(renderer: Renderer) {
         val playerPosition = findPlayerPosition()
 
         val mapOffset = Vec2M(
@@ -24,7 +22,7 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
         map.actors.forEach {
             val position = it.position - mapOffset + center
             if (position in borders)
-                writeCharacter(screen, it.getViewAppearance(), offset + position)
+                renderer.writeCharacter(it.getViewAppearance(), position)
         }
     }
 

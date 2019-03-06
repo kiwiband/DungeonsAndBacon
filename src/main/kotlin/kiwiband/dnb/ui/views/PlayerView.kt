@@ -1,19 +1,17 @@
 package kiwiband.dnb.ui.views
 
-import com.googlecode.lanterna.screen.Screen
 import kiwiband.dnb.math.Vec2M
-import kiwiband.dnb.ui.MapDrawUtil
-import kiwiband.dnb.ui.MapDrawUtil.writeText
+import kiwiband.dnb.ui.Renderer
 
 class PlayerView(width: Int, height: Int) : View(width, height) {
-    override fun draw(screen: Screen, offset: Vec2M) {
-        writeText(screen, "L(O_o)-(===>", offset + Vec2M(7, 1))
+    override fun draw(renderer: Renderer) {
+        renderer.writeText("L(O_o)-(===>", Vec2M(7, 1))
 
-        writeText(screen, "HERONAME", offset + Vec2M(3, 4))
-        writeText(screen, "HP 15/15",offset + Vec2M(3, 5))
-        writeText(screen, "LVL 1",offset + Vec2M(3, 6))
-        writeText(screen, "EXP 1/10",offset + Vec2M(3, 7))
-        writeText(screen, "ATK 4",offset + Vec2M(3, 8))
-        writeText(screen, "DEF 1",offset + Vec2M(3, 9))
+        renderer.writeText("HERONAME", Vec2M(3, 4))
+        renderer.writeText("HP 15/15", Vec2M(3, 5))
+        renderer.writeText("LVL 1", Vec2M(3, 6))
+        renderer.writeText("EXP 1/10", Vec2M(3, 7))
+        renderer.writeText("ATK 4", Vec2M(3, 8))
+        renderer.writeText("DEF 1", Vec2M(3, 9))
     }
 }

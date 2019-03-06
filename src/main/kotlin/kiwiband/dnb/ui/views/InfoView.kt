@@ -1,13 +1,12 @@
 package kiwiband.dnb.ui.views
 
-import com.googlecode.lanterna.screen.Screen
 import kiwiband.dnb.math.Vec2M
-import kiwiband.dnb.ui.MapDrawUtil.writeText
+import kiwiband.dnb.ui.Renderer
 
 class InfoView(width: Int, height: Int) : View(width, height) {
-    override fun draw(screen: Screen, offset: Vec2M) {
-        writeText(screen, "DUNGEONS", offset + Vec2M(10, 4))
-        writeText(screen, "AND", offset + Vec2M(12, 5))
-        writeText(screen, "BACONS", offset + Vec2M(11, 6))
+    override fun draw(renderer: Renderer) {
+        renderer.writeText("DUNGEONS", Vec2M(10, 4))
+        renderer.writeText("AND", Vec2M(12, 5))
+        renderer.writeText("BACONS", Vec2M(11, 6))
     }
 }

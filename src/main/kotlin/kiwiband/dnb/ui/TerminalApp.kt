@@ -5,8 +5,10 @@ import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.InputManager
 import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.math.Vec2M
-import kiwiband.dnb.ui.views.*
+import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.ui.views.InfoView
+import kiwiband.dnb.ui.views.MapView
+import kiwiband.dnb.ui.views.PlayerView
 import kiwiband.dnb.ui.views.layout.SequenceLayout
 
 class TerminalApp(map: LocalMap,
@@ -24,7 +26,8 @@ class TerminalApp(map: LocalMap,
 
     override fun drawScene() {
         screen.clear()
-        rootView.draw(screen, Vec2M(0, 0))
+        val renderer = Renderer(screen, Vec2(0, 0))
+        rootView.draw(renderer)
      
         screen.refresh()
     }
