@@ -31,7 +31,7 @@ class EventMove(val direction: Vec2M) : Event() {
     }
 }
 
-class EventTick() : Event() {
+class EventTick : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventTick>()
     }

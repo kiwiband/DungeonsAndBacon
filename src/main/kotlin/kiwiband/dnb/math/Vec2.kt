@@ -1,5 +1,6 @@
 package kiwiband.dnb.math
 
+@Suppress("UNUSED")
 class Vec2(x: Int, y: Int) : Vec2M(x, y) {
     constructor() : this(0, 0)
 

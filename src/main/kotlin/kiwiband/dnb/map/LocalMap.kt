@@ -5,6 +5,7 @@ import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.math.contains
 
+@Suppress("UNUSED")
 class LocalMap(val x: Int, val y: Int) {
     private val borders = Vec2M(0, 0) to Vec2M(x, y)
 

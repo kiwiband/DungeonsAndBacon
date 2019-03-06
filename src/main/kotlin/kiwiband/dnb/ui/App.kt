@@ -12,7 +12,7 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 
-class App() {
+class App {
     private val inputManager = InputManager()
 
     private val rootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -24,7 +24,7 @@ class App() {
     private val renderer = Renderer(screen)
 
     private fun drawScene() {
-        screen.clear();
+        screen.clear()
 
         renderer.setOffset(0, 0)
         rootView.draw(renderer)
@@ -32,7 +32,7 @@ class App() {
         screen.refresh()
     }
 
-    fun runLoop() {
+    private fun runLoop() {
         screen.startScreen()
         screen.cursorPosition = null
 
