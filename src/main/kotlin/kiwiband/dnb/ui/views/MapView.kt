@@ -10,8 +10,8 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
         val result = Array(height) { CharArray(width) { ' ' } }
 
         val playerPosition = findPlayerPosition()
-        val offsetX = playerPosition.x
-        val offsetY = playerPosition.y
+        val offsetX = Math.min(Math.max(playerPosition.x, width / 2), map.x - width / 2 + 1)
+        val offsetY = Math.min(Math.max(playerPosition.y, height / 2), map.y - height / 2 + 1)
 
         map.actors.forEach {
             val x = it.position.x - offsetX + width / 2

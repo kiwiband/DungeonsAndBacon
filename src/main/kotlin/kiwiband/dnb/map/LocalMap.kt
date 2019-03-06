@@ -17,6 +17,8 @@ class LocalMap(val x: Int, val y: Int) {
         return listOf(endMap)
     }
 
+    fun getActors(area: Pair<Vec2M, Vec2M>): Collection<MapActor> = actors.filter { it.position in area }
+
     companion object {
         private val endMap = object : MapActor() {
             override fun getViewAppearance(): Char = ' '

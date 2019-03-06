@@ -55,8 +55,8 @@ class Game {
     }
 
     companion object {
-        const val MAP_WIDTH = 48
-        const val MAP_HEIGHT = 22
+        const val MAP_WIDTH = 88
+        const val MAP_HEIGHT = 32
     }
 }
 
