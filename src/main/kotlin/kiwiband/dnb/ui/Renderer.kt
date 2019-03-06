@@ -30,15 +30,15 @@ class Renderer(private val screen: Screen, val offset: Vec2) {
     }
 
     fun drawBox(width: Int, height: Int) {
-        drawHorizontalLine(1, width, 0)
-        drawHorizontalLine(1, width, height + 1)
-        drawVerticalLine(0, 1, height)
-        drawVerticalLine(width + 1, 1, height)
+        drawHorizontalLine(1, width - 1, 0)
+        drawHorizontalLine(1, width - 1, height - 1)
+        drawVerticalLine(0, 1, height - 1)
+        drawVerticalLine(width - 1, 1, height - 1)
 
         drawTopLeftCorner(Vec2M(0, 0))
-        drawTopRightCorner(Vec2M(width + 1, 0))
-        drawBottomLeftCorner(Vec2M(0, height + 1))
-        drawBottomRightCorner(Vec2M(width + 1, height + 1))
+        drawTopRightCorner(Vec2M(width - 1, 0))
+        drawBottomLeftCorner(Vec2M(0, height - 1))
+        drawBottomRightCorner(Vec2M(width - 1, height - 1))
     }
 
 

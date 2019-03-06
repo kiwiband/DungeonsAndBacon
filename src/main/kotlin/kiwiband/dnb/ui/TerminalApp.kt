@@ -9,7 +9,9 @@ import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView
 import kiwiband.dnb.ui.views.PlayerView
-import kiwiband.dnb.ui.views.layout.SequenceLayout
+import kiwiband.dnb.ui.views.layout.BoxLayout
+import kiwiband.dnb.ui.views.layout.HorizontalLayout
+import kiwiband.dnb.ui.views.layout.VerticalLayout
 
 class TerminalApp(map: LocalMap,
                   private val inputManager: InputManager,
@@ -19,7 +21,7 @@ class TerminalApp(map: LocalMap,
     private val playerView = PlayerView(28,10)
     private val infoView = InfoView(28, 10)
 
-    private val rootView = SequenceLayout(width, height)
+    private val rootView = HorizontalLayout(width, height)
 
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val screen = TerminalScreen(terminal)
@@ -54,12 +56,12 @@ class TerminalApp(map: LocalMap,
     }
 
     fun start() {
-        rootView.addChild(mapView)
+        rootView.addChild(BoxLayout(mapView))
 
-        val verticalView = SequenceLayout(30, 24, false)
-        verticalView.addChild(infoView)
-        verticalView.addChild(playerView)
-        rootView.addChild(verticalView)
+        val verticalLayout = VerticalLayout(30, 24)
+        verticalLayout.addChild(BoxLayout(infoView))
+        verticalLayout.addChild(BoxLayout(playerView))
+        rootView.addChild(verticalLayout)
 
         runLoop()
     }
