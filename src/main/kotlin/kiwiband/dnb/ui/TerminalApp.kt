@@ -15,7 +15,7 @@ import kiwiband.dnb.ui.views.layout.VerticalLayout
 
 class TerminalApp(map: LocalMap,
                   private val inputManager: InputManager,
-                  width: Int = 80, height: Int = 24): App(map, inputManager) {
+                  width: Int = 80, height: Int = 24) {
 
     private val mapView = MapView(map, 48, 22)
     private val playerView = PlayerView(28,10)
@@ -26,7 +26,7 @@ class TerminalApp(map: LocalMap,
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val screen = TerminalScreen(terminal)
 
-    override fun drawScene() {
+    fun drawScene() {
         screen.clear()
         val renderer = Renderer(screen, Vec2(0, 0))
         rootView.draw(renderer)
