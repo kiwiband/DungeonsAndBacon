@@ -10,7 +10,7 @@ import kiwiband.dnb.math.Vec2M
 class Game {
     var tickTime = 0
         private set
-    val map = LocalMap(MAP_WIDTH, MAP_HEIGHT)
+    val map = LocalMap(88, 32)
     val player = Player(map)
 
     // TODO: delete
@@ -51,10 +51,5 @@ class Game {
 
     fun endGame() {
         EventTick.dispatcher.removeHandler(eventTickId)
-    }
-
-    companion object {
-        const val MAP_WIDTH = 88
-        const val MAP_HEIGHT = 32
     }
 }

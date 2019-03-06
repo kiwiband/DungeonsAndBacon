@@ -1,5 +1,6 @@
 package kiwiband.dnb.events
 
+import com.googlecode.lanterna.input.KeyStroke
 import kiwiband.dnb.math.Vec2M
 import java.util.*
 
@@ -34,5 +35,11 @@ class EventMove(val direction: Vec2M) : Event() {
 class EventTick : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventTick>()
+    }
+}
+
+class EventKeyPress(val key: KeyStroke) : Event() {
+    companion object {
+        val dispatcher = EventDispatcher<EventKeyPress>()
     }
 }

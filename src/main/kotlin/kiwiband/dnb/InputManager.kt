@@ -1,21 +1,34 @@
 package kiwiband.dnb
 
-import com.googlecode.lanterna.input.KeyStroke
-import kiwiband.dnb.events.EventMove
-import kiwiband.dnb.events.EventTick
-import kiwiband.dnb.math.Vec2M
+import com.googlecode.lanterna.input.KeyType
+import com.googlecode.lanterna.terminal.Terminal
+import kiwiband.dnb.events.EventKeyPress
 
-class InputManager {
-    fun handleKey(keyStroke: KeyStroke) {
-        val movement = when (keyStroke.character) {
-            'w' -> Vec2M(0, -1)
-            'a' -> Vec2M(-1, 0)
-            's' -> Vec2M(0, 1)
-            'd' -> Vec2M(1, 0)
-            else -> null
+class InputManager(val terminal: Terminal) {
+    private lateinit var handleThread: Thread
+    private var isHandle = false
+
+    private var eventKeyId: Int = 0
+
+    fun startKeyHandle() {
+        isHandle = true
+        handleThread = Thread {
+            while(isHandle) {
+                val key = terminal.readInput()
+                EventKeyPress.dispatcher.run(EventKeyPress(key))
+            }
+            EventKeyPress.dispatcher.removeHandler(eventKeyId)
         }
-        movement?.also { EventMove.dispatcher.run(EventMove(it)) }
+        handleThread.start()
 
-        EventTick.dispatcher.run(EventTick())
+        eventKeyId = EventKeyPress.dispatcher.addHandler {
+            if (it.key.keyType == KeyType.EOF) {
+                isHandle = false
+            }
+        }
+    }
+
+    fun join() {
+        handleThread.join()
     }
 }
