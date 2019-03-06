@@ -10,29 +10,28 @@ class SequenceLayout(width: Int, height: Int, private val isHorizontal: Boolean 
     }
 
     override fun draw(renderer: Renderer) {
-        val rendererPreviousOffset = renderer.offset
+        renderer.withOffset {
+            val boxSequenceStep = if (isHorizontal) Vec2M(2, 0) else Vec2M(0, 2)
 
-        val boxSequenceStep = if (isHorizontal) Vec2M(2, 0) else Vec2M(0, 2)
+            for (child in children) {
+                val view = child.view
+                if (view !is Layout) {
+                    renderer.drawBox(view.width, view.height)
 
-        for (child in children) {
-            val view = child.view
-            if (view !is Layout) {
-                renderer.drawBox(view.width, view.height)
-
-                renderer.offset.add(Vec2M(1, 1))
-                view.draw(renderer)
-                renderer.offset.add(Vec2M(-1, -1))
-
-                renderer.offset.add(boxSequenceStep)
-            } else {
-                view.draw(renderer)
+                    renderer.withOffset {
+                        renderer.offset.add(Vec2M(1, 1))
+                        view.draw(renderer)
+                    }
+                    
+                    renderer.offset.add(boxSequenceStep)
+                } else {
+                    view.draw(renderer)
+                }
+                if (isHorizontal)
+                    renderer.offset.add(Vec2M(view.width, 0))
+                else
+                    renderer.offset.add(Vec2M(0, view.height))
             }
-            if (isHorizontal)
-                renderer.offset.add(Vec2M(view.width, 0))
-            else
-                renderer.offset.add(Vec2M(0, view.height))
         }
-
-        renderer.offset.set(rendererPreviousOffset)
     }
 }

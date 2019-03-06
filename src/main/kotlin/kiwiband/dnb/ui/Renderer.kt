@@ -7,7 +7,13 @@ import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
 
 class Renderer(private val screen: Screen, val offset: Vec2) {
-    
+
+    fun withOffset(f: () -> Unit) {
+        val previousOffset = Vec2M(offset)
+        f()
+        offset.set(previousOffset)
+    }
+
     fun writeCharacter(character: Char, internalOffset: Vec2M) {
         val resultOffset = offset + internalOffset
         screen.setCharacter(
