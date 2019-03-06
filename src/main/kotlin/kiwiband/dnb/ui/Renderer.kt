@@ -68,8 +68,19 @@ class Renderer(private val screen: Screen, val offset: Vec2) {
         writeCharacter(CORNER_BOTTOM_RIGHT, position)
     }
 
-    
+    fun clear() {
+        val width = screen.terminalSize.columns
+        val height = screen.terminalSize.rows
+
+        for (x in 0..(width - 1))
+            for (y in 0..(height - 1))
+                writeCharacter(BACKGROUND, Vec2M(x, y))
+    }
+
+
     companion object {
+        private const val BACKGROUND = ' '
+
         private const val BORDER_HORIZONTAL = '─'
         private const val BORDER_VERTICAL = '│'
 

@@ -13,13 +13,9 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 
-class TerminalApp(map: LocalMap,
+class TerminalApp(private val map: LocalMap,
                   private val inputManager: InputManager,
                   width: Int = 80, height: Int = 24) {
-
-    private val mapView = MapView(map, 48, 22)
-    private val playerView = PlayerView(28,10)
-    private val infoView = InfoView(28, 10)
 
     private val rootView = HorizontalLayout(width, height)
 
@@ -27,8 +23,8 @@ class TerminalApp(map: LocalMap,
     private val screen = TerminalScreen(terminal)
 
     fun drawScene() {
-        screen.clear()
         val renderer = Renderer(screen, Vec2(0, 0))
+        renderer.clear()
         rootView.draw(renderer)
      
         screen.refresh()
@@ -55,14 +51,22 @@ class TerminalApp(map: LocalMap,
         }
     }
 
-    fun start() {
+    private fun constructScene() {
+        val mapView = MapView(map, 48, 22)
+        val playerView = PlayerView(28,10)
+        val infoView = InfoView(28, 10)
+
         rootView.addChild(BoxLayout(mapView))
 
-        val verticalLayout = VerticalLayout(30, 24)
-        verticalLayout.addChild(BoxLayout(infoView))
-        verticalLayout.addChild(BoxLayout(playerView))
-        rootView.addChild(verticalLayout)
+        val sidebar = VerticalLayout(30, 24)
+        sidebar.addChild(BoxLayout(infoView))
+        sidebar.addChild(BoxLayout(playerView))
 
+        rootView.addChild(sidebar)
+    }
+
+    fun start() {
+        constructScene()
         runLoop()
     }
 
