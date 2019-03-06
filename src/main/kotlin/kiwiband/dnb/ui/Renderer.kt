@@ -6,7 +6,12 @@ import com.googlecode.lanterna.screen.Screen
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
 
-class Renderer(private val screen: Screen, val offset: Vec2) {
+class Renderer(private val screen: Screen) {
+    val offset: Vec2 = Vec2()
+
+    fun setOffset(x: Int, y: Int) {
+        offset.set(x, y)
+    }
 
     fun withOffset(f: () -> Unit) {
         val previousOffset = Vec2M(offset)
@@ -79,7 +84,7 @@ class Renderer(private val screen: Screen, val offset: Vec2) {
 
 
     companion object {
-        private const val BACKGROUND = ' '
+        const val BACKGROUND = ' '
 
         private const val BORDER_HORIZONTAL = '─'
         private const val BORDER_VERTICAL = '│'

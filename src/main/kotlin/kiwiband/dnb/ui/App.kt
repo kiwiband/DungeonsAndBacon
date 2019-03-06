@@ -3,9 +3,8 @@ package kiwiband.dnb.ui
 import com.googlecode.lanterna.input.KeyType
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
+import kiwiband.dnb.Game
 import kiwiband.dnb.InputManager
-import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView
 import kiwiband.dnb.ui.views.PlayerView
@@ -13,20 +12,23 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 
-class TerminalApp(private val map: LocalMap,
-                  private val inputManager: InputManager,
-                  width: Int = 80, height: Int = 24) {
+class App() {
+    private val inputManager = InputManager()
 
-    private val rootView = HorizontalLayout(width, height)
+    private val rootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val screen = TerminalScreen(terminal)
+    private val game = Game()
 
-    fun drawScene() {
-        val renderer = Renderer(screen, Vec2(0, 0))
-        renderer.clear()
+    private val renderer = Renderer(screen)
+
+    private fun drawScene() {
+        screen.clear();
+
+        renderer.setOffset(0, 0)
         rootView.draw(renderer)
-     
+
         screen.refresh()
     }
 
@@ -53,7 +55,7 @@ class TerminalApp(private val map: LocalMap,
     }
 
     private fun constructScene() {
-        val mapView = MapView(map, 48, 22)
+        val mapView = MapView(game.map, 48, 22)
         val playerView = PlayerView(28,10)
         val infoView = InfoView(28, 10)
 
@@ -68,10 +70,19 @@ class TerminalApp(private val map: LocalMap,
 
     fun start() {
         constructScene()
+
+        game.startGame()
         runLoop()
+        game.endGame()
     }
 
     companion object {
         private val HANDLED_CHARACTERS = listOf('w', 'a', 's', 'd')
+        private const val SCREEN_WIDTH = 80
+        private const val SCREEN_HEIGHT = 24
     }
+}
+
+fun main() {
+    App().start()
 }
