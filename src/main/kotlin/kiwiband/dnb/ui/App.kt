@@ -16,6 +16,7 @@ import kiwiband.dnb.ui.views.PlayerView
 import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
+import kotlin.system.exitProcess
 
 class App {
     private val rootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -39,6 +40,8 @@ class App {
 
 
     private fun handleMoveKeys(keyStroke: KeyStroke) {
+        // todo: add EventExit
+        if (keyStroke.keyType == KeyType.Escape) exitProcess(0)
         if (keyStroke.keyType != KeyType.Character) return
         when (keyStroke.character) {
             'w', 'ц' -> Vec2M(0, -1)
