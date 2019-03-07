@@ -39,8 +39,9 @@ class LocalMap(val width: Int, val height: Int) {
         grid.forEach { _, x, y, _ ->
             if (isWall(grid, x, y)) {
                 addWall(x, y)
-            } else if (grid.get(x, y) == WALL_THRESHOLD) {
-                val floor = StaticActor('~', Collision.Ignore)
+            } else {
+                val char = if (grid.get(x, y) == WALL_THRESHOLD) '▒' else '.'
+                val floor = StaticActor(char, Collision.Ignore)
                 floor.position.set(x, y)
                 backgroundActors.add(floor)
             }
@@ -63,7 +64,7 @@ class LocalMap(val width: Int, val height: Int) {
     }
 
     private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor('#', Collision.Block)
+        val wall = StaticActor('▒', Collision.Block)
         wall.position.set(x, y)
         actors.add(wall)
     }
