@@ -41,14 +41,10 @@ class App {
     private fun handleMoveKeys(keyStroke: KeyStroke) {
         if (keyStroke.keyType != KeyType.Character) return
         when (keyStroke.character) {
-            'w' -> Vec2M(0, -1)
-            'a' -> Vec2M(-1, 0)
-            's' -> Vec2M(0, 1)
-            'd' -> Vec2M(1, 0)
-            'ц' -> Vec2M(0, -1)
-            'ф' -> Vec2M(-1, 0)
-            'ы' -> Vec2M(0, 1)
-            'в' -> Vec2M(1, 0)
+            'w', 'ц' -> Vec2M(0, -1)
+            'a', 'ф' -> Vec2M(-1, 0)
+            's', 'ы' -> Vec2M(0, 1)
+            'd', 'в' -> Vec2M(1, 0)
             else -> null
         }?.also {
             EventMove.dispatcher.run(EventMove(it))
