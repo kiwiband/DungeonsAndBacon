@@ -45,6 +45,10 @@ class App {
             'a' -> Vec2M(-1, 0)
             's' -> Vec2M(0, 1)
             'd' -> Vec2M(1, 0)
+            'ц' -> Vec2M(0, -1)
+            'ф' -> Vec2M(-1, 0)
+            'в' -> Vec2M(0, 1)
+            'ы' -> Vec2M(1, 0)
             else -> null
         }?.also {
             EventMove.dispatcher.run(EventMove(it))
