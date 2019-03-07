@@ -22,6 +22,6 @@ open class Vec2M(var x: Int, var y: Int) {
 }
 
 operator fun Pair<Vec2M, Vec2M>.contains(v: Vec2M): Boolean {
-    return first.x <= v.x && v.x <= second.x
-            && first.y <= v.y && v.y <= second.y
+    return first.x <= v.x && v.x < second.x
+            && first.y <= v.y && v.y < second.y
 }

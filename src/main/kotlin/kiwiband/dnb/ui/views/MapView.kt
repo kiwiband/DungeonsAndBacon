@@ -2,6 +2,7 @@ package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.map.LocalMap
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.math.contains
 import kiwiband.dnb.ui.Renderer
@@ -19,10 +20,16 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
             Math.min(Math.max(playerPosition.y, height / 2), map.height - height / 2 + 1)
         )
 
+        val pos = Vec2()
+        map.backgroundActors.forEach {
+            pos.set(it.position).sub(mapOffset).add(center)
+            if (pos in borders)
+                renderer.writeCharacter(it.getViewAppearance(), pos)
+        }
         map.actors.forEach {
-            val position = it.position - mapOffset + center
-            if (position in borders)
-                renderer.writeCharacter(it.getViewAppearance(), position)
+            pos.set(it.position).sub(mapOffset).add(center)
+            if (pos in borders)
+                renderer.writeCharacter(it.getViewAppearance(), pos)
         }
     }
 

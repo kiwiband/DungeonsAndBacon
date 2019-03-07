@@ -22,6 +22,7 @@ class LocalMap(val width: Int, val height: Int) {
     private val grid: Grid = Grid(width + 1, height + 1)
 
     val actors = mutableListOf<MapActor>()
+    val backgroundActors = mutableListOf<MapActor>()
 
     init {
         val dungeonGenerator = DungeonGenerator()
@@ -38,6 +39,10 @@ class LocalMap(val width: Int, val height: Int) {
         grid.forEach { _, x, y, _ ->
             if (isWall(grid, x, y)) {
                 addWall(x, y)
+            } else if (grid.get(x, y) == WALL_THRESHOLD) {
+                val floor = StaticActor('~', Collision.Ignore)
+                floor.position.set(x, y)
+                backgroundActors.add(floor)
             }
             false
         }
@@ -58,7 +63,7 @@ class LocalMap(val width: Int, val height: Int) {
     }
 
     private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor('▒', Collision.Block)
+        val wall = StaticActor('#', Collision.Block)
         wall.position.set(x, y)
         actors.add(wall)
     }

@@ -86,8 +86,6 @@ class App {
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
     }
 
-
-
     companion object {
         private const val SCREEN_WIDTH = 80
         private const val SCREEN_HEIGHT = 24
