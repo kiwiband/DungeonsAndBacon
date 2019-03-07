@@ -22,7 +22,7 @@ class InputManager(val terminal: Terminal) {
         handleThread.start()
 
         eventKeyId = EventKeyPress.dispatcher.addHandler {
-            if (it.key.keyType == KeyType.EOF) {
+            if (it.key.keyType == KeyType.EOF || it.key.keyType == KeyType.Escape) {
                 isHandle = false
             }
         }

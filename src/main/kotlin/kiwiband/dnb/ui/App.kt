@@ -40,8 +40,6 @@ class App {
 
 
     private fun handleMoveKeys(keyStroke: KeyStroke) {
-        // todo: add EventExit
-        if (keyStroke.keyType == KeyType.Escape) exitProcess(0)
         if (keyStroke.keyType != KeyType.Character) return
         when (keyStroke.character) {
             'w', 'ц' -> Vec2M(0, -1)
@@ -85,6 +83,7 @@ class App {
         drawScene()
         game.startGame()
         inputManager.join()
+        screen.stopScreen()
         game.endGame()
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
     }
