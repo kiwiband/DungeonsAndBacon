@@ -16,7 +16,6 @@ import kiwiband.dnb.ui.views.PlayerView
 import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
-import kotlin.system.exitProcess
 
 class App {
     private val rootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
