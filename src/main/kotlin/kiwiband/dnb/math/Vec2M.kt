@@ -11,6 +11,10 @@ open class Vec2M(var x: Int, var y: Int) {
 
     operator fun minus(v: Vec2M) = Vec2M(x - v.x, y - v.y)
 
+    fun mixMax(v: Vec2M): Vec2M = Vec2M(Math.max(x, v.x), Math.max(y, v.y))
+
+    fun mixMin(v: Vec2M): Vec2M = Vec2M(Math.min(x, v.x), Math.min(y, v.y))
+
     override fun equals(other: Any?): Boolean {
         if (other is Vec2M) {
             return x == other.x && y == other.y
@@ -19,9 +23,4 @@ open class Vec2M(var x: Int, var y: Int) {
     }
 
     override fun hashCode(): Int = 31 * x + y
-}
-
-operator fun Pair<Vec2M, Vec2M>.contains(v: Vec2M): Boolean {
-    return first.x <= v.x && v.x < second.x
-            && first.y <= v.y && v.y < second.y
 }

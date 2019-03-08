@@ -16,24 +16,24 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
         val playerPosition = findPlayerPosition()
 
         val mapOffset = Vec2M(
-            Math.min(Math.max(playerPosition.x, width / 2), map.width - width / 2 + 1),
-            Math.min(Math.max(playerPosition.y, height / 2), map.height - height / 2 + 1)
+            Math.min(Math.max(playerPosition.x, width / 2), map.width - width / 2),
+            Math.min(Math.max(playerPosition.y, height / 2), map.height - height / 2)
         )
 
         val pos = Vec2()
         map.backgroundActors.forEach {
-            pos.set(it.position).sub(mapOffset).add(center)
+            pos.set(it.pos).sub(mapOffset).add(center)
             if (pos in borders)
                 renderer.writeCharacter(it.getViewAppearance(), pos)
         }
         map.actors.forEach {
-            pos.set(it.position).sub(mapOffset).add(center)
+            pos.set(it.pos).sub(mapOffset).add(center)
             if (pos in borders)
                 renderer.writeCharacter(it.getViewAppearance(), pos)
         }
     }
 
     private fun findPlayerPosition(): Vec2M {
-        return map.actors.find { it is Player }?.position ?: Vec2M(width / 2, height / 2)
+        return map.actors.find { it is Player }?.pos ?: Vec2M(width / 2, height / 2)
     }
 }

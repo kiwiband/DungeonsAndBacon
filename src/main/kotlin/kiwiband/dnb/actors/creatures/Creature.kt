@@ -7,8 +7,10 @@ import kiwiband.dnb.math.Vec2M
 
 abstract class Creature(private val map: LocalMap) : MapActor() {
     open fun move(direction: Vec2M) {
-        if (resolveCollision(map.getActors(position + direction))) {
-            position.add(direction)
+        if (resolveCollision(map.getActors(pos + direction))) {
+            val oldPos = Vec2M(pos)
+            pos.add(direction)
+            map.actors.updateOne(oldPos)
         }
     }
 

@@ -8,7 +8,7 @@ class Player(map: LocalMap, position: Vec2) : Creature(map) {
     private val viewAppearance = '@'
 
     init {
-        super.position.set(position)
+        super.pos.set(position)
     }
 
     override fun getViewAppearance(): Char = viewAppearance

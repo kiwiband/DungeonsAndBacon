@@ -16,7 +16,7 @@ abstract class MapActor {
     open var viewPriority = 0
 
     protected open val collision = Collision.Block
-    val position = Vec2()
+    val pos = Vec2()
 
     open fun collide(actor: MapActor): Collision = collision.collide(actor.collision)
 
