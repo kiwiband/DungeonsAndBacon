@@ -5,7 +5,7 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
 
-abstract class Creature(private val map: LocalMap) : MapActor() {
+abstract class Creature(protected val map: LocalMap) : MapActor() {
     open fun move(direction: Vec2M) {
         if (resolveCollision(map.getActors(pos + direction))) {
             val oldPos = Vec2M(pos)

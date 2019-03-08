@@ -10,7 +10,7 @@ enum class ViewOrder(private val order: Int) {
     fun compare(other: ViewOrder): Int = other.order - order
 }
 
-abstract class MapActor {
+abstract class MapActor : Comparable<MapActor> {
     private var eventTickId: Int = -1
     open var viewOrder = ViewOrder.Default
     open var viewPriority = 0
@@ -42,6 +42,8 @@ abstract class MapActor {
     protected open fun onDestroy() {
         EventTick.dispatcher.removeHandler(eventTickId)
     }
+
+    override fun compareTo(other: MapActor): Int = viewOrderCompare(other)
 
     fun viewOrderCompare(other: MapActor): Int {
         return when(val firstOrder = viewOrder.compare(other.viewOrder)) {

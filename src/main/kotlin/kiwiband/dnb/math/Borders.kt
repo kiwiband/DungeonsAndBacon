@@ -1,23 +1,35 @@
 package kiwiband.dnb.math
 
-typealias Borders = Pair<Vec2M, Vec2M>
+class Borders(val a: Vec2M, val b: Vec2M) {
+    constructor(ax: Int, ay: Int, bx: Int, by: Int) : this(Vec2M(ax, ay), Vec2M(bx, by))
 
-fun borders(x1: Int, y1: Int, x2: Int, y2: Int) = Vec2M(x1, y1) to Vec2M(x2, y2)
+    operator fun contains(v: Vec2M): Boolean {
+        return a.x <= v.x && v.x < b.x
+                && a.y <= v.y && v.y < b.y
+    }
 
-operator fun Borders.contains(v: Vec2M): Boolean {
-    return first.x <= v.x && v.x < second.x
-            && first.y <= v.y && v.y < second.y
-}
+    fun fitIn(other: Borders): Borders = a.mixMax(other.a) to b.mixMin(other.b)
 
-fun Borders.fitIn(b: Borders): Borders = first.mixMax(b.first) to second.mixMin(b.second)
+    fun any(predicate: (Vec2M) -> Boolean): Boolean {
+        val v = Vec2()
+        for (y in a.y until b.y) {
+            for (x in a.x until b.x) {
+                if (predicate(v.set(x, y))) return true
+            }
+        }
+        return false
+    }
 
-
-fun Borders.any(predicate: (Vec2M) -> Boolean): Boolean {
-    val v = Vec2()
-    for (y in first.y until second.y) {
-        for (x in first.x until second.x) {
-            if (predicate(v.set(x, y))) return true
+    fun forEach(consumer: (Vec2M) -> Unit) {
+        val v = Vec2()
+        for (y in a.y until b.y) {
+            for (x in a.x until b.x) {
+                consumer(v.set(x, y))
+            }
         }
     }
-    return false
+
+    operator fun plus(offset: Vec2M) = Borders(a + offset, b + offset)
+    operator fun minus(offset: Vec2M) = Borders(a - offset, b - offset)
 }
+

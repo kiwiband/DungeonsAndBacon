@@ -6,6 +6,7 @@ import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.StaticActor
+import kiwiband.dnb.actors.ViewOrder
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.*
 import kotlin.random.Random
@@ -16,7 +17,8 @@ class LocalMap(val width: Int, val height: Int) {
     private val grid: Grid = Grid(width, height)
 
     val actors = MapGrid(width, height)
-    val backgroundActors = mutableListOf<MapActor>()
+
+    var player: Player? = null
 
     init {
         val dungeonGenerator = DungeonGenerator()
@@ -33,8 +35,8 @@ class LocalMap(val width: Int, val height: Int) {
         grid.forEach { _, x, y, value ->
             if (isWall(grid, x, y)) {
                 addWall(x, y)
-            } else {
-                addFloor(x, y, if (value == WALL_THRESHOLD) '▒' else ' ')
+            } else if (value == WALL_THRESHOLD) {
+                addStaticBackground(x, y, '▒')
             }
             false
         }
@@ -44,8 +46,8 @@ class LocalMap(val width: Int, val height: Int) {
         if (grid.get(x, y) != WALL_THRESHOLD) {
             return false
         }
-        val area = borders(x - 1, y - 1, x + 2, y + 2).fitIn(borders)
-        return area.any{ grid.get(it.x, it.y) != WALL_THRESHOLD }
+        val area = Borders(x - 1, y - 1, x + 2, y + 2).fitIn(borders)
+        return area.any { grid.get(it.x, it.y) != WALL_THRESHOLD }
     }
 
     private fun addWall(x: Int, y: Int) {
@@ -54,21 +56,26 @@ class LocalMap(val width: Int, val height: Int) {
         actors.add(wall)
     }
 
-    private fun addFloor(x: Int, y: Int, char: Char) {
+    private fun addStaticBackground(x: Int, y: Int, char: Char) {
         val floor = StaticActor(char, Collision.Ignore)
+        floor.viewOrder = ViewOrder.Background
         floor.pos.set(x, y)
-        backgroundActors.add(floor)
+        actors.add(floor)
     }
 
     fun spawnPlayer(): Player {
         while (true) {
             val playerPosition = Vec2(Random.nextInt(width), Random.nextInt(height))
             if (grid.get(playerPosition.x, playerPosition.y) == FLOOR_THRESHOLD) {
-                val player = Player(this, playerPosition)
-                 actors.add(player)
-                return player
+                player = Player(this, playerPosition)
+                actors.add(player!!)
+                return player!!
             }
         }
+    }
+
+    fun removePlayer() {
+        player = null
     }
 
     fun getActors(pos: Vec2M): Collection<MapActor> = if (pos in borders) actors[pos] else listOf(endMap)

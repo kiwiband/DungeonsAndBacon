@@ -33,5 +33,6 @@ class Player(map: LocalMap, position: Vec2) : Creature(map) {
     override fun onDestroy() {
         super.onDestroy()
         EventMove.dispatcher.removeHandler(eventMoveId)
+        map.removePlayer()
     }
 }
