@@ -13,6 +13,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.random.Random
 
+// todo get rid of the kostyl' with 'generated' param
 class LocalMap(val width: Int, val height: Int, generated: Boolean) {
 
     private val borders = Vec2M(0, 0) to Vec2M(width, height)
@@ -32,6 +33,7 @@ class LocalMap(val width: Int, val height: Int, generated: Boolean) {
             when (actorObject.getString("type")) {
                 "wall" -> addWall(x, y)
                 "bgnd" -> addStaticBackground(x, y, BKGND_APPEARANCE)
+                "plyr" -> addPlayer(x, y)
             }
             grid.set(x, y, WALL_THRESHOLD)
         }
@@ -64,7 +66,11 @@ class LocalMap(val width: Int, val height: Int, generated: Boolean) {
         actors.forEach { actor ->
             val x = actor.pos.x
             val y = actor.pos.y
-            val type = if (isWall(x, y)) "wall" else "bgnd"
+            val type = when {
+                actor == player -> "plyr"
+                actor.getViewAppearance() == WALL_APPEARANCE -> "wall"
+                else -> "bgnd"
+            }
             actorsArray.put(
                 JSONObject()
                     .put("x", x)
@@ -99,12 +105,19 @@ class LocalMap(val width: Int, val height: Int, generated: Boolean) {
         actors.add(floor)
     }
 
+    fun addPlayer(x: Int, y: Int) {
+        val playerPosition = Vec2(x, y)
+        player = Player(this, playerPosition)
+        actors.add(player!!)
+    }
+
     fun spawnPlayer(): Player {
+        if (player != null) return player!!
         while (true) {
-            val playerPosition = Vec2(Random.nextInt(grid.width), Random.nextInt(grid.height))
-            if (grid.get(playerPosition.x, playerPosition.y) == FLOOR_THRESHOLD) {
-                player = Player(this, playerPosition)
-                actors.add(player!!)
+            val x = Random.nextInt(grid.width)
+            val y = Random.nextInt(grid.height)
+            if (grid.get(x, y) == FLOOR_THRESHOLD) {
+                addPlayer(x, y)
                 return player!!
             }
         }

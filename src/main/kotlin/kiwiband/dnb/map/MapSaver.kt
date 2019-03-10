@@ -27,6 +27,6 @@ class MapSaver {
 
         fun checkSaved() = File(MAP_FILE).exists()
 
-        const val MAP_FILE = "./maps/saved_map.dnd"
+        private const val MAP_FILE = "./maps/saved_map.dnd"
     }
 }
