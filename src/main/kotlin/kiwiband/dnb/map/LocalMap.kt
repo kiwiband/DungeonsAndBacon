@@ -9,9 +9,12 @@ import kiwiband.dnb.actors.StaticActor
 import kiwiband.dnb.actors.ViewOrder
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.*
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.random.Random
 
-class LocalMap(val width: Int, val height: Int) {
+class LocalMap(val width: Int, val height: Int, generated: Boolean) {
+
     private val borders = Vec2M(0, 0) to Vec2M(width, height)
 
     private val grid: Grid = Grid(width, height)
@@ -20,7 +23,21 @@ class LocalMap(val width: Int, val height: Int) {
 
     var player: Player? = null
 
-    init {
+    constructor(mapData: JSONObject): this(mapData.getInt("width"), mapData.getInt("height"), false) {
+        grid.fill(FLOOR_THRESHOLD)
+        mapData.getJSONArray("actors").forEach {
+            val actorObject = it as JSONObject
+            val x = actorObject.getInt("x")
+            val y = actorObject.getInt("y")
+            when (actorObject.getString("type")) {
+                "wall" -> addWall(x, y)
+                "bgnd" -> addStaticBackground(x, y, BKGND_APPEARANCE)
+            }
+            grid.set(x, y, WALL_THRESHOLD)
+        }
+    }
+
+    constructor(width: Int, height: Int): this(width, height, true) {
         val dungeonGenerator = DungeonGenerator()
         dungeonGenerator.roomGenerationAttempts = 100
         dungeonGenerator.maxRoomSize = 11
@@ -33,16 +50,35 @@ class LocalMap(val width: Int, val height: Int) {
         dungeonGenerator.addRoomTypes(*RoomType.DefaultRoomType.values())
         dungeonGenerator.generate(grid)
         grid.forEach { _, x, y, value ->
-            if (isWall(grid, x, y)) {
+            if (isWall(x, y)) {
                 addWall(x, y)
             } else if (value == WALL_THRESHOLD) {
-                addStaticBackground(x, y, '▒')
+                addStaticBackground(x, y, BKGND_APPEARANCE)
             }
             false
         }
     }
 
-    private fun isWall(grid: Grid, x: Int, y: Int): Boolean {
+    fun toJSON(): JSONObject {
+        val actorsArray = JSONArray()
+        actors.forEach { actor ->
+            val x = actor.pos.x
+            val y = actor.pos.y
+            val type = if (isWall(x, y)) "wall" else "bgnd"
+            actorsArray.put(
+                JSONObject()
+                    .put("x", x)
+                    .put("y", y)
+                    .put("type", type)
+            )
+        }
+        return JSONObject()
+            .put("width", width)
+            .put("height", height)
+            .put("actors", actorsArray)
+    }
+
+    private fun isWall(x: Int, y: Int): Boolean {
         if (grid.get(x, y) != WALL_THRESHOLD) {
             return false
         }
@@ -51,7 +87,7 @@ class LocalMap(val width: Int, val height: Int) {
     }
 
     private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor('▒', Collision.Block)
+        val wall = StaticActor(WALL_APPEARANCE, Collision.Block)
         wall.pos.set(x, y)
         actors.add(wall)
     }
@@ -65,7 +101,7 @@ class LocalMap(val width: Int, val height: Int) {
 
     fun spawnPlayer(): Player {
         while (true) {
-            val playerPosition = Vec2(Random.nextInt(width), Random.nextInt(height))
+            val playerPosition = Vec2(Random.nextInt(grid.width), Random.nextInt(grid.height))
             if (grid.get(playerPosition.x, playerPosition.y) == FLOOR_THRESHOLD) {
                 player = Player(this, playerPosition)
                 actors.add(player!!)
@@ -85,6 +121,9 @@ class LocalMap(val width: Int, val height: Int) {
         private const val WALL_THRESHOLD = 2F
         private const val FLOOR_THRESHOLD = 1F
         private const val CORRIDOR_THRESHOLD = 0F
+
+        private const val BKGND_APPEARANCE = '▒'
+        private const val WALL_APPEARANCE = '▒'
 
         private val endMap = StaticActor('~', Collision.Block)
     }

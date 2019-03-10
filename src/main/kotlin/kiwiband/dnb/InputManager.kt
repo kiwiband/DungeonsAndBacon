@@ -22,10 +22,14 @@ class InputManager(val terminal: Terminal) {
         handleThread.start()
 
         eventKeyId = EventKeyPress.dispatcher.addHandler {
-            if (it.key.keyType == KeyType.EOF || it.key.keyType == KeyType.Escape) {
-                isHandle = false
+            if (it.key.keyType == KeyType.EOF) {
+                stop()
             }
         }
+    }
+
+    fun stop() {
+        isHandle = false
     }
 
     fun join() {

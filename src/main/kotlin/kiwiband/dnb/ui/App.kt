@@ -9,8 +9,11 @@ import kiwiband.dnb.InputManager
 import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.events.EventTick
+import kiwiband.dnb.map.LocalMap
+import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.ui.views.InfoView
+import kiwiband.dnb.ui.views.LoadMapView
 import kiwiband.dnb.ui.views.MapView
 import kiwiband.dnb.ui.views.PlayerView
 import kiwiband.dnb.ui.views.layout.BoxLayout
@@ -24,7 +27,7 @@ class App {
 
     private val inputManager = InputManager(terminal)
     private val screen = TerminalScreen(terminal)
-    private val game = Game()
+    private lateinit var game: Game
 
     private val renderer = Renderer(screen)
 
@@ -36,7 +39,6 @@ class App {
 
         screen.refresh()
     }
-
 
     private fun handleMoveKeys(keyStroke: KeyStroke) {
         if (keyStroke.keyType != KeyType.Character) return
@@ -71,20 +73,73 @@ class App {
         rootView.addChild(sidebar)
     }
 
+    private fun createGame() {
+
+        if (!MapSaver.checkSaved()) {
+            game = Game(LocalMap(88, 32))
+            return
+        }
+
+        rootView.addChild(BoxLayout(LoadMapView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
+
+        drawScene()
+
+        var map: LocalMap? = null
+        val mapLock = Object()
+        val eventKeyPressId = EventKeyPress.dispatcher.addHandler {
+            synchronized(mapLock) {
+                map = when (it.key.character) {
+                    'y', 'н' -> MapSaver.loadFromFile()
+                    'n', 'т' -> LocalMap(88, 32)
+                    else -> return@addHandler
+                }
+                mapLock.notify()
+            }
+        }
+
+        synchronized(mapLock) {
+            while (map == null) {
+                mapLock.wait()
+            }
+        }
+
+        game = Game(map!!)
+
+        EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
+        rootView.clear()
+    }
+
+    private fun saveMap() {
+        MapSaver.saveToFile(game.map)
+    }
+
     fun start() {
         screen.startScreen()
         screen.cursorPosition = null
-        constructScene()
 
         inputManager.startKeyHandle()
-        val eventKeyPressId = EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
+
+        createGame()
+        constructScene()
 
         drawScene()
+
+        val eventKeyPressId = EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
+        val eventEscapeId = EventKeyPress.dispatcher.addHandler {
+            if (it.key.keyType == KeyType.Escape) {
+                inputManager.stop()
+            }
+        }
+
         game.startGame()
         inputManager.join()
-        screen.stopScreen()
         game.endGame()
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
+        EventKeyPress.dispatcher.removeHandler(eventEscapeId)
+
+        saveMap()
+
+        screen.stopScreen()
     }
 
     companion object {

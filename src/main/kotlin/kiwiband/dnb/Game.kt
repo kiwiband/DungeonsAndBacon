@@ -3,11 +3,12 @@ package kiwiband.dnb
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
+import org.json.JSONObject
 
-class Game {
+class Game(val map: LocalMap) {
     var tickTime = 0
         private set
-    val map = LocalMap(88, 32)
+
     val player: Player
 
     private var eventTickId: Int = 0
