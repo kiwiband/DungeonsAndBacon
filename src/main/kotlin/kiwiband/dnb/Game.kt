@@ -14,7 +14,6 @@ class Game(val map: LocalMap) {
     private var eventTickId: Int = 0
 
     init {
-        // think about delete handler from dispatcher
         player = map.spawnPlayer()
     }
 

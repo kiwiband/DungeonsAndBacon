@@ -22,7 +22,7 @@ class MapSaver {
             if (!checkSaved()) {
                 throw RuntimeException("No saved maps.")
             }
-            return LocalMap(JSONObject(File(MAP_FILE).readText()))
+            return LocalMap.loadMap(JSONObject(File(MAP_FILE).readText()))
         }
 
         fun checkSaved() = File(MAP_FILE).exists()

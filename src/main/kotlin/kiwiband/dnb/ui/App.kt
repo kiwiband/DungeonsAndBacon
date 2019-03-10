@@ -74,9 +74,8 @@ class App {
     }
 
     private fun createGame() {
-
         if (!MapSaver.checkSaved()) {
-            game = Game(LocalMap(88, 32))
+            game = Game(LocalMap.generateMap(88, 32))
             return
         }
 
@@ -90,7 +89,7 @@ class App {
             synchronized(mapLock) {
                 map = when (it.key.character) {
                     'y', 'н' -> MapSaver.loadFromFile()
-                    'n', 'т' -> LocalMap(88, 32)
+                    'n', 'т' -> LocalMap.generateMap(88, 32)
                     else -> return@addHandler
                 }
                 mapLock.notify()
