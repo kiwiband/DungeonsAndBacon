@@ -16,7 +16,7 @@ abstract class MapActor : Comparable<MapActor> {
     open var viewPriority = 0
 
     protected open val collision = Collision.Block
-    val pos = Vec2()
+    open val pos = Vec2()
 
     open fun collide(actor: MapActor): Collision = collision.collide(actor.collision)
 

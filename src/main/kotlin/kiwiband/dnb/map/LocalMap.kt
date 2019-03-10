@@ -6,14 +6,12 @@ import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.StaticActor
-import kiwiband.dnb.actors.ViewOrder
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.*
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.random.Random
 
-// todo get rid of the kostyl' with 'generated' param
 class LocalMap(val width: Int, val height: Int) {
 
     private val borders = Vec2M(0, 0) to Vec2M(width, height)
@@ -32,7 +30,7 @@ class LocalMap(val width: Int, val height: Int) {
             val type = when {
                 actor == player -> "plyr"
                 actor.getViewAppearance() == WALL_APPEARANCE -> "wall"
-                else -> "bgnd"
+                else -> "none"
             }
             actorsArray.put(
                 JSONObject()
@@ -48,16 +46,8 @@ class LocalMap(val width: Int, val height: Int) {
     }
 
     private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor(WALL_APPEARANCE, Collision.Block)
-        wall.pos.set(x, y)
+        val wall = StaticActor(WALL_APPEARANCE, Collision.Block, Vec2(x, y))
         actors.add(wall)
-    }
-
-    private fun addStaticBackground(x: Int, y: Int, char: Char) {
-        val floor = StaticActor(char, Collision.Ignore)
-        floor.viewOrder = ViewOrder.Background
-        floor.pos.set(x, y)
-        actors.add(floor)
     }
 
     fun addPlayer(x: Int, y: Int) {
@@ -90,7 +80,6 @@ class LocalMap(val width: Int, val height: Int) {
         private const val FLOOR_THRESHOLD = 1F
         private const val CORRIDOR_THRESHOLD = 0F
 
-        private const val BKGND_APPEARANCE = '▒'
         private const val WALL_APPEARANCE = '▒'
 
         private val endMap = StaticActor('~', Collision.Block)
@@ -109,10 +98,8 @@ class LocalMap(val width: Int, val height: Int) {
             dungeonGenerator.addRoomTypes(*RoomType.DefaultRoomType.values())
             dungeonGenerator.generate(map.grid)
             map.grid.forEach { _, x, y, value ->
-                if (isWall(map, x, y)) {
+                if (value == WALL_THRESHOLD) {
                     map.addWall(x, y)
-                } else if (value == WALL_THRESHOLD) {
-                    map.addStaticBackground(x, y, BKGND_APPEARANCE)
                 }
                 false
             }
@@ -129,20 +116,11 @@ class LocalMap(val width: Int, val height: Int) {
                 val y = actorObject.getInt("y")
                 when (actorObject.getString("type")) {
                     "wall" -> map.addWall(x, y)
-                    "bgnd" -> map.addStaticBackground(x, y, BKGND_APPEARANCE)
                     "plyr" -> map.addPlayer(x, y)
                 }
                 map.grid.set(x, y, WALL_THRESHOLD)
             }
             return map
-        }
-
-        private fun isWall(map: LocalMap, x: Int, y: Int): Boolean {
-            if (map.grid.get(x, y) != WALL_THRESHOLD) {
-                return false
-            }
-            val area = Borders(x - 1, y - 1, x + 2, y + 2).fitIn(map.borders)
-            return area.any { map.grid.get(it.x, it.y) != WALL_THRESHOLD }
         }
     }
 }
