@@ -146,7 +146,3 @@ class App {
         private const val SCREEN_HEIGHT = 24
     }
 }
-
-fun main() {
-    App().start()
-}
