@@ -3,7 +3,6 @@ package kiwiband.dnb
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
-import org.json.JSONObject
 
 class Game(val map: LocalMap) {
     var tickTime = 0
@@ -15,6 +14,7 @@ class Game(val map: LocalMap) {
 
     init {
         player = map.spawnPlayer()
+        map.spawnMob(10)
     }
 
     private fun onTick() {
@@ -24,6 +24,7 @@ class Game(val map: LocalMap) {
     fun startGame() {
         eventTickId = EventTick.dispatcher.addHandler { onTick() }
         player.onBeginGame()
+        map.actors.forEach { if (it !is Player) it.onBeginGame() }
     }
 
     fun endGame() {

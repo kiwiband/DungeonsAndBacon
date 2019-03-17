@@ -15,7 +15,7 @@ abstract class MapActor : Comparable<MapActor> {
     open var viewOrder = ViewOrder.Default
     open var viewPriority = 0
 
-    protected open val collision = Collision.Block
+    open val collision = Collision.Block
     open val pos = Vec2()
 
     open fun collide(actor: MapActor): Collision = collision.collide(actor.collision)
@@ -43,10 +43,8 @@ abstract class MapActor : Comparable<MapActor> {
         EventTick.dispatcher.removeHandler(eventTickId)
     }
 
-    override fun compareTo(other: MapActor): Int = viewOrderCompare(other)
-
-    fun viewOrderCompare(other: MapActor): Int {
-        return when(val firstOrder = viewOrder.compare(other.viewOrder)) {
+    override fun compareTo(other: MapActor): Int {
+        return when (val firstOrder = viewOrder.compare(other.viewOrder)) {
             0 -> other.viewPriority - viewPriority
             else -> firstOrder
         }

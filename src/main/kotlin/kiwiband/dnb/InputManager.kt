@@ -4,7 +4,7 @@ import com.googlecode.lanterna.input.KeyType
 import com.googlecode.lanterna.terminal.Terminal
 import kiwiband.dnb.events.EventKeyPress
 
-class InputManager(val terminal: Terminal) {
+class InputManager(private val terminal: Terminal) {
     private lateinit var handleThread: Thread
     private var isHandle = false
 

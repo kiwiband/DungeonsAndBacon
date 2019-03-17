@@ -6,6 +6,7 @@ import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.StaticActor
+import kiwiband.dnb.actors.creatures.Mob
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.*
 import org.json.JSONArray
@@ -19,6 +20,7 @@ class LocalMap(val width: Int, val height: Int) {
     private val grid: Grid = Grid(width, height)
 
     val actors = MapGrid(width, height)
+    val navigationGraph = NavigationGraph(actors)
 
     var player: Player? = null
 
@@ -67,6 +69,22 @@ class LocalMap(val width: Int, val height: Int) {
             }
         }
     }
+
+
+    fun spawnMob(n: Int) {
+        for (i in 0 until n) {
+            while (true) {
+                val x = Random.nextInt(grid.width)
+                val y = Random.nextInt(grid.height)
+                if (grid.get(x, y) == FLOOR_THRESHOLD) {
+                    val mob = Mob(this, Vec2M(x, y))
+                    actors.add(mob)
+                    break
+                }
+            }
+        }
+    }
+
 
     fun removePlayer() {
         player = null

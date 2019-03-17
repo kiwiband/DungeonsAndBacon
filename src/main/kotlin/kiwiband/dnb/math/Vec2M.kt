@@ -2,7 +2,8 @@ package kiwiband.dnb.math
 
 open class Vec2M(var x: Int, var y: Int) {
     constructor(v: Vec2M) : this(v.x, v.y)
-    constructor() : this(0, 0)
+    constructor(v: Int) : this(v, v)
+    constructor() : this(0)
 
     fun isZero() : Boolean = x == 0 && y == 0
 
@@ -23,6 +24,12 @@ open class Vec2M(var x: Int, var y: Int) {
         return super.equals(other)
     }
 
+    fun distance(v: Vec2M): Int = distance(v.x, v.y)
+
+    fun distance(vx: Int, vy: Int): Int = Math.abs(vx - x) + Math.abs(vy - y)
+
+    fun normalize(): Vec2M = Vec2M(normalize(x), normalize(y))
+
     fun fitIn(borders: Borders) = Vec2M(
         MyMath.clamp(x, borders.a.x, borders.b.x),
         MyMath.clamp(y, borders.a.y, borders.b.y)
@@ -31,4 +38,8 @@ open class Vec2M(var x: Int, var y: Int) {
     infix fun to(that: Vec2M): Borders = Borders(this, that)
 
     override fun hashCode(): Int = 31 * x + y
+
+    companion object {
+        private fun normalize(x: Int) = if (x < 0) -1 else if (x > 0) 1 else 0
+    }
 }
