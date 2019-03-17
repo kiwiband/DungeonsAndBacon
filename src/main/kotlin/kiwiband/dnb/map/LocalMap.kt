@@ -77,11 +77,6 @@ class LocalMap(val width: Int, val height: Int) {
         }
     }
 
-    /**
-     * Gets all actors from a map.
-     * @return all map actors.
-     */
-
     fun spawnMob(n: Int) {
         for (i in 0 until n) {
             while (true) {

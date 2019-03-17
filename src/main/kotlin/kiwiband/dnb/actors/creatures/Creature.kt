@@ -21,9 +21,9 @@ abstract class Creature(protected val map: LocalMap) : MapActor() {
         }
     }
 
-    fun moveTo(position: Vec2M) = move(resolveDirection(position))
+    fun moveTo(position: Vec2) = move(resolveDirection(position))
 
-    private fun resolveDirection(position: Vec2M): Vec2M = (position - pos).normalize()
+    private fun resolveDirection(position: Vec2): Vec2 = (position - pos).normalize()
 
     private fun resolveCollision(actors: Collection<MapActor>): Boolean {
         var result = true
