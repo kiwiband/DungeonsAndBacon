@@ -8,28 +8,52 @@ import java.util.*
 
 class NavigationGraph(val map: MapGrid) {
     private val marks: IntArray = IntArray(map.height * map.width) { -1 }
+    private val dists: IntArray = IntArray(map.height * map.width) { -1 }
     private val deque = ArrayDeque<MapCell>()
 
-    fun bfs(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): MutableList<Vec2M>? {
+
+    fun pathToNearest(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): MutableList<Vec2M>? {
+        val nearestCell = bfs(start, maxDistance) { cell -> f(cell.getActors()) }
+        return nearestCell?.let { findPath(it.getId()) }
+    }
+
+    fun nextToNearest(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): Vec2M? {
+        return bfs(start, maxDistance + 1) { cell ->
+            cell.neighbours().any { neighbour ->
+                val dist = dists[neighbour.getId()]
+                0 < dist && dist < dists[cell.getId()] && f(neighbour.getActors())
+            }
+        }?.toVec2M()
+    }
+
+    fun nearest(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): Vec2M? {
+        return bfs(start, maxDistance) { cell -> f(cell.getActors()) }?.toVec2M()
+    }
+
+    private fun bfs(start: Vec2M, maxDistance: Int, f: (MapCell) -> Boolean): MapCell? {
         marks.fill(-1)
+        dists.fill(-1)
         deque.clear()
 
         val startCell = MapCell(start.x, start.y)
         marks[startCell.getId()] = startCell.getId()
+        dists[startCell.getId()] = 0
         deque.addLast(startCell)
         while (deque.isNotEmpty()) {
             val cell = deque.pollFirst()
-            val dist = start.distance(cell.x, cell.y)
-            if (dist > maxDistance) return null
-            if (f(cell.getActors())) {
-                return findPath(cell.getId())
+            val cellDist = start.distance(cell.x, cell.y)
+            if (cellDist > maxDistance) return null
+            if (f(cell)) {
+                return cell
             }
             val id = cell.getId()
-            cell.neighbours().forEach {
+            val dist = dists[id]
+            cell.neighbours().shuffled().forEach {
                 val itId = it.getId()
                 if (marks[itId] < 0) {
                     deque.addLast(it)
                     marks[itId] = id
+                    dists[itId] = dist + 1
                 }
             }
         }
@@ -63,6 +87,10 @@ class NavigationGraph(val map: MapGrid) {
             if (checkCell(x + 1, y)) MapCellList.add(MapCell(x + 1, y))
             if (checkCell(x - 1, y)) MapCellList.add(MapCell(x - 1, y))
             return MapCellList
+        }
+
+        fun toVec2M(): Vec2M {
+            return Vec2M(x, y)
         }
 
         private fun checkCell(x: Int, y: Int): Boolean =
