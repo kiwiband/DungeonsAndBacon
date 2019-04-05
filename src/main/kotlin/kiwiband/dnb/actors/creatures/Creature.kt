@@ -3,12 +3,12 @@ package kiwiband.dnb.actors.creatures
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Collision
-import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.math.Vec2
 
 abstract class Creature(protected val map: LocalMap) : MapActor() {
-    open fun move(direction: Vec2M) {
+    open fun move(direction: Vec2) {
         if (resolveCollision(map.getActors(pos + direction))) {
-            val oldPos = Vec2M(pos)
+            val oldPos = Vec2(pos)
             pos.add(direction)
             map.actors.updateOne(oldPos)
         }

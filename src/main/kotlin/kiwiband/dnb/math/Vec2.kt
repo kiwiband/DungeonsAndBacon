@@ -1,20 +1,34 @@
 package kiwiband.dnb.math
 
-@Suppress("UNUSED")
-class Vec2(x: Int, y: Int) : Vec2M(x, y) {
+open class Vec2(var x: Int, var y: Int) {
+    constructor(v: Vec2) : this(v.x, v.y)
     constructor() : this(0, 0)
 
-    constructor(v: Vec2M) : this(v.x, v.y)
+    fun isZero() : Boolean = x == 0 && y == 0
 
-    fun set(vx: Int, vy: Int): Vec2 {
-        x = vx
-        y = vy
-        return this
+    operator fun unaryMinus() = Vec2(-x, -y)
+
+    operator fun plus(v: Vec2) = Vec2(x + v.x, y + v.y)
+
+    operator fun minus(v: Vec2) = Vec2(x - v.x, y - v.y)
+
+    fun mixMax(v: Vec2): Vec2 = Vec2(Math.max(x, v.x), Math.max(y, v.y))
+
+    fun mixMin(v: Vec2): Vec2 = Vec2(Math.min(x, v.x), Math.min(y, v.y))
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Vec2) {
+            return x == other.x && y == other.y
+        }
+        return super.equals(other)
     }
 
-    fun set(v: Vec2M): Vec2 = set(v.x, v.y)
+    fun fitIn(borders: Borders) = Vec2(
+        MyMath.clamp(x, borders.a.x, borders.b.x),
+        MyMath.clamp(y, borders.a.y, borders.b.y)
+    )
 
-    fun add(v: Vec2M): Vec2 = set(x + v.x, y + v.y)
+    infix fun to(that: Vec2): Borders = Borders(this, that)
 
-    fun sub(v: Vec2M): Vec2 = set(x - v.x, y - v.y)
+    override fun hashCode(): Int = 31 * x + y
 }

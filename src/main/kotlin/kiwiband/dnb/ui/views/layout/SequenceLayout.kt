@@ -1,12 +1,12 @@
 package kiwiband.dnb.ui.views.layout
 
-import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 
 abstract class SequenceLayout(width: Int, height: Int, private val isHorizontal: Boolean) : Layout(width, height) {
     fun addChild(view: View) {
-        children.add(ChildView(Vec2M(0, 0), view))
+        children.add(ChildView(Vec2(0, 0), view))
     }
 
     override fun draw(renderer: Renderer) {
@@ -16,9 +16,9 @@ abstract class SequenceLayout(width: Int, height: Int, private val isHorizontal:
                 view.draw(renderer)
 
                 if (isHorizontal)
-                    renderer.offset.add(Vec2M(view.width, 0))
+                    renderer.offset.add(Vec2(view.width, 0))
                 else
-                    renderer.offset.add(Vec2M(0, view.height))
+                    renderer.offset.add(Vec2(0, view.height))
             }
         }
     }

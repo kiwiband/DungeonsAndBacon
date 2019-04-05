@@ -11,7 +11,7 @@ import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
-import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.LoadMapView
 import kiwiband.dnb.ui.views.MapView
@@ -43,10 +43,10 @@ class App {
     private fun handleMoveKeys(keyStroke: KeyStroke) {
         if (keyStroke.keyType != KeyType.Character) return
         when (keyStroke.character) {
-            'w', 'ц' -> Vec2M(0, -1)
-            'a', 'ф' -> Vec2M(-1, 0)
-            's', 'ы' -> Vec2M(0, 1)
-            'd', 'в' -> Vec2M(1, 0)
+            'w', 'ц' -> Vec2(0, -1)
+            'a', 'ф' -> Vec2(-1, 0)
+            's', 'ы' -> Vec2(0, 1)
+            'd', 'в' -> Vec2(1, 0)
             else -> null
         }?.also {
             EventMove.dispatcher.run(EventMove(it))

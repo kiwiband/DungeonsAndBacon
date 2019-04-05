@@ -14,7 +14,7 @@ import kotlin.random.Random
 
 class LocalMap(val width: Int, val height: Int) {
 
-    private val borders = Vec2M(0, 0) to Vec2M(width, height)
+    private val borders = Vec2(0, 0) to Vec2(width, height)
 
     private val grid: Grid = Grid(width, height)
 
@@ -46,12 +46,12 @@ class LocalMap(val width: Int, val height: Int) {
     }
 
     private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor(WALL_APPEARANCE, Collision.Block, Vec2(x, y))
+        val wall = StaticActor(WALL_APPEARANCE, Collision.Block, Vec2M(x, y))
         actors.add(wall)
     }
 
     fun addPlayer(x: Int, y: Int) {
-        val playerPosition = Vec2(x, y)
+        val playerPosition = Vec2M(x, y)
         player = Player(this, playerPosition)
         actors.add(player!!)
     }
@@ -72,7 +72,7 @@ class LocalMap(val width: Int, val height: Int) {
         player = null
     }
 
-    fun getActors(pos: Vec2M): Collection<MapActor> = if (pos in borders) actors[pos] else listOf(endMap)
+    fun getActors(pos: Vec2): Collection<MapActor> = if (pos in borders) actors[pos] else listOf(endMap)
 
     companion object {
 

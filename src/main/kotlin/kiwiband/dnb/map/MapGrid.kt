@@ -2,7 +2,7 @@ package kiwiband.dnb.map
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.math.Borders
-import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.math.Vec2
 import java.util.*
 
 @Suppress("unused")
@@ -22,7 +22,7 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
 
     fun remove(x: Int, y: Int, actor: MapActor) = data[y * width + x]?.remove(actor)
 
-    fun updateOne(pos: Vec2M) : Boolean {
+    fun updateOne(pos: Vec2) : Boolean {
         val actor = get(pos.x, pos.y).find { it.pos != pos }
         if (actor != null) {
             add(actor)
@@ -32,7 +32,7 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         return false
     }
 
-    operator fun get(pos: Vec2M) = get(pos.x, pos.y)
+    operator fun get(pos: Vec2) = get(pos.x, pos.y)
 
     operator fun get(x: Int, y: Int): List<MapActor> {
         return data[y * width + x] ?: emptyList()
@@ -53,7 +53,7 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     }
 
     fun forEachCellIndexed(consumer: (Int, Int, List<MapActor>) -> Unit) {
-        forEachCellIndexed(Vec2M() to Vec2M(width, height), consumer)
+        forEachCellIndexed(Vec2() to Vec2(width, height), consumer)
     }
 
     fun size(x: Int, y: Int) = size(y * width + x)
