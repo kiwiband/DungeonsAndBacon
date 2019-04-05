@@ -2,9 +2,9 @@ package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.math.Vec2M
 
-class Player(map: LocalMap, position: Vec2) : Creature(map) {
+class Player(map: LocalMap, position: Vec2M) : Creature(map) {
     private val viewAppearance = '@'
 
     init {
@@ -14,7 +14,7 @@ class Player(map: LocalMap, position: Vec2) : Creature(map) {
     override fun getViewAppearance(): Char = viewAppearance
 
     private var eventMoveId: Int = -1
-    private val moveDirection: Vec2 = Vec2()
+    private val moveDirection: Vec2M = Vec2M()
     override var viewPriority: Int = 10000
 
     override fun onBeginGame() {

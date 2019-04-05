@@ -2,7 +2,7 @@ package kiwiband.dnb.actors
 
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Collision
-import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.math.Vec2M
 
 enum class ViewOrder(private val order: Int) {
     Background(0), Default(1), Foreground(2);
@@ -16,7 +16,7 @@ abstract class MapActor : Comparable<MapActor> {
     open var viewPriority = 0
 
     open val collision = Collision.Block
-    open val pos = Vec2()
+    open val pos = Vec2M()
 
     open fun collide(actor: MapActor): Collision = collision.collide(actor.collision)
 
@@ -44,7 +44,7 @@ abstract class MapActor : Comparable<MapActor> {
     }
 
     override fun compareTo(other: MapActor): Int {
-        return when (val firstOrder = viewOrder.compare(other.viewOrder)) {
+        return when (val firstOrder = viewOrder.compareTo(other.viewOrder)) {
             0 -> other.viewPriority - viewPriority
             else -> firstOrder
         }
