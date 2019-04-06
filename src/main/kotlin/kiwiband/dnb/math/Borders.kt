@@ -1,5 +1,7 @@
 package kiwiband.dnb.math
 
+// [a.x, b.x) X [a.y, b.y)
+// b.x >= a.x && b.y >= a.y for correct work
 class Borders(val a: Vec2, val b: Vec2) {
     constructor(ax: Int, ay: Int, bx: Int, by: Int) : this(Vec2(ax, ay), Vec2(bx, by))
 

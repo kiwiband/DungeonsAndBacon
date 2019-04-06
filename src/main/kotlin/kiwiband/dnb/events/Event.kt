@@ -15,8 +15,8 @@ class EventDispatcher<T : Event> {
      * Add handler to others and return handler's id
      */
     fun addHandler(handler: (T) -> Unit): Int {
-        handlers[id++] = handler
-        return id - 1
+        handlers[id] = handler
+        return id++
     }
 
     fun removeHandler(id: Int) = handlers.remove(id)

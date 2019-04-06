@@ -13,6 +13,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.random.Random
 
+/**
+ * Class for game location
+ */
 class LocalMap(val width: Int, val height: Int) {
 
     private val borders = Vec2(0, 0) to Vec2(width, height)
@@ -22,6 +25,7 @@ class LocalMap(val width: Int, val height: Int) {
     val actors = MapGrid(width, height)
     val navigationGraph = NavigationGraph(actors)
 
+    // current player on the map
     var player: Player? = null
 
     fun toJSON(): JSONObject {
@@ -31,14 +35,14 @@ class LocalMap(val width: Int, val height: Int) {
             val y = actor.pos.y
             val type = when {
                 actor == player -> "plyr"
-                actor.getViewAppearance() == WALL_APPEARANCE -> "wall"
+                actor.getViewAppearance() == WALL_APPEARANCE -> "wl"
                 else -> "none"
             }
             actorsArray.put(
                 JSONObject()
                     .put("x", x)
                     .put("y", y)
-                    .put("type", type)
+                    .put("t", type)
             )
         }
         return JSONObject()
@@ -52,7 +56,7 @@ class LocalMap(val width: Int, val height: Int) {
         actors.add(wall)
     }
 
-    fun addPlayer(x: Int, y: Int) {
+    private fun addPlayer(x: Int, y: Int) {
         val playerPosition = Vec2M(x, y)
         player = Player(this, playerPosition)
         actors.add(player!!)
@@ -132,8 +136,8 @@ class LocalMap(val width: Int, val height: Int) {
                 val actorObject = it as JSONObject
                 val x = actorObject.getInt("x")
                 val y = actorObject.getInt("y")
-                when (actorObject.getString("type")) {
-                    "wall" -> map.addWall(x, y)
+                when (actorObject.getString("t")) {
+                    "wl" -> map.addWall(x, y)
                     "plyr" -> map.addPlayer(x, y)
                 }
                 map.grid.set(x, y, WALL_THRESHOLD)
