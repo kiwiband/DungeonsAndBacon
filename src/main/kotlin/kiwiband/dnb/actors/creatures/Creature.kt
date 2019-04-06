@@ -5,7 +5,14 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
 
+/**
+ * @param map current contained map
+ */
 abstract class Creature(protected val map: LocalMap) : MapActor() {
+
+    /**
+     * Change position of creature by [direction] and update the map
+     */
     open fun move(direction: Vec2) {
         if (resolveCollision(map.getActors(pos + direction))) {
             val oldPos = Vec2(pos)
@@ -29,5 +36,10 @@ abstract class Creature(protected val map: LocalMap) : MapActor() {
             }
         }
         return result
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        map.actors.remove(pos, this)
     }
 }

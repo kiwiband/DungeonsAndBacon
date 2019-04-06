@@ -9,13 +9,9 @@ class Game(val map: LocalMap) {
     var tickTime = 0
         private set
 
-    val player: Player
+    private val player: Player = map.spawnPlayer()
 
     private var eventTickId: Int = 0
-
-    init {
-        player = map.spawnPlayer()
-    }
 
     private fun onTick() {
         tickTime++

@@ -5,6 +5,9 @@ import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
 import java.util.*
 
+/**
+ * Container for all actors on map
+ */
 @Suppress("unused")
 class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     private val size = width * height
@@ -13,20 +16,21 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     fun add(actor: MapActor) = add(actor.pos.y * width + actor.pos.x, actor)
 
     private fun add(index: Int, actor: MapActor) {
-        if (data[index] != null)
-            data[index]?.add(actor)
-        else
-            data[index] = mutableListOf(actor)
+        data[index]?.add(actor) ?: also { data[index] = mutableListOf(actor) }
         data[index]!!.sort()
     }
 
-    fun remove(x: Int, y: Int, actor: MapActor) = data[y * width + x]?.remove(actor)
+    fun remove(pos: Vec2, actor: MapActor) = data[pos.y * width + pos.x]?.remove(actor)
 
+    /**
+     * Move actor from cell with [pos] to their cells
+     * @return true when there is an actor in cell with [pos] which have different position
+     */
     fun updateOne(pos: Vec2) : Boolean {
         val actor = get(pos.x, pos.y).find { it.pos != pos }
         if (actor != null) {
             add(actor)
-            remove(pos.x, pos.y, actor)
+            remove(pos, actor)
             return true
         }
         return false
@@ -56,10 +60,6 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         forEachCellIndexed(Vec2() to Vec2(width, height), consumer)
     }
 
-    fun size(x: Int, y: Int) = size(y * width + x)
-
-    fun isEmpty(x: Int, y: Int) = isEmpty(y * width + x)
-
     private fun size(index: Int) = data[index]?.size ?: 0
 
     private fun isEmpty(index: Int) = data[index]?.isEmpty() != false
@@ -67,9 +67,9 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     override fun iterator(): Iterator<MapActor> = AllActorsIterator()
 
     inner class AllActorsIterator : Iterator<MapActor> {
-        var index = 0
-        var innerIndex = 0
-        var ready = false
+        private var index = 0
+        private var innerIndex = 0
+        private var ready = false
 
         override fun hasNext(): Boolean {
             return if (index < size && size(index) <= innerIndex) {
