@@ -12,7 +12,7 @@ class EventDispatcher<T : Event> {
     private val handlers: MutableMap<Int, (T) -> Unit> = TreeMap()
 
     /**
-     * Add handler to others and return handler's id
+     * @return added handler's id
      */
     fun addHandler(handler: (T) -> Unit): Int {
         handlers[id] = handler
@@ -21,6 +21,9 @@ class EventDispatcher<T : Event> {
 
     fun removeHandler(id: Int) = handlers.remove(id)
 
+    /**
+     * Send the [event] to all existing handlers
+     */
     fun run(event: T) {
         handlers.values.forEach { it(event) }
     }

@@ -6,12 +6,12 @@ import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
 
 /**
- * @param map current contained map
+ * @param map currently contained map
  */
 abstract class Creature(protected val map: LocalMap) : MapActor() {
 
     /**
-     * Change position of creature by [direction] and update the map
+     * Changes position of creature by [direction] and update the map
      */
     open fun move(direction: Vec2) {
         if (resolveCollision(map.getActors(pos + direction))) {
