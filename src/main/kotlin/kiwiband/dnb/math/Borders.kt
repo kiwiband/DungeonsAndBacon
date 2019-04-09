@@ -10,7 +10,7 @@ class Borders(val a: Vec2, val b: Vec2) {
                 && a.y <= v.y && v.y < b.y
     }
 
-    fun fitIn(other: Borders): Borders = a.mixMax(other.a) to b.mixMin(other.b)
+    fun fitIn(other: Borders): Borders = a.fitInIncluded(other) to b.fitInIncluded(other)
 
     fun any(predicate: (Vec2) -> Boolean): Boolean {
         val v = Vec2M()

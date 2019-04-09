@@ -24,9 +24,15 @@ open class Vec2(var x: Int, var y: Int) {
     }
 
     fun fitIn(borders: Borders) = Vec2(
+        MyMath.clamp(x, borders.a.x, borders.b.x - 1),
+        MyMath.clamp(y, borders.a.y, borders.b.y - 1)
+    )
+
+    fun fitInIncluded(borders: Borders) = Vec2(
         MyMath.clamp(x, borders.a.x, borders.b.x),
         MyMath.clamp(y, borders.a.y, borders.b.y)
     )
+
 
     infix fun to(that: Vec2): Borders = Borders(this, that)
 
