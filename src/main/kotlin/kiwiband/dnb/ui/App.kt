@@ -29,6 +29,9 @@ class App {
     private val screen = TerminalScreen(terminal)
     private lateinit var game: Game
 
+    private val mapSaver = MapSaver()
+    private val mapFIle = "./maps/saved_map.dnb"
+
     private val renderer = Renderer(screen)
 
     private fun drawScene() {
@@ -74,7 +77,7 @@ class App {
     }
 
     private fun createGame() {
-        if (!MapSaver.checkSaved()) {
+        if (!mapSaver.checkSaved(mapFIle)) {
             game = Game(LocalMap.generateMap(88, 32))
             return
         }
@@ -88,7 +91,7 @@ class App {
         val eventKeyPressId = EventKeyPress.dispatcher.addHandler {
             synchronized(mapLock) {
                 map = when (it.key.character) {
-                    'y', 'н' -> MapSaver.loadFromFile()
+                    'y', 'н' -> mapSaver.loadFromFile(mapFIle)
                     'n', 'т' -> LocalMap.generateMap(88, 32)
                     else -> return@addHandler
                 }
@@ -109,7 +112,7 @@ class App {
     }
 
     private fun saveMap() {
-        MapSaver.saveToFile(game.map)
+        mapSaver.saveToFile(game.map, mapFIle)
     }
 
     fun start() {
