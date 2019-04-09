@@ -23,8 +23,8 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     fun remove(pos: Vec2, actor: MapActor) = data[pos.y * width + pos.x]?.remove(actor)
 
     /**
-     * Move actor from cell with [pos] to their cells
-     * @return true when there is an actor in cell with [pos] which have different position
+     * Moves an actor at [pos] to its actual cell
+     * @return true if at least one actor is updated
      */
     fun updateOne(pos: Vec2) : Boolean {
         val actor = get(pos.x, pos.y).find { it.pos != pos }

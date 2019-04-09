@@ -9,7 +9,7 @@ enum class ViewOrder {
 }
 
 /**
- * Base class for any actors on a map
+ * Base class for all actors on a map
  */
 abstract class MapActor : Comparable<MapActor> {
     private var eventTickId: Int = -1
@@ -35,8 +35,8 @@ abstract class MapActor : Comparable<MapActor> {
     open fun onOverlap(actor: MapActor) {}
 
     /**
-     * Initialize actor and its primary events
-     * Must be called when actor spawns on local map
+     * Initializes the actor and its primary events
+     * Must be called when an actor spawns on a local map
      */
     open fun onBeginGame() {
         eventTickId = EventTick.dispatcher.addHandler { onTick() }
@@ -62,7 +62,7 @@ abstract class MapActor : Comparable<MapActor> {
     protected open fun onTick() {}
 
     /**
-     * Perform actions on destroying creature
+     * Perform actions on destroying a creature
      */
     protected open fun onDestroy() {
         EventTick.dispatcher.removeHandler(eventTickId)
