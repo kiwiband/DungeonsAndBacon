@@ -1,5 +1,8 @@
 package kiwiband.dnb.math
 
+/**
+ * Collision behaviours.
+ */
 enum class Collision {
     Block, Ignore, Overlap;
 

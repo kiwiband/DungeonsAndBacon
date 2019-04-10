@@ -14,7 +14,7 @@ import org.json.JSONObject
 import kotlin.random.Random
 
 /**
- * Class for game location
+ * Class for game map.
  */
 class LocalMap(val width: Int, val height: Int) {
 
@@ -25,6 +25,10 @@ class LocalMap(val width: Int, val height: Int) {
     val actors = MapGrid(width, height)
     val navigationGraph = NavigationGraph(actors)
 
+    /**
+     * Serializes the map to JSON.
+     * @return JSON object
+     */
     fun toJSON(): JSONObject {
         val actorsArray = JSONArray()
         actors.forEach { actor ->
@@ -59,6 +63,10 @@ class LocalMap(val width: Int, val height: Int) {
         return player
     }
 
+    /**
+     * Spawns a player on a free cell on a map.
+     * @return created player
+     */
     fun spawnPlayer(): Player {
         while (true) {
             val x = Random.nextInt(grid.width)
@@ -69,6 +77,10 @@ class LocalMap(val width: Int, val height: Int) {
         }
     }
 
+    /**
+     * Gets all actors from a map.
+     * @return all map actors.
+     */
 
     fun spawnMob(n: Int) {
         for (i in 0 until n) {
@@ -96,6 +108,12 @@ class LocalMap(val width: Int, val height: Int) {
 
         private val endMap = StaticActor('~', Collision.Block)
 
+        /**
+         * Generates a map.
+         * @param width map width
+         * @param height map height
+         * @return created map
+         */
         fun generateMap(width: Int, height: Int): LocalMap {
             val map = LocalMap(width, height)
             val dungeonGenerator = DungeonGenerator()
@@ -118,6 +136,11 @@ class LocalMap(val width: Int, val height: Int) {
             return map
         }
 
+        /**
+         * Deserializes a map from JSON.
+         * @param mapData JSON map
+         * @return deserialized map.
+         */
         fun loadMap(mapData: JSONObject): LocalMap {
             val map = LocalMap(mapData.getInt("width"), mapData.getInt("height"))
 
