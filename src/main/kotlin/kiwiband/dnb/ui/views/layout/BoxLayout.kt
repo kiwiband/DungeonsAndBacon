@@ -4,6 +4,9 @@ import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 
+/**
+ * Container layout containing only one view in a box.
+ */
 class BoxLayout(content: View): Layout(content.width + 2, content.height + 2) {
 
     init {

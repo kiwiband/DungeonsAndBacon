@@ -7,6 +7,9 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 
+/**
+ * View containing the map.
+ */
 class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, height) {
 
     private val center = Vec2(width / 2, height / 2)

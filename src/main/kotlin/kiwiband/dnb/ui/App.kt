@@ -20,6 +20,10 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 
+/**
+ * Application class.
+ * Run start() method to start
+ */
 class App {
     private val rootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
 
@@ -115,6 +119,9 @@ class App {
         mapSaver.saveToFile(game.map, mapFIle)
     }
 
+    /**
+     * Console application entry point.
+     */
     fun start() {
         screen.startScreen()
         screen.cursorPosition = null

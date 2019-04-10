@@ -3,6 +3,9 @@ package kiwiband.dnb.ui.views
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 
+/**
+ * View containing the player stats.
+ */
 class PlayerView(width: Int, height: Int) : View(width, height) {
     override fun draw(renderer: Renderer) {
         renderer.writeText("L(O_o)-(===>", Vec2(7, 1))
