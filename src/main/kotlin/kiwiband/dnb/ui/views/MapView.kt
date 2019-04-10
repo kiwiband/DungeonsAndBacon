@@ -1,5 +1,8 @@
 package kiwiband.dnb.ui.views
 
+import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.actors.creatures.Creature
+import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
@@ -10,6 +13,7 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
     private val borders = Vec2(0, 0) to Vec2(width, height)
     private val mapBorders = Vec2(0, 0) to Vec2(map.width, map.height)
     private val offsets = center to (mapBorders.b - center)
+    private val player: MapActor? = findPlayer()
 
     override fun draw(renderer: Renderer) {
         val offset = center - findPlayerPosition().fitIn(offsets)
@@ -22,6 +26,8 @@ class MapView(private val map: LocalMap, width: Int, height: Int) : View(width, 
     }
 
     private fun findPlayerPosition(): Vec2 {
-        return map.player?.pos ?: center
+        return player?.pos ?: center
     }
+
+    private fun findPlayer(): MapActor? = map.actors.find { it is Player }
 }

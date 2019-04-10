@@ -25,16 +25,13 @@ class LocalMap(val width: Int, val height: Int) {
     val actors = MapGrid(width, height)
     val navigationGraph = NavigationGraph(actors)
 
-    // current player on the map
-    var player: Player? = null
-
     fun toJSON(): JSONObject {
         val actorsArray = JSONArray()
         actors.forEach { actor ->
             val x = actor.pos.x
             val y = actor.pos.y
             val type = when {
-                actor == player -> "plyr"
+                actor is Player -> "plyr"
                 actor.getViewAppearance() == WALL_APPEARANCE -> "wl"
                 else -> "none"
             }
@@ -56,20 +53,18 @@ class LocalMap(val width: Int, val height: Int) {
         actors.add(wall)
     }
 
-    private fun addPlayer(x: Int, y: Int) {
-        val playerPosition = Vec2M(x, y)
-        player = Player(this, playerPosition)
-        actors.add(player!!)
+    private fun addPlayer(x: Int, y: Int): Player {
+        val player = Player(this, Vec2M(x, y))
+        actors.add(player)
+        return player
     }
 
     fun spawnPlayer(): Player {
-        if (player != null) return player!!
         while (true) {
             val x = Random.nextInt(grid.width)
             val y = Random.nextInt(grid.height)
             if (grid.get(x, y) == FLOOR_THRESHOLD) {
-                addPlayer(x, y)
-                return player!!
+                return addPlayer(x, y)
             }
         }
     }
@@ -87,11 +82,6 @@ class LocalMap(val width: Int, val height: Int) {
                 }
             }
         }
-    }
-
-
-    fun removePlayer() {
-        player = null
     }
 
     fun getActors(pos: Vec2): Collection<MapActor> = if (pos in borders) actors[pos] else listOf(endMap)
