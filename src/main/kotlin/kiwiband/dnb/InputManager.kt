@@ -13,6 +13,10 @@ class InputManager(private val terminal: Terminal) {
 
     private var eventKeyId: Int = 0
 
+    /**
+     * Starts handling key presses.
+     * Stops upon receiving EOF or stop() method call.
+     */
     fun startKeyHandle() {
         isHandle = true
         handleThread = Thread {
@@ -31,10 +35,16 @@ class InputManager(private val terminal: Terminal) {
         }
     }
 
+    /**
+     * Stops handling key presses.
+     */
     fun stop() {
         isHandle = false
     }
 
+    /**
+     * Blocks execution until key press handling is stopped.
+     */
     fun join() {
         handleThread.join()
     }

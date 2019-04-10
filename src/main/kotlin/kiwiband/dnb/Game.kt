@@ -4,7 +4,13 @@ import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
 
+/**
+ * Game model class.
+ */
 class Game(val map: LocalMap) {
+    /**
+     * Game time.
+     */
     var tickTime = 0
         private set
 
@@ -16,12 +22,18 @@ class Game(val map: LocalMap) {
         tickTime++
     }
 
+    /**
+     * Starts the game, resetting game timer and initializing player.
+     */
     fun startGame() {
         eventTickId = EventTick.dispatcher.addHandler { onTick() }
         player.onBeginGame()
         map.actors.forEach { if (it !is Player) it.onBeginGame() }
     }
 
+    /**
+     * Ends the game, removing the game's tick handler from tick dispatcher.
+     */
     fun endGame() {
         EventTick.dispatcher.removeHandler(eventTickId)
     }

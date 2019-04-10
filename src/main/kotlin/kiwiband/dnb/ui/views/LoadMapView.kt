@@ -3,6 +3,9 @@ package kiwiband.dnb.ui.views
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 
+/**
+ * Dialog view for loading the map.
+ */
 class LoadMapView(width: Int, height: Int) : View(width, height) {
 
     override fun draw(renderer: Renderer) {
