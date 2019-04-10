@@ -4,6 +4,11 @@ import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
 
+/**
+ * Player character.
+ * @param map map where the character is on
+ * @param position position on a map
+ */
 class Player(map: LocalMap, position: Vec2M) : Creature(map) {
     private val viewAppearance = '@'
 

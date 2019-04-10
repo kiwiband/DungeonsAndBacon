@@ -1,5 +1,10 @@
 package kiwiband.dnb.math
 
+/**
+ * Mutable two-dimensional point.
+ * @param x X coordinate
+ * @param y Y coordinate
+ */
 open class Vec2(var x: Int, var y: Int) {
     constructor(v: Vec2) : this(v.x, v.y)
     constructor() : this(0, 0)
@@ -23,11 +28,21 @@ open class Vec2(var x: Int, var y: Int) {
         return super.equals(other)
     }
 
+    /**
+     * Fits a point in borders.
+     * @borders borders to fit in
+     * @return fitted point
+     */
     fun fitIn(borders: Borders) = Vec2(
         MyMath.clamp(x, borders.a.x, borders.b.x - 1),
         MyMath.clamp(y, borders.a.y, borders.b.y - 1)
     )
 
+    /**
+     * Fits a point in borders with included bottom right corner.
+     * @borders borders to fit in
+     * @return fitted point
+     */
     fun fitInIncluded(borders: Borders) = Vec2(
         MyMath.clamp(x, borders.a.x, borders.b.x),
         MyMath.clamp(y, borders.a.y, borders.b.y)

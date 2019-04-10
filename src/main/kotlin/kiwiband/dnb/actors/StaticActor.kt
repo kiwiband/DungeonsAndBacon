@@ -3,6 +3,12 @@ package kiwiband.dnb.actors
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
 
+/**
+ * Non-moving actor.
+ * @param viewAppearance character used to draw the character
+ * @param collision collision status
+ * @param pos position
+ */
 class StaticActor(
     private val viewAppearance: Char,
     override val collision: Collision,

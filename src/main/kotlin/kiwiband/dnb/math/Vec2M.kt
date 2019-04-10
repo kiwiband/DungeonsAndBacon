@@ -1,5 +1,8 @@
 package kiwiband.dnb.math
 
+/**
+ * Immutable two-dimensional point.
+ */
 @Suppress("UNUSED")
 class Vec2M(x: Int, y: Int) : Vec2(x, y) {
     constructor() : this(0, 0)
