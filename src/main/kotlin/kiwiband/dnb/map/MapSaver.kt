@@ -9,11 +9,6 @@ import java.lang.RuntimeException
  */
 class MapSaver {
 
-    /**
-     * Saves a map to file.
-     * @param map map to save
-     * @param filename name of save file
-     */
     fun saveToFile(map: LocalMap, filename: String) {
         val file = File(filename)
         file.parentFile.mkdirs()
@@ -21,9 +16,6 @@ class MapSaver {
     }
 
     /**
-     * Loads a map from a file.
-     * @param filename file to load from
-     * @return loaded map
      * @throws RuntimeException if a map was not found.
      */
     fun loadFromFile(filename: String): LocalMap {

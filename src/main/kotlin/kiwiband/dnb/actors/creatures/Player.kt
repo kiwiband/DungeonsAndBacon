@@ -2,15 +2,15 @@ package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.map.LocalMap
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
-import org.json.JSONObject
 
 /**
  * Player character.
  * @param map map where the character is on
- * @param position position on a map
+ * @param position initial position on the [map]
  */
-class Player(map: LocalMap, position: Vec2M) : Creature(map) {
+class Player(map: LocalMap, position: Vec2) : Creature(map) {
     private val viewAppearance = '@'
 
     init {
