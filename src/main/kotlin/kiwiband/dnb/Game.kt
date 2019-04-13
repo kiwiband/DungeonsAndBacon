@@ -14,7 +14,7 @@ class Game(val map: LocalMap) {
     var tickTime = 0
         private set
 
-    private val player: Player = map.spawnPlayer()
+    private val player: Player = map.actors.find { it is Player } as Player? ?: map.spawnPlayer()
 
     private var eventTickId: Int = 0
 
