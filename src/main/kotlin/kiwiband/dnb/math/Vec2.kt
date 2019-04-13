@@ -1,10 +1,11 @@
 package kiwiband.dnb.math
 
 /**
- * Mutable two-dimensional point.
+ * Immutable two-dimensional point.
  * @param x X coordinate
  * @param y Y coordinate
  */
+@Suppress("unused")
 open class Vec2(var x: Int, var y: Int) {
     constructor(v: Vec2) : this(v.x, v.y)
     constructor() : this(0, 0)
@@ -27,6 +28,13 @@ open class Vec2(var x: Int, var y: Int) {
         }
         return super.equals(other)
     }
+
+
+    fun distance(v: Vec2M): Int = distance(v.x, v.y)
+
+    fun distance(vx: Int, vy: Int): Int = Math.abs(vx - x) + Math.abs(vy - y)
+
+    fun normalize(): Vec2M = Vec2M(Integer.signum(x), Integer.signum(y))
 
     /**
      * Fits a point in borders.
@@ -51,5 +59,5 @@ open class Vec2(var x: Int, var y: Int) {
 
     infix fun to(that: Vec2): Borders = Borders(this, that)
 
-    override fun hashCode(): Int = 31 * x + y
+    override fun hashCode(): Int = 0xffff * x + y
 }

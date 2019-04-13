@@ -1,5 +1,6 @@
-package kiwiband.dnb.actors
+package kiwiband.dnb.actors.statics
 
+import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
 
@@ -9,7 +10,7 @@ import kiwiband.dnb.math.Vec2M
  * @param collision collision status
  * @param pos position
  */
-class StaticActor(
+abstract class StaticActor(
     private val viewAppearance: Char,
     override val collision: Collision,
     override val pos: Vec2M = Vec2M()

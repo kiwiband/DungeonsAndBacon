@@ -3,6 +3,7 @@ package kiwiband.dnb.actors
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
+import org.json.JSONObject
 
 enum class ViewOrder {
     Background, Default, Foreground;
@@ -74,6 +75,10 @@ abstract class MapActor : Comparable<MapActor> {
             else -> firstOrder
         }
     }
+
+    open fun toJSON(): JSONObject = JSONObject().put("x", pos.x).put("y", pos.y).put("t", getType())
+
+    abstract fun getType(): String
 
     abstract fun getViewAppearance(): Char
 }

@@ -3,6 +3,7 @@ package kiwiband.dnb.actors.creatures
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
+import org.json.JSONObject
 
 /**
  * Player character.
@@ -38,5 +39,11 @@ class Player(map: LocalMap, position: Vec2M) : Creature(map) {
     override fun onDestroy() {
         super.onDestroy()
         EventMove.dispatcher.removeHandler(eventMoveId)
+    }
+
+    override fun getType() = TYPE_ID
+
+    companion object {
+        const val TYPE_ID = "plyr"
     }
 }

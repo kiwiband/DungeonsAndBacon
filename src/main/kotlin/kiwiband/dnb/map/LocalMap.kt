@@ -5,9 +5,11 @@ import com.github.czyzby.noise4j.map.generator.room.RoomType
 import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
 
 import kiwiband.dnb.actors.MapActor
-import kiwiband.dnb.actors.StaticActor
+import kiwiband.dnb.actors.creatures.MapActorFactory
+import kiwiband.dnb.actors.statics.StaticActor
 import kiwiband.dnb.actors.creatures.Mob
 import kiwiband.dnb.actors.creatures.Player
+import kiwiband.dnb.actors.statics.WallActor
 import kiwiband.dnb.math.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -31,51 +33,25 @@ class LocalMap(val width: Int, val height: Int) {
      */
     fun toJSON(): JSONObject {
         val actorsArray = JSONArray()
-        actors.forEach { actor ->
-            val x = actor.pos.x
-            val y = actor.pos.y
-            val type = when {
-                actor is Player -> "plyr"
-                actor.getViewAppearance() == WALL_APPEARANCE -> "wl"
-                else -> "none"
-            }
-            actorsArray.put(
-                JSONObject()
-                    .put("x", x)
-                    .put("y", y)
-                    .put("t", type)
-            )
-        }
+        actors.forEach { actor -> actorsArray.put(actor.toJSON()) }
         return JSONObject()
             .put("width", width)
             .put("height", height)
             .put("actors", actorsArray)
     }
 
-    private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor(WALL_APPEARANCE, Collision.Block, Vec2M(x, y))
-        actors.add(wall)
-    }
-
-    private fun addPlayer(x: Int, y: Int): Player {
-        val player = Player(this, Vec2M(x, y))
-        actors.add(player)
-        return player
-    }
-
-    /**
-     * Spawns a player on a free cell on a map.
-     * @return created player
-     */
     fun spawnPlayer(): Player {
         while (true) {
             val x = Random.nextInt(grid.width)
             val y = Random.nextInt(grid.height)
             if (grid.get(x, y) == FLOOR_THRESHOLD) {
-                return addPlayer(x, y)
+                val player = Player(this, Vec2M(x, y))
+                actors.add(player)
+                return player
             }
         }
     }
+
 
     fun spawnMob(n: Int) {
         for (i in 0 until n) {
@@ -99,9 +75,9 @@ class LocalMap(val width: Int, val height: Int) {
         private const val FLOOR_THRESHOLD = 1F
         private const val CORRIDOR_THRESHOLD = 0F
 
-        private const val WALL_APPEARANCE = '▒'
-
-        private val endMap = StaticActor('~', Collision.Block)
+        private val endMap = object : StaticActor('~', Collision.Block, Vec2M()) {
+            override fun getType() = "none"
+        }
 
         /**
          * Generates a map.
@@ -124,10 +100,11 @@ class LocalMap(val width: Int, val height: Int) {
             dungeonGenerator.generate(map.grid)
             map.grid.forEach { _, x, y, value ->
                 if (value == WALL_THRESHOLD) {
-                    map.addWall(x, y)
+                    map.actors.add(WallActor(Vec2M(x, y)))
                 }
                 false
             }
+            map.spawnMob(10)
             return map
         }
 
@@ -140,15 +117,13 @@ class LocalMap(val width: Int, val height: Int) {
             val map = LocalMap(mapData.getInt("width"), mapData.getInt("height"))
 
             map.grid.fill(FLOOR_THRESHOLD)
-            mapData.getJSONArray("actors").forEach {
-                val actorObject = it as JSONObject
-                val x = actorObject.getInt("x")
-                val y = actorObject.getInt("y")
-                when (actorObject.getString("t")) {
-                    "wl" -> map.addWall(x, y)
-                    "plyr" -> map.addPlayer(x, y)
+            mapData.getJSONArray("actors").forEach { json ->
+                MapActorFactory.createMapActor(map, json as JSONObject)?.also {
+                    map.actors.add(it)
+                    if (it is WallActor) {
+                        map.grid.set(it.pos.x, it.pos.y, WALL_THRESHOLD)
+                    }
                 }
-                map.grid.set(x, y, WALL_THRESHOLD)
             }
             return map
         }
