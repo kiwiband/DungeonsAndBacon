@@ -1,7 +1,7 @@
 package kiwiband.dnb.math
 
 /**
- * Mutable two-dimensional point.
+ * Immutable two-dimensional point.
  * @param x X coordinate
  * @param y Y coordinate
  */

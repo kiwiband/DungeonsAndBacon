@@ -4,9 +4,6 @@ import com.googlecode.lanterna.input.KeyStroke
 import kiwiband.dnb.math.Vec2
 import java.util.*
 
-/**
- * Base class for the events.
- */
 sealed class Event
 
 /**
@@ -28,7 +25,7 @@ class EventDispatcher<T : Event> {
     fun removeHandler(id: Int) = handlers.remove(id)
 
     /**
-     * Send the [event] to all existing handlers
+     * Sends the [event] to all existing handlers
      */
     fun run(event: T) {
         handlers.values.forEach { it(event) }

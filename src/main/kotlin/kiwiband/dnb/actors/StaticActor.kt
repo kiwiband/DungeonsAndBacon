@@ -1,6 +1,7 @@
 package kiwiband.dnb.actors
 
 import kiwiband.dnb.math.Collision
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
 
 /**
@@ -12,8 +13,11 @@ import kiwiband.dnb.math.Vec2M
 class StaticActor(
     private val viewAppearance: Char,
     override val collision: Collision,
-    override val pos: Vec2M = Vec2M()
+    pos: Vec2 = Vec2()
 ) : MapActor() {
+    init {
+        super.pos.set(pos)
+    }
     override fun getViewAppearance(): Char = viewAppearance
     override fun collide(actor: MapActor): Collision = collision
     override fun onBeginGame() {}

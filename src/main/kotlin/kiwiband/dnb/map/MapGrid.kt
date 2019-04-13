@@ -13,10 +13,6 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     private val size = width * height
     private val data = Array<MutableList<MapActor>?>(size) { null }
 
-    /**
-     * Adds an actor to a map.
-     * @param actor actor to add
-     */
     fun add(actor: MapActor) = add(actor.pos.y * width + actor.pos.x, actor)
 
     private fun add(index: Int, actor: MapActor) {

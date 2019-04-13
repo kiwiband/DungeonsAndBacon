@@ -23,17 +23,11 @@ class Game(val map: LocalMap) {
         tickTime++
     }
 
-    /**
-     * Starts the game, resetting game timer and initializing player.
-     */
     fun startGame() {
         eventTickId = EventTick.dispatcher.addHandler { onTick() }
         player.onBeginGame()
     }
 
-    /**
-     * Ends the game, removing the game's tick handler from tick dispatcher.
-     */
     fun endGame() {
         EventTick.dispatcher.removeHandler(eventTickId)
     }

@@ -51,12 +51,12 @@ class LocalMap(val width: Int, val height: Int) {
     }
 
     private fun addWall(x: Int, y: Int) {
-        val wall = StaticActor(WALL_APPEARANCE, Collision.Block, Vec2M(x, y))
+        val wall = StaticActor(WALL_APPEARANCE, Collision.Block, Vec2(x, y))
         actors.add(wall)
     }
 
     private fun addPlayer(x: Int, y: Int): Player {
-        val player = Player(this, Vec2M(x, y))
+        val player = Player(this, Vec2(x, y))
         actors.add(player)
         return player
     }
