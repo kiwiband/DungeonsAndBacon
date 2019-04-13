@@ -3,7 +3,7 @@ package kiwiband.dnb.map
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.Creature
 import kiwiband.dnb.math.Collision
-import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.math.Vec2
 import java.util.*
 
 class NavigationGraph(val map: MapGrid) {
@@ -12,25 +12,25 @@ class NavigationGraph(val map: MapGrid) {
     private val deque = ArrayDeque<MapCell>()
 
 
-    fun pathToNearest(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): MutableList<Vec2M>? {
+    fun pathToNearest(start: Vec2, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): MutableList<Vec2>? {
         val nearestCell = bfs(start, maxDistance) { cell -> f(cell.getActors()) }
         return nearestCell?.let { findPath(it.getId()) }
     }
 
-    fun nextToNearest(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): Vec2M? {
+    fun nextToNearest(start: Vec2, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): Vec2? {
         return bfs(start, maxDistance + 1) { cell ->
             cell.neighbours().any { neighbour ->
                 val dist = dists[neighbour.getId()]
                 0 < dist && dist < dists[cell.getId()] && f(neighbour.getActors())
             }
-        }?.toVec2M()
+        }?.toVec2()
     }
 
-    fun nearest(start: Vec2M, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): Vec2M? {
-        return bfs(start, maxDistance) { cell -> f(cell.getActors()) }?.toVec2M()
+    fun nearest(start: Vec2, maxDistance: Int, f: (Collection<MapActor>) -> Boolean): Vec2? {
+        return bfs(start, maxDistance) { cell -> f(cell.getActors()) }?.toVec2()
     }
 
-    private fun bfs(start: Vec2M, maxDistance: Int, f: (MapCell) -> Boolean): MapCell? {
+    private fun bfs(start: Vec2, maxDistance: Int, f: (MapCell) -> Boolean): MapCell? {
         marks.fill(-1)
         dists.fill(-1)
         deque.clear()
@@ -60,19 +60,19 @@ class NavigationGraph(val map: MapGrid) {
         return null
     }
 
-    private fun findPath(startId: Int): MutableList<Vec2M> {
-        val path = mutableListOf<Vec2M>()
+    private fun findPath(startId: Int): MutableList<Vec2> {
+        val path = mutableListOf<Vec2>()
         var id = startId
         while (marks[id] != id) {
-            path.add(toVec2M(id))
+            path.add(toVec2(id))
             id = marks[id]
         }
         return path
     }
 
-    private fun toVec2M(id: Int): Vec2M {
+    private fun toVec2(id: Int): Vec2 {
         val y: Int = id / map.width
-        return Vec2M(id - y * map.width, y)
+        return Vec2(id - y * map.width, y)
     }
 
     inner class MapCell(val x: Int, val y: Int) {
@@ -89,8 +89,8 @@ class NavigationGraph(val map: MapGrid) {
             return MapCellList
         }
 
-        fun toVec2M(): Vec2M {
-            return Vec2M(x, y)
+        fun toVec2(): Vec2 {
+            return Vec2(x, y)
         }
 
         private fun checkCell(x: Int, y: Int): Boolean =

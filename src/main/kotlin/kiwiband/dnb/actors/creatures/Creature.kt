@@ -8,7 +8,7 @@ import kiwiband.dnb.math.Vec2
 /**
  * @param map currently contained map
  */
-abstract class Creature(protected val map: LocalMap) : MapActor() {
+abstract class Creature(val map: LocalMap) : MapActor() {
 
     /**
      * Changes position of creature by [direction] and update the map
