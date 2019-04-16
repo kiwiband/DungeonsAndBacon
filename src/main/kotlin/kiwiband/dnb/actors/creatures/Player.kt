@@ -1,5 +1,6 @@
 package kiwiband.dnb.actors.creatures
 
+import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
@@ -39,6 +40,13 @@ class Player(map: LocalMap, position: Vec2) : Creature(map) {
     override fun onDestroy() {
         super.onDestroy()
         EventMove.dispatcher.removeHandler(eventMoveId)
+    }
+
+    override fun blockInteract(actor: MapActor) {
+        super.blockInteract(actor)
+        if (actor is Mob) {
+            actor.confuse()
+        }
     }
 
     override fun getType() = TYPE_ID

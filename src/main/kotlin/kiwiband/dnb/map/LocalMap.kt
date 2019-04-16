@@ -5,7 +5,7 @@ import com.github.czyzby.noise4j.map.generator.room.RoomType
 import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
 
 import kiwiband.dnb.actors.MapActor
-import kiwiband.dnb.actors.creatures.MapActorFactory
+import kiwiband.dnb.actors.MapActorFactory
 import kiwiband.dnb.actors.statics.StaticActor
 import kiwiband.dnb.actors.creatures.Mob
 import kiwiband.dnb.actors.creatures.Player

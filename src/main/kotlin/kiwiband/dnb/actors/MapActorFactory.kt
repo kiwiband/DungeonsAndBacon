@@ -1,6 +1,7 @@
-package kiwiband.dnb.actors.creatures
+package kiwiband.dnb.actors
 
-import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.actors.creatures.Mob
+import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.actors.statics.WallActor
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
@@ -12,8 +13,15 @@ object MapActorFactory {
         val y = actorJSON.getInt("y")
         return when (actorJSON.getString("t")) {
             WallActor.TYPE_ID -> WallActor(Vec2M(x, y))
-            Player.TYPE_ID -> Player(map, Vec2M(x, y))
-            Mob.TYPE_ID -> Mob(map, Vec2M(x, y), actorJSON.getInt("ai"))
+            Player.TYPE_ID -> Player(
+                map,
+                Vec2M(x, y)
+            )
+            Mob.TYPE_ID -> Mob(
+                map,
+                Vec2M(x, y),
+                actorJSON.getInt("ai")
+            )
             else -> null
         }
     }
