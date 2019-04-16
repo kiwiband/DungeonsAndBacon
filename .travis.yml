@@ -13,4 +13,4 @@ before_script:
   - export PATH=$GRADLE_HOME/bin:$PATH
 
 script: 
-  - ./gradlew check
+  - bash ./gradlew check
