@@ -79,5 +79,7 @@ class MapGridTest {
 }
 
 class MockActor : MapActor() {
+    override fun getType(): String = throw UnsupportedOperationException()
+
     override fun getViewAppearance(): Char = throw UnsupportedOperationException()
 }
