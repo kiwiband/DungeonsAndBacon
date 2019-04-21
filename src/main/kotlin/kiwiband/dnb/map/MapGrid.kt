@@ -1,6 +1,7 @@
 package kiwiband.dnb.map
 
 import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.actors.creatures.Creature
 import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
 import java.util.*
@@ -45,10 +46,14 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         return false
     }
 
+    fun filterDead(pos: Vec2) {
+        get(pos).removeAll { it is Creature && it.checkDead() }
+    }
+
     operator fun get(pos: Vec2) = get(pos.x, pos.y)
 
-    operator fun get(x: Int, y: Int): List<MapActor> {
-        return data[y * width + x] ?: emptyList()
+    operator fun get(x: Int, y: Int): MutableList<MapActor> {
+        return data[y * width + x] ?: mutableListOf()
     }
 
     fun forEachCell(consumer: (List<MapActor>) -> Unit) {

@@ -1,13 +1,14 @@
 package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.actors.creatures.ai.*
+import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
 import org.json.JSONObject
 import kotlin.random.Random
 
 
-class Mob(map: LocalMap, position: Vec2M, private val aiID: Int) : Creature(map) {
+class Mob(map: LocalMap, position: Vec2M, private val aiID: Int) : Creature(map, CreatureStatus.generateRandom()) {
     constructor(map: LocalMap, position: Vec2M) : this(map, position, Random.nextInt(3))
 
     private var intelligence: AIBase

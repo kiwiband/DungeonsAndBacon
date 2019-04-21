@@ -6,6 +6,7 @@ import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.Game
 import kiwiband.dnb.InputManager
+import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.events.EventTick
@@ -34,7 +35,7 @@ class App {
     private lateinit var game: Game
 
     private val mapSaver = MapSaver()
-    private val mapFIle = "./maps/saved_map.dnb"
+    private val mapFile = "./maps/saved_map.dnb"
 
     private val renderer = Renderer(screen)
 
@@ -68,7 +69,7 @@ class App {
 
     private fun constructScene() {
         val mapView = MapView(game.map, 48, 22)
-        val playerView = PlayerView(28, 10)
+        val playerView = PlayerView(game.player, 28, 10)
         val infoView = InfoView(28, 10)
 
         rootView.addChild(BoxLayout(mapView))
@@ -81,7 +82,7 @@ class App {
     }
 
     private fun createGame() {
-        if (!mapSaver.checkSaved(mapFIle)) {
+        if (!mapSaver.checkSaved(mapFile)) {
             game = Game(LocalMap.generateMap(88, 32))
             return
         }
@@ -95,7 +96,7 @@ class App {
         val eventKeyPressId = EventKeyPress.dispatcher.addHandler {
             synchronized(mapLock) {
                 map = when (it.key.character) {
-                    'y', 'н' -> mapSaver.loadFromFile(mapFIle)
+                    'y', 'н' -> mapSaver.loadFromFile(mapFile)
                     'n', 'т' -> LocalMap.generateMap(88, 32)
                     else -> return@addHandler
                 }
@@ -116,7 +117,7 @@ class App {
     }
 
     private fun saveMap() {
-        mapSaver.saveToFile(game.map, mapFIle)
+        mapSaver.saveToFile(game.map, mapFile)
     }
 
     /**
@@ -139,12 +140,16 @@ class App {
                 inputManager.stop()
             }
         }
+        val eventGameOverId = EventGameOver.dispatcher.addHandler {
+            inputManager.stop()
+        }
 
         game.startGame()
         inputManager.join()
         game.endGame()
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
         EventKeyPress.dispatcher.removeHandler(eventEscapeId)
+        EventGameOver.dispatcher.removeHandler(eventGameOverId)
 
         saveMap()
 

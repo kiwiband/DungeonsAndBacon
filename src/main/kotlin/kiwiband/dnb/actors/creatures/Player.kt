@@ -1,17 +1,20 @@
 package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.actors.creatures.status.CreatureStatus
+import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
+import kotlin.random.Random
 
 /**
  * Player character.
  * @param map map where the character is on
  * @param position initial position on the [map]
  */
-class Player(map: LocalMap, position: Vec2) : Creature(map) {
+class Player(map: LocalMap, position: Vec2) : Creature(map, CreatureStatus.DEFAULT) {
     private val viewAppearance = '@'
 
     init {
@@ -39,14 +42,20 @@ class Player(map: LocalMap, position: Vec2) : Creature(map) {
 
     override fun onDestroy() {
         super.onDestroy()
+        EventGameOver.dispatcher.run(EventGameOver())
         EventMove.dispatcher.removeHandler(eventMoveId)
     }
 
-    override fun blockInteract(actor: MapActor) {
-        super.blockInteract(actor)
-        if (actor is Mob) {
+    override fun blockInteract(actor: MapActor): Boolean {
+        if (super.blockInteract(actor)) {
+            status.addExperience()
+            status.addHealth(1)
+            return true
+        }
+        if (actor is Mob && Random.nextFloat() < 0.2) {
             actor.confuse()
         }
+        return false
     }
 
     override fun getType() = TYPE_ID

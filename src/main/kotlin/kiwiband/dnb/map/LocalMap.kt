@@ -104,7 +104,7 @@ class LocalMap(val width: Int, val height: Int) {
                 }
                 false
             }
-            map.spawnMob(10)
+            map.spawnMob(50)
             return map
         }
 

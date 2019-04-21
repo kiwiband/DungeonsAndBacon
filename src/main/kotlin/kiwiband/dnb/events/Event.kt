@@ -14,6 +14,8 @@ class EventDispatcher<T : Event> {
 
     private val handlers: MutableMap<Int, (T) -> Unit> = TreeMap()
 
+    private val removed: MutableList<Int> = mutableListOf()
+
     /**
      * @return added handler's id
      */
@@ -22,12 +24,15 @@ class EventDispatcher<T : Event> {
         return id++
     }
 
-    fun removeHandler(id: Int) = handlers.remove(id)
+    fun removeHandler(id: Int) = removed.add(id)
+
 
     /**
      * Sends the [event] to all existing handlers
      */
     fun run(event: T) {
+        removed.forEach { handlers.remove(it) }
+        removed.clear()
         handlers.values.forEach { it(event) }
     }
 }
@@ -48,6 +53,12 @@ class EventMove(val direction: Vec2) : Event() {
 class EventTick : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventTick>()
+    }
+}
+
+class EventGameOver : Event() {
+    companion object {
+        val dispatcher = EventDispatcher<EventGameOver>()
     }
 }
 
