@@ -1,6 +1,7 @@
 package kiwiband.dnb.actors.creatures.status
 
 import kiwiband.dnb.math.MyMath
+import kotlin.math.min
 import kotlin.random.Random
 
 data class CreatureStatus(
@@ -37,7 +38,7 @@ data class CreatureStatus(
     }
 
     fun damage(dmg: Int) {
-        addHealth(defence - dmg)
+        addHealth(min(0, defence - dmg))
     }
 
     companion object {
