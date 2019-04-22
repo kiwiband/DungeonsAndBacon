@@ -55,11 +55,12 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         return status.health == 0
     }
 
+    fun isDead(): Boolean = status.health == 0
+
     fun checkDead(): Boolean {
-        val isDead = status.health == 0
-        if (isDead) {
+        if (isDead()) {
             onDestroy()
         }
-        return isDead
+        return isDead()
     }
 }

@@ -120,6 +120,10 @@ class App {
         mapSaver.saveToFile(game.map, mapFile)
     }
 
+    private fun deleteMap() {
+        mapSaver.deleteFile(mapFile)
+    }
+
     /**
      * Console application entry point.
      */
@@ -151,7 +155,11 @@ class App {
         EventKeyPress.dispatcher.removeHandler(eventEscapeId)
         EventGameOver.dispatcher.removeHandler(eventGameOverId)
 
-        saveMap()
+        if (game.player.isDead()) {
+            deleteMap()
+        } else {
+            saveMap()
+        }
 
         screen.stopScreen()
     }

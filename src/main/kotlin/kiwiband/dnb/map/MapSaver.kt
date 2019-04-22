@@ -3,11 +3,19 @@ package kiwiband.dnb.map
 import org.json.JSONObject
 import java.io.File
 import java.lang.RuntimeException
+import java.nio.file.Files
+import java.nio.file.Paths
 
 /**
  * Class for saving map.
  */
 class MapSaver {
+
+    fun deleteFile(filename: String) {
+        if (checkSaved(filename)) {
+            Files.delete(Paths.get(filename))
+        }
+    }
 
     fun saveToFile(map: LocalMap, filename: String) {
         val file = File(filename)
