@@ -1,19 +1,26 @@
 package kiwiband.dnb.actors.creatures.status
 
 import kiwiband.dnb.math.MyMath
+import org.json.JSONObject
 import kotlin.math.min
 import kotlin.random.Random
 
-data class CreatureStatus(
-    var maxHealth: Int,
-    var attack: Int,
-    var defence: Int
+class CreatureStatus(
+    var level: Int,
+    var health: Int = -1,
+    var experience: Int = 0
 ) {
 
-    var level: Int = 1
-    var experience: Int = 0
-    var health = maxHealth
-    var maxExperience = 2
+    var maxHealth = 13 + 2 * level
+    var attack = 2 + level
+    var defence = (level + 1) / 2
+    var maxExperience = 1.shl(level)
+
+    init {
+        if (health < 0) {
+            health = maxHealth
+        }
+    }
 
     fun addExperience() {
         experience++
@@ -28,7 +35,7 @@ data class CreatureStatus(
         maxExperience *= 2
         maxHealth += 2
         attack++
-        if (level % 2 == 0) {
+        if (level % 2 == 1) {
             defence++
         }
     }
@@ -43,13 +50,8 @@ data class CreatureStatus(
 
     companion object {
 
-        val DEFAULT = CreatureStatus(15, 3, 1)
+        fun generateDefault() = CreatureStatus(1)
 
-        fun generateRandom(): CreatureStatus {
-            val health = Random.nextInt(5, 16)
-            val attack = Random.nextInt(8)
-            val defence = Random.nextInt(2)
-            return CreatureStatus(health, attack, defence)
-        }
+        fun generateRandom() = CreatureStatus(Random.nextInt(3), Random.nextInt(2, 11))
     }
 }

@@ -5,6 +5,7 @@ import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
+import org.json.JSONObject
 
 /**
  * @param map currently contained map
@@ -63,4 +64,10 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         }
         return isDead()
     }
+
+    override fun toJSON() = super.toJSON()
+        .put("lvl", status.level)
+        .put("hp", status.health)
+        .put("exp", status.experience)
+
 }

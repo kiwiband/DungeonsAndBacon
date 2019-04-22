@@ -14,7 +14,7 @@ import kotlin.random.Random
  * @param map map where the character is on
  * @param position initial position on the [map]
  */
-class Player(map: LocalMap, position: Vec2) : Creature(map, CreatureStatus.DEFAULT) {
+class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status) {
     private val viewAppearance = '@'
 
     init {

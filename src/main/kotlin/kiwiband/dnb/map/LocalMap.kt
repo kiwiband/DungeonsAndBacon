@@ -9,6 +9,7 @@ import kiwiband.dnb.actors.MapActorFactory
 import kiwiband.dnb.actors.statics.StaticActor
 import kiwiband.dnb.actors.creatures.Mob
 import kiwiband.dnb.actors.creatures.Player
+import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.WallActor
 import kiwiband.dnb.math.*
 import org.json.JSONArray
@@ -45,7 +46,7 @@ class LocalMap(val width: Int, val height: Int) {
             val x = Random.nextInt(grid.width)
             val y = Random.nextInt(grid.height)
             if (grid.get(x, y) == FLOOR_THRESHOLD) {
-                val player = Player(this, Vec2M(x, y))
+                val player = Player(this, Vec2M(x, y), CreatureStatus.generateDefault())
                 actors.add(player)
                 return player
             }
@@ -59,7 +60,7 @@ class LocalMap(val width: Int, val height: Int) {
                 val x = Random.nextInt(grid.width)
                 val y = Random.nextInt(grid.height)
                 if (grid.get(x, y) == FLOOR_THRESHOLD) {
-                    val mob = Mob(this, Vec2M(x, y))
+                    val mob = Mob(this, Vec2M(x, y), CreatureStatus.generateRandom())
                     actors.add(mob)
                     break
                 }

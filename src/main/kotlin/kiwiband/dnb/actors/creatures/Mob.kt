@@ -8,8 +8,15 @@ import org.json.JSONObject
 import kotlin.random.Random
 
 
-class Mob(map: LocalMap, position: Vec2M, private val aiID: Int) : Creature(map, CreatureStatus.generateRandom()) {
-    constructor(map: LocalMap, position: Vec2M) : this(map, position, Random.nextInt(3))
+class Mob(
+    map: LocalMap,
+    position: Vec2M,
+    private val aiID: Int,
+    status: CreatureStatus
+) : Creature(map, status) {
+
+    constructor(map: LocalMap, position: Vec2M, status: CreatureStatus) :
+            this(map, position, Random.nextInt(3), status)
 
     private var intelligence: AIBase
     override fun getViewAppearance() = appearance
