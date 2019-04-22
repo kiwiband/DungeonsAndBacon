@@ -13,10 +13,7 @@ import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2
-import kiwiband.dnb.ui.views.InfoView
-import kiwiband.dnb.ui.views.LoadMapView
-import kiwiband.dnb.ui.views.MapView
-import kiwiband.dnb.ui.views.PlayerView
+import kiwiband.dnb.ui.views.*
 import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
@@ -157,6 +154,10 @@ class App {
 
         if (game.player.isDead()) {
             deleteMap()
+            rootView.clear()
+            rootView.addChild(BoxLayout(GameOverView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
+            drawScene()
+            Thread.sleep(2000)
         } else {
             saveMap()
         }
