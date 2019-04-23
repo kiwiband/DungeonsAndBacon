@@ -12,9 +12,13 @@ class CreatureStatus(
 ) {
 
     var maxHealth = 13 + 2 * level
-    var attack = 2 + level
-    var defence = (level + 1) / 2
     var maxExperience = 1.shl(level)
+
+    var weaponAttack = 0
+    var armorDefence = 0
+
+    fun getTotalAttack() = 2 + level + weaponAttack
+    fun getTotalDefence() = (level + 1) / 2 + armorDefence
 
     init {
         if (health < 0) {
@@ -34,10 +38,6 @@ class CreatureStatus(
         level++
         maxExperience *= 2
         maxHealth += 2
-        attack++
-        if (level % 2 == 1) {
-            defence++
-        }
     }
 
     fun addHealth(hp: Int) {
@@ -45,7 +45,7 @@ class CreatureStatus(
     }
 
     fun damage(dmg: Int) {
-        addHealth(min(0, defence - dmg))
+        addHealth(min(0, getTotalDefence() - dmg))
     }
 
     companion object {

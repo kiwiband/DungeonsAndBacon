@@ -46,7 +46,7 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
     override fun blockInteract(actor: MapActor): Boolean {
         super.blockInteract(actor)
         if (actor is Creature) {
-            return actor.hit(status.attack)
+            return actor.hit(status.getTotalAttack())
         }
         return false
     }

@@ -16,7 +16,7 @@ class PlayerView(private val player: Player, width: Int, height: Int) : View(wid
         renderer.writeText("HP ${player.status.health}/${player.status.maxHealth}", Vec2(3, 5))
         renderer.writeText("LVL ${player.status.level}", Vec2(3, 6))
         renderer.writeText("EXP ${player.status.experience}/${player.status.maxExperience}", Vec2(3, 7))
-        renderer.writeText("ATK ${player.status.attack}", Vec2(3, 8))
-        renderer.writeText("DEF ${player.status.defence}", Vec2(3, 9))
+        renderer.writeText("ATK ${player.status.getTotalAttack()}", Vec2(3, 8))
+        renderer.writeText("DEF ${player.status.getTotalDefence()}", Vec2(3, 9))
     }
 }
