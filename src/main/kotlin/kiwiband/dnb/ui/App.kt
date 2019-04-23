@@ -121,6 +121,14 @@ class App {
         mapSaver.deleteFile(mapFile)
     }
 
+    private fun openInventory() {
+        EventKeyPress.dispatcher.pushLayer()
+        EventKeyPress.dispatcher.addHandler {
+            if (it.key.character == 'i')
+                EventKeyPress.dispatcher.popLayer()
+        }
+    }
+
     /**
      * Console application entry point.
      */
@@ -145,12 +153,22 @@ class App {
             inputManager.stop()
         }
 
+        val eventInventoryOpenId = EventKeyPress.dispatcher.addHandler {
+            if (it.key.keyType == KeyType.Character) {
+                when (it.key.character) {
+                    'i', 'ш' -> openInventory()
+                }
+            }
+        }
+
         game.startGame()
         inputManager.join()
         game.endGame()
+
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
         EventKeyPress.dispatcher.removeHandler(eventEscapeId)
         EventGameOver.dispatcher.removeHandler(eventGameOverId)
+        EventGameOver.dispatcher.removeHandler(eventInventoryOpenId)
 
         if (game.player.isDead()) {
             deleteMap()

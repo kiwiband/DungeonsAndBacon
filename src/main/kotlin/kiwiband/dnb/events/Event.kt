@@ -9,12 +9,12 @@ sealed class Event
 /**
  * Class dispatching the events.
  */
-class EventDispatcher<T : Event> {
-    private var id = 0
+open class EventDispatcher<T : Event> {
+    protected var id = 0
 
-    private val handlers: MutableMap<Int, (T) -> Unit> = TreeMap()
+    protected var handlers: MutableMap<Int, (T) -> Unit> = TreeMap()
 
-    private val removed: MutableList<Int> = mutableListOf()
+    protected var removed: MutableList<Int> = mutableListOf()
 
     /**
      * @return added handler's id
@@ -68,6 +68,6 @@ class EventGameOver : Event() {
  */
 class EventKeyPress(val key: KeyStroke) : Event() {
     companion object {
-        val dispatcher = EventDispatcher<EventKeyPress>()
+        val dispatcher = EventKeyPressDispatcher()
     }
 }
