@@ -20,7 +20,8 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         if (resolveCollision(map.getActors(pos + direction))) {
             pos.add(direction)
             map.actors.updateOne(oldPos)
-            map.actors.filterDead(pos)
+        } else {
+            map.actors.filterDead(pos + direction)
         }
     }
 
@@ -33,7 +34,8 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         for (actor in actors) {
             when (collide(actor)) {
                 Collision.Block -> {
-                    result = result && blockInteract(actor)
+                    blockInteract(actor)
+                    result = false
                 }
                 Collision.Overlap -> overlapInteract(actor)
                 else -> {
@@ -43,17 +45,19 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         return result
     }
 
-    override fun blockInteract(actor: MapActor): Boolean {
+    override fun blockInteract(actor: MapActor) {
         super.blockInteract(actor)
         if (actor is Creature) {
-            return actor.hit(status.getTotalAttack())
+            actor.hit(this, status.getTotalAttack())
         }
-        return false
     }
 
-    fun hit(dmg: Int): Boolean {
+    fun hit(creature: Creature, dmg: Int) {
         status.damage(dmg)
-        return status.health == 0
+        if (isDead()) {
+            creature.status.addExperience(status.level)
+            creature.status.addHealth(1)
+        }
     }
 
     fun isDead(): Boolean = status.health == 0

@@ -46,16 +46,11 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
         EventMove.dispatcher.removeHandler(eventMoveId)
     }
 
-    override fun blockInteract(actor: MapActor): Boolean {
-        if (super.blockInteract(actor)) {
-            status.addExperience()
-            status.addHealth(1)
-            return true
-        }
+    override fun blockInteract(actor: MapActor) {
+        super.blockInteract(actor)
         if (actor is Mob && Random.nextFloat() < 0.2) {
             actor.confuse()
         }
-        return false
     }
 
     override fun getType() = TYPE_ID

@@ -1,18 +1,26 @@
 package kiwiband.dnb.actors.creatures.status
 
 import kiwiband.dnb.math.MyMath
-import org.json.JSONObject
 import kotlin.math.min
 import kotlin.random.Random
 
 class CreatureStatus(
-    var level: Int,
-    var health: Int = -1,
-    var experience: Int = 0
+    level: Int,
+    health: Int = -1,
+    experience: Int = 0
 ) {
 
     var maxHealth = 13 + 2 * level
-    var maxExperience = 1.shl(level)
+        private set
+    var maxExperience = 1 shl level
+        private set
+
+    var level = level
+        private set
+    var health: Int = if (health < 0) maxHealth else health
+        private set
+    var experience: Int = experience
+        private set
 
     var weaponAttack = 0
     var armorDefence = 0
@@ -20,16 +28,10 @@ class CreatureStatus(
     fun getTotalAttack() = 2 + level + weaponAttack
     fun getTotalDefence() = (level + 1) / 2 + armorDefence
 
-    init {
-        if (health < 0) {
-            health = maxHealth
-        }
-    }
-
-    fun addExperience() {
-        experience++
-        if (experience >= maxExperience) {
-            experience = 0
+    fun addExperience(value: Int) {
+        experience += value
+        while (experience >= maxExperience) {
+            experience -= maxExperience
             addLevel()
         }
     }

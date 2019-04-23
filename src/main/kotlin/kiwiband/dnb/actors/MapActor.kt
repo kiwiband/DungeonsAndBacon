@@ -46,9 +46,8 @@ abstract class MapActor : Comparable<MapActor> {
     /**
      * Performs actions when blocked by the [actor]
      */
-    protected open fun blockInteract(actor: MapActor): Boolean {
+    protected open fun blockInteract(actor: MapActor) {
         actor.onBlock(this)
-        return false
     }
 
     /**
