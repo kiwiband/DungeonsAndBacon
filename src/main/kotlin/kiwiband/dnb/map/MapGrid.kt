@@ -1,7 +1,6 @@
 package kiwiband.dnb.map
 
 import kiwiband.dnb.actors.MapActor
-import kiwiband.dnb.actors.creatures.Creature
 import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
 import java.util.*
@@ -9,7 +8,6 @@ import java.util.*
 /**
  * Container for all actors on map
  */
-@Suppress("unused")
 class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
     private val size = width * height
     private val data = Array<MutableList<MapActor>?>(size) { null }
@@ -30,7 +28,13 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
      * @param pos position to remove
      * @param actor actor to remove
      */
-    fun remove(pos: Vec2, actor: MapActor) = data[pos.y * width + pos.x]?.remove(actor)
+    private fun remove(pos: Vec2, actor: MapActor) = data[pos.y * width + pos.x]?.remove(actor)
+
+    /**
+     * Removes a map actor from a map.
+     * @param actor actor to remove
+     */
+    fun remove(actor: MapActor) = remove(actor.pos, actor)
 
     /**
      * Moves an actor at [pos] to its actual cell
@@ -46,16 +50,13 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         return false
     }
 
-    fun filterDead(pos: Vec2) {
-        get(pos).removeAll { it is Creature && it.checkDead() }
-    }
-
     operator fun get(pos: Vec2) = get(pos.x, pos.y)
 
     operator fun get(x: Int, y: Int): MutableList<MapActor> {
         return data[y * width + x] ?: mutableListOf()
     }
 
+    @Suppress("unused")
     fun forEachCell(consumer: (List<MapActor>) -> Unit) {
         for (i in 0 until size) {
             consumer(data[i] ?: emptyList())
@@ -66,10 +67,12 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         borders.forEach { consumer(get(it)) }
     }
 
+    @Suppress("unused")
     fun forEachCellIndexed(borders: Borders, consumer: (Int, Int, List<MapActor>) -> Unit) {
         borders.forEach { consumer(it.x, it.y, get(it)) }
     }
 
+    @Suppress("unused")
     fun forEachCellIndexed(consumer: (Int, Int, List<MapActor>) -> Unit) {
         forEachCellIndexed(Vec2() to Vec2(width, height), consumer)
     }

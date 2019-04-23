@@ -5,7 +5,6 @@ import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
-import org.json.JSONObject
 
 /**
  * @param map currently contained map
@@ -20,8 +19,6 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         if (resolveCollision(map.getActors(pos + direction))) {
             pos.add(direction)
             map.actors.updateOne(oldPos)
-        } else {
-            map.actors.filterDead(pos + direction)
         }
     }
 
@@ -57,21 +54,15 @@ abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActo
         if (isDead()) {
             creature.status.addExperience(status.level)
             creature.status.addHealth(1)
+            destroy()
         }
     }
 
     fun isDead(): Boolean = status.health == 0
 
-    fun checkDead(): Boolean {
-        if (isDead()) {
-            onDestroy()
-        }
-        return isDead()
-    }
-
     override fun toJSON() = super.toJSON()
         .put("lvl", status.level)
         .put("hp", status.health)
-        .put("exp", status.experience)
+        .put("exp", status.experience)!!
 
 }
