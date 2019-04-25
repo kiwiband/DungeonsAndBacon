@@ -13,6 +13,11 @@ object ASCIIART {
         | \_/
     """.trimMargin()
 
+    val BRASSIERE = """
+        |
+        |└⚪-⚪┘
+        |
+    """.trimMargin()
 
     val SWORD = """
         |  |

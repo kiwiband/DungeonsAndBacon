@@ -12,7 +12,7 @@ object ItemFactory {
     )
 
     val armorLibrary : List<ArmorItem> = listOf(
-        ArmorItem(1, "Leather Brassiere", "Funny leather armor. Looks nice."),
+        ArmorItem(1, "Leather Brassiere", "Funny leather armor. Looks nice.", ASCIIART.BRASSIERE),
         ArmorItem(-1, "Thorn Armor", "The worst armor ever. Who's create this?"),
         ArmorItem(3, "Bacon Plate", "Excellent armor of neat bacon slices.")
     )
