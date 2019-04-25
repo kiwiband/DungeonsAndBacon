@@ -5,6 +5,8 @@ import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.DropBag
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventMove
+import kiwiband.dnb.inventory.EquipmentItem
+import kiwiband.dnb.inventory.EquipmentSet
 import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.map.LocalMap
@@ -20,7 +22,8 @@ import kotlin.random.Random
 class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status) {
     private val viewAppearance = '@'
 
-    val inventory = Inventory(20);
+    val inventory = Inventory(20)
+    val equipment = EquipmentSet(this)
 
     init {
         super.pos.set(position)
@@ -35,11 +38,8 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
     override fun onBeginGame() {
         super.onBeginGame()
         eventMoveId = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
-        inventory.add(ItemFactory.getRandomItem())
-        inventory.add(ItemFactory.getRandomItem())
-        inventory.add(ItemFactory.getRandomItem())
-        inventory.add(ItemFactory.getRandomItem())
-        inventory.add(ItemFactory.getRandomItem())
+        inventory.add(ItemFactory.getRandomArmor())
+        inventory.add(ItemFactory.getRandomWeapon())
         inventory.add(ItemFactory.getRandomItem())
     }
 
@@ -74,6 +74,13 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
     }
 
     override fun getType() = TYPE_ID
+
+    fun useItem(itemNum: Int) {
+        val item = inventory.get(itemNum)
+        if (item is EquipmentItem) {
+            equipment.equip(item)
+        }
+    }
 
     companion object {
         const val TYPE_ID = "plyr"

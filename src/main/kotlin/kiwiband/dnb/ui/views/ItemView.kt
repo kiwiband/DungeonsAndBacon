@@ -2,14 +2,16 @@ package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.inventory.*
 import kiwiband.dnb.math.Vec2
-import kiwiband.dnb.ui.ASCIIART
 import kiwiband.dnb.ui.Renderer
 
 class ItemView(width: Int, height: Int, private val item: Item) : View(width, height) {
     override fun draw(renderer: Renderer) {
+        if (item is EquipmentItem && item.equipped) {
+            renderer.writeCharacter('*', Vec2(3, 3))
+        }
         renderer.withOffset {
             renderer.offset.add(Vec2(5, 2))
-            drawItemIcon(renderer)
+            renderer.writeMultiLineText(item.getIcon())
         }
         renderer.writeText(item.getName(), Vec2(13, 2))
         renderer.writeText(itemStatString(), Vec2(13, 3))
@@ -22,7 +24,4 @@ class ItemView(width: Int, height: Int, private val item: Item) : View(width, he
         else -> ""
     }
 
-    private fun drawItemIcon(renderer: Renderer) {
-        renderer.writeMultiLineText(item.getIcon())
-    }
 }

@@ -16,9 +16,9 @@ object ItemFactory {
         ArmorItem(3, "Bacon Plate", "Excellent armor of neat bacon slices.")
     )
 
-    fun getRandomWeapon(): WeaponItem = weaponLibrary[Random.nextInt(weaponLibrary.size)]
+    fun getRandomWeapon(): WeaponItem = weaponLibrary[Random.nextInt(weaponLibrary.size)].clone()
 
-    fun getRandomArmor(): ArmorItem = armorLibrary[Random.nextInt(armorLibrary.size)]
+    fun getRandomArmor(): ArmorItem = armorLibrary[Random.nextInt(armorLibrary.size)].clone()
 
     fun getRandomItem(): Item {
         return when (Random.nextInt(2)) {

@@ -18,10 +18,12 @@ class ArmorItem(
     override fun getDescription() = description
 
     override fun onEquip(creature: Creature) {
+        super.onEquip(creature)
         creature.status.armorDefence += defence
     }
 
     override fun onUnequip(creature: Creature) {
+        super.onUnequip(creature)
         creature.status.armorDefence -= defence
     }
 

@@ -11,7 +11,9 @@ class Inventory(val capacity: Int) {
         return false
     }
 
-    fun get(): List<Item> = items
+    fun items(): List<Item> = items
+
+    fun get(i: Int): Item = items[i]
 
     fun remove(item: Item) = items.remove(item)
 

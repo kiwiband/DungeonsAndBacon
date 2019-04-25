@@ -124,7 +124,7 @@ class App {
 
     private fun openInventory() {
         EventKeyPress.dispatcher.pushLayer()
-        val inventoryRootView = InventoryView(game.player, SCREEN_WIDTH, SCREEN_HEIGHT)
+        val inventoryRootView = InventoryView(game.player.inventory, SCREEN_WIDTH, SCREEN_HEIGHT)
         val previousRootView = rootView
         rootView = inventoryRootView
         drawScene()
@@ -142,6 +142,13 @@ class App {
                 's', 'ы' -> {
                     inventoryRootView.selectNext()
                     drawScene()
+                }
+                'e', 'у' -> {
+                    val itemNum = inventoryRootView.getCurrentSelected()
+                    if (itemNum >= 0) {
+                        game.player.useItem(itemNum)
+                        drawScene()
+                    }
                 }
             }
         }

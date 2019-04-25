@@ -18,10 +18,12 @@ class WeaponItem(
     override fun getSlot() = EquipmentSlot.Weapon
 
     override fun onEquip(creature: Creature) {
+        super.onEquip(creature)
         creature.status.weaponAttack += damage;
     }
 
     override fun onUnequip(creature: Creature) {
+        super.onUnequip(creature)
         creature.status.weaponAttack -= damage
     }
 
