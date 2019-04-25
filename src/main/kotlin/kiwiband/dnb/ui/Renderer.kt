@@ -61,6 +61,12 @@ class Renderer(private val screen: Screen) {
         }
     }
 
+    fun writeMultiLineText(text: String, offset: Vec2) {
+        text.lines().forEachIndexed { i, line ->
+            writeText(line, offset + Vec2(0, i))
+        }
+    }
+
     /**
      * Draws a box from a top left corner.
      * @param width box width

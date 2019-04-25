@@ -2,6 +2,7 @@ package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.inventory.*
 import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.ui.ASCIIART
 import kiwiband.dnb.ui.Renderer
 
 class ItemView(width: Int, height: Int, private val item: EquipmentItem) : View(width, height) {
@@ -23,16 +24,8 @@ class ItemView(width: Int, height: Int, private val item: EquipmentItem) : View(
 
     private fun drawItemIcon(renderer: Renderer) {
         when (item.getSlot()) {
-            EquipmentSlot.Armor -> {
-                renderer.writeText(".-.-.", Vec2(0, 0))
-                renderer.writeText("| . |", Vec2(0, 1))
-                renderer.writeText("\\___/", Vec2(0, 2))
-            }
-            EquipmentSlot.Weapon -> {
-                renderer.writeText("  | ", Vec2(0, 0))
-                renderer.writeText("  ║ ", Vec2(0, 1))
-                renderer.writeText(" `T`", Vec2(0, 2))
-            }
+            EquipmentSlot.Armor -> renderer.writeMultiLineText(ASCIIART.SHIELD, Vec2(0, 0))
+            EquipmentSlot.Weapon -> renderer.writeMultiLineText(ASCIIART.SWORD, Vec2(1, 0))
         }
     }
 }

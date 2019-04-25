@@ -1,13 +1,20 @@
 package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.inventory.EquipmentItem
+import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 import kotlin.math.min
 
 class InventoryView(width: Int, height: Int) : View(width, height) {
-    private val items = mutableListOf<EquipmentItem>()
+    private val items = mutableListOf<EquipmentItem>(
+        ItemFactory.getRandomItem() as EquipmentItem,
+        ItemFactory.getRandomItem() as EquipmentItem,
+        ItemFactory.getRandomItem() as EquipmentItem,
+        ItemFactory.getRandomItem() as EquipmentItem,
+        ItemFactory.getRandomItem() as EquipmentItem
+    )
 
     private val itemHolder = VerticalLayout(width, height - 5)
 
