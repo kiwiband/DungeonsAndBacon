@@ -138,6 +138,13 @@ class Renderer(private val screen: Screen) {
         writeCharacter(CORNER_BOTTOM_RIGHT, position)
     }
 
+    fun clearScreen() {
+        screen.clear()
+    }
+
+    fun refreshScreen() {
+        screen.refresh()
+    }
 
     companion object {
 

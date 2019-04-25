@@ -13,6 +13,7 @@ import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.ui.activities.LoadMapActivity
 import kiwiband.dnb.ui.views.*
 import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
@@ -80,38 +81,26 @@ class App {
     }
 
     private fun createGame() {
-        if (!mapSaver.checkSaved(mapFile)) {
-            game = Game(LocalMap.generateMap(88, 32))
-            return
-        }
-
-        gameRootView.addChild(BoxLayout(LoadMapView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
-
-        drawScene()
+        val mapLock = Object()
 
         var map: LocalMap? = null
-        val mapLock = Object()
-        val eventKeyPressId = EventKeyPress.dispatcher.addHandler {
+
+        val view = BoxLayout(LoadMapView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2))
+        val loadMapActivity = LoadMapActivity(view, renderer) {
             synchronized(mapLock) {
-                map = when (it.key.character) {
-                    'y', 'н' -> mapSaver.loadFromFile(mapFile)
-                    'n', 'т' -> LocalMap.generateMap(88, 32)
-                    else -> return@addHandler
-                }
+                map = it
                 mapLock.notify()
             }
         }
+
+        loadMapActivity.start()
 
         synchronized(mapLock) {
             while (map == null) {
                 mapLock.wait()
             }
         }
-
         game = Game(map!!)
-
-        EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
-        gameRootView.clear()
     }
 
     private fun saveMap() {
