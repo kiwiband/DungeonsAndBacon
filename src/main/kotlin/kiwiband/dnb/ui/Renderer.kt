@@ -61,9 +61,9 @@ class Renderer(private val screen: Screen) {
         }
     }
 
-    fun writeMultiLineText(text: String, offset: Vec2) {
+    fun writeMultiLineText(text: String) {
         text.lines().forEachIndexed { i, line ->
-            writeText(line, offset + Vec2(0, i))
+            writeText(line, Vec2(0, i))
         }
     }
 

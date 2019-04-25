@@ -6,6 +6,7 @@ import kiwiband.dnb.actors.statics.DropBag
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.inventory.Inventory
+import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
@@ -34,6 +35,12 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
     override fun onBeginGame() {
         super.onBeginGame()
         eventMoveId = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
+        inventory.add(ItemFactory.getRandomItem())
+        inventory.add(ItemFactory.getRandomItem())
+        inventory.add(ItemFactory.getRandomItem())
+        inventory.add(ItemFactory.getRandomItem())
+        inventory.add(ItemFactory.getRandomItem())
+        inventory.add(ItemFactory.getRandomItem())
     }
 
     override fun onTick() {

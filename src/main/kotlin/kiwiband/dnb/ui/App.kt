@@ -124,7 +124,7 @@ class App {
 
     private fun openInventory() {
         EventKeyPress.dispatcher.pushLayer()
-        val inventoryRootView = InventoryView(SCREEN_WIDTH, SCREEN_HEIGHT)
+        val inventoryRootView = InventoryView(game.player, SCREEN_WIDTH, SCREEN_HEIGHT)
         val previousRootView = rootView
         rootView = inventoryRootView
         drawScene()
@@ -161,7 +161,7 @@ class App {
 
         drawScene()
 
-        EventKeyPress.dispatcher.addPermanentHandler {
+        val eventEscapePressId = EventKeyPress.dispatcher.addHandler {
             if (it.key.keyType == KeyType.Escape) {
                 inputManager.stop()
             }
@@ -181,6 +181,7 @@ class App {
         inputManager.join()
         game.endGame()
 
+        EventKeyPress.dispatcher.removeHandler(eventEscapePressId)
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
         EventGameOver.dispatcher.removeHandler(eventGameOverId)
         EventGameOver.dispatcher.removeHandler(eventInventoryOpenId)

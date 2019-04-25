@@ -1,13 +1,17 @@
 package kiwiband.dnb.inventory
 
 import kiwiband.dnb.actors.creatures.Creature
+import kiwiband.dnb.ui.ASCIIART
 
 class ArmorItem(
     val defence: Int,
     private val name: String,
-    private val description: String
+    private val description: String,
+    private val icon:String = ASCIIART.SHIELD
 ) : EquipmentItem() {
     override fun getName() = name
+
+    override fun getIcon() = icon
 
     override fun getSlot() = EquipmentSlot.Armor
 

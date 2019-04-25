@@ -11,8 +11,6 @@ class InputManager(private val terminal: Terminal) {
     private lateinit var handleThread: Thread
     private var isHandle = false
 
-    private var eventKeyId: Int = 0
-
     /**
      * Starts handling key presses.
      * Stops upon receiving EOF or stop() method call.
@@ -24,11 +22,10 @@ class InputManager(private val terminal: Terminal) {
                 val key = terminal.readInput()
                 EventKeyPress.dispatcher.run(EventKeyPress(key))
             }
-            EventKeyPress.dispatcher.removeHandler(eventKeyId)
         }
         handleThread.start()
 
-        eventKeyId = EventKeyPress.dispatcher.addHandler {
+        EventKeyPress.dispatcher.addPermanentHandler {
             if (it.key.keyType == KeyType.EOF) {
                 stop()
             }

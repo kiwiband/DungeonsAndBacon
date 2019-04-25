@@ -1,6 +1,6 @@
 package kiwiband.dnb.inventory
 
-class Inventory(val size: Int) {
+class Inventory(val capacity: Int) {
     private val items = mutableListOf<Item>()
 
     fun add(item: Item): Boolean {
@@ -15,7 +15,8 @@ class Inventory(val size: Int) {
 
     fun remove(item: Item) = items.remove(item)
 
-    fun isFull() = !hasSpace()
-
-    fun hasSpace() = items.size < size
+    fun getSize(): Int = items.size
+    fun isFull(): Boolean = !hasSpace()
+    fun hasSpace(): Boolean = items.size < capacity
+    fun isEmpty(): Boolean = items.size == 0
 }

@@ -5,7 +5,7 @@ import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.ASCIIART
 import kiwiband.dnb.ui.Renderer
 
-class ItemView(width: Int, height: Int, private val item: EquipmentItem) : View(width, height) {
+class ItemView(width: Int, height: Int, private val item: Item) : View(width, height) {
     override fun draw(renderer: Renderer) {
         renderer.withOffset {
             renderer.offset.add(Vec2(5, 2))
@@ -23,9 +23,6 @@ class ItemView(width: Int, height: Int, private val item: EquipmentItem) : View(
     }
 
     private fun drawItemIcon(renderer: Renderer) {
-        when (item.getSlot()) {
-            EquipmentSlot.Armor -> renderer.writeMultiLineText(ASCIIART.SHIELD, Vec2(0, 0))
-            EquipmentSlot.Weapon -> renderer.writeMultiLineText(ASCIIART.SWORD, Vec2(1, 0))
-        }
+        renderer.writeMultiLineText(item.getIcon())
     }
 }

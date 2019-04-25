@@ -5,9 +5,9 @@ object ASCIIART {
                        "| . |\n" +
                       "\\___/"
 
-    const val SWORD = " |\n" +
-                      " ║\n" +
-                      "`T`"
+    const val SWORD = "  |\n" +
+                      "  ║\n" +
+                      " `T`"
 
     const val PLAYER = "L(O_o)-(===>"
 }
