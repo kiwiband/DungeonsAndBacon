@@ -82,3 +82,9 @@ class EventDestroyActor(val actor: MapActor): Event() {
         val dispatcher = EventDispatcher<EventDestroyActor>()
     }
 }
+
+class EventSpawnActor(val actor: MapActor): Event() {
+    companion object {
+        val dispatcher = EventDispatcher<EventSpawnActor>()
+    }
+}

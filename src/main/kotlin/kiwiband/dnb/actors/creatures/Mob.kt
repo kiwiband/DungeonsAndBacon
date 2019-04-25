@@ -2,6 +2,9 @@ package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.actors.creatures.ai.*
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
+import kiwiband.dnb.actors.statics.DropBag
+import kiwiband.dnb.events.EventSpawnActor
+import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2M
 import org.json.JSONObject
@@ -39,6 +42,13 @@ class Mob(
 
     fun confuse() {
         intelligence = ConfusedAIDecorator(intelligence).removeFinishedDecorators()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (Random.nextInt(0, 10) == 0) {
+            EventSpawnActor.dispatcher.run(EventSpawnActor(DropBag(pos, ItemFactory.getRandomItem())))
+        }
     }
 
     override fun getType() = TYPE_ID

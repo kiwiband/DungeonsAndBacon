@@ -3,6 +3,7 @@ package kiwiband.dnb.actors.creatures
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.DropBag
+import kiwiband.dnb.events.EventDestroyActor
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.inventory.EquipmentItem
@@ -39,8 +40,6 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
         super.onBeginGame()
         eventMoveId = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
         inventory.add(ItemFactory.getRandomArmor())
-        inventory.add(ItemFactory.getRandomWeapon())
-        inventory.add(ItemFactory.getRandomItem())
     }
 
     override fun onTick() {
@@ -69,6 +68,9 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
         if (actor is DropBag) {
             while (actor.hasItems() && inventory.hasSpace()) {
                 inventory.add(actor.getItem())
+            }
+            if (!actor.hasItems()) {
+                EventDestroyActor.dispatcher.run(EventDestroyActor(actor))
             }
         }
     }
