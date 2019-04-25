@@ -2,8 +2,10 @@ package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
+import kiwiband.dnb.actors.statics.DropBag
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventMove
+import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
@@ -16,6 +18,8 @@ import kotlin.random.Random
  */
 class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status) {
     private val viewAppearance = '@'
+
+    val inventory = Inventory(20);
 
     init {
         super.pos.set(position)
@@ -50,6 +54,15 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
         super.blockInteract(actor)
         if (actor is Mob && Random.nextFloat() < 0.2) {
             actor.confuse()
+        }
+    }
+
+    override fun overlapInteract(actor: MapActor) {
+        super.overlapInteract(actor)
+        if (actor is DropBag) {
+            while (actor.hasItems() && inventory.hasSpace()) {
+                inventory.add(actor.getItem())
+            }
         }
     }
 
