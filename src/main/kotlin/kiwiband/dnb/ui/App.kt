@@ -23,7 +23,8 @@ import kiwiband.dnb.ui.views.layout.VerticalLayout
  * Run start() method to start
  */
 class App {
-    private val rootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
+    private val gameRootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
+    private var rootView: View = gameRootView
 
     private val terminal = DefaultTerminalFactory().createTerminal()
 
@@ -69,13 +70,13 @@ class App {
         val playerView = PlayerView(game.player, 28, 10)
         val infoView = InfoView(28, 10)
 
-        rootView.addChild(BoxLayout(mapView))
+        gameRootView.addChild(BoxLayout(mapView))
 
         val sidebar = VerticalLayout(30, 24)
         sidebar.addChild(BoxLayout(infoView))
         sidebar.addChild(BoxLayout(playerView))
 
-        rootView.addChild(sidebar)
+        gameRootView.addChild(sidebar)
     }
 
     private fun createGame() {
@@ -84,7 +85,7 @@ class App {
             return
         }
 
-        rootView.addChild(BoxLayout(LoadMapView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
+        gameRootView.addChild(BoxLayout(LoadMapView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
 
         drawScene()
 
@@ -110,7 +111,7 @@ class App {
         game = Game(map!!)
 
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
-        rootView.clear()
+        gameRootView.clear()
     }
 
     private fun saveMap() {
@@ -123,9 +124,16 @@ class App {
 
     private fun openInventory() {
         EventKeyPress.dispatcher.pushLayer()
+        val inventoryRootView = InventoryView(SCREEN_WIDTH, SCREEN_HEIGHT)
+        val previousRootView = rootView
+        rootView = inventoryRootView
+        drawScene()
         EventKeyPress.dispatcher.addHandler {
-            if (it.key.character == 'i')
+            if (it.key.character == 'i') {
                 EventKeyPress.dispatcher.popLayer()
+                rootView = previousRootView
+                drawScene()
+            }
         }
     }
 
@@ -172,8 +180,8 @@ class App {
 
         if (game.player.isDead()) {
             deleteMap()
-            rootView.clear()
-            rootView.addChild(BoxLayout(GameOverView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
+            gameRootView.clear()
+            gameRootView.addChild(BoxLayout(GameOverView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
             drawScene()
             Thread.sleep(2000)
         } else {
