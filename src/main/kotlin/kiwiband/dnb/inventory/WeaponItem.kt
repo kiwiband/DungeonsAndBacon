@@ -27,5 +27,5 @@ class WeaponItem(
         creature.status.weaponAttack -= damage
     }
 
-    override fun clone() = WeaponItem(damage, name, description)
+    override fun clone() = WeaponItem(damage, name, description, icon)
 }

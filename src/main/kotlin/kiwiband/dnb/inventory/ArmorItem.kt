@@ -7,7 +7,7 @@ class ArmorItem(
     val defence: Int,
     private val name: String,
     private val description: String,
-    private val icon:String = ASCIIART.SHIELD
+    private val icon:String = ASCIIART.ARMOR
 ) : EquipmentItem() {
     override fun getName() = name
 
@@ -27,5 +27,5 @@ class ArmorItem(
         creature.status.armorDefence -= defence
     }
 
-    override fun clone() = ArmorItem(defence, name, description)
+    override fun clone() = ArmorItem(defence, name, description, icon)
 }

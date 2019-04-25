@@ -26,7 +26,7 @@ class CreatureStatus(
     var armorDefence = 0
 
     fun getTotalAttack() = 2 + level + weaponAttack
-    fun getTotalDefence() = (level + 1) / 2 + armorDefence
+    fun getTotalDefence() = (level - 1) / 2 + armorDefence
 
     fun addExperience(value: Int) {
         experience += value

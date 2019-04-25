@@ -1,13 +1,30 @@
 package kiwiband.dnb.ui
 
 object ASCIIART {
-    const val SHIELD = ".-.-.\n" +
-                       "| . |\n" +
-                      "\\___/"
+    val SHIELD = """
+        |.-.-.
+        || . |
+        |\___/
+    """.trimMargin()
 
-    const val SWORD = "  |\n" +
-                      "  ║\n" +
-                      " `T`"
+    val ARMOR = """
+        | _͜_
+        |( ҉ )
+        | \_/
+    """.trimMargin()
+
+
+    val SWORD = """
+        |  |
+        |  ║
+        | `T`
+    """.trimMargin()
+
+    val AXE = """
+        | ┌─┐
+        | ║_/
+        | ║
+    """.trimMargin()
 
     const val PLAYER = "L(O_o)-(===>"
 }

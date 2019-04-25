@@ -1,5 +1,6 @@
 package kiwiband.dnb.inventory
 
+import kiwiband.dnb.ui.ASCIIART
 import kotlin.random.Random
 
 object ItemFactory {
@@ -7,7 +8,7 @@ object ItemFactory {
         WeaponItem(1, "Dagger", "A simple dagger."),
         WeaponItem(2, "Iron Sword", "Old rusty iron sword."),
         WeaponItem(4, "Tachi", "Perfect japanese katana."),
-        WeaponItem(5, "Mysterious Bacon Axe", "The greatest ancient pure bacon axe.")
+        WeaponItem(5, "Mysterious Bacon Axe", "The greatest ancient pure bacon axe.", ASCIIART.AXE)
     )
 
     val armorLibrary : List<ArmorItem> = listOf(
