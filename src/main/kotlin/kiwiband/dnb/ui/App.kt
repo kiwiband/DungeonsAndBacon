@@ -129,10 +129,20 @@ class App {
         rootView = inventoryRootView
         drawScene()
         EventKeyPress.dispatcher.addHandler {
-            if (it.key.character == 'i') {
-                EventKeyPress.dispatcher.popLayer()
-                rootView = previousRootView
-                drawScene()
+            when(it.key.character) {
+                'i', 'ш'-> {
+                    EventKeyPress.dispatcher.popLayer()
+                    rootView = previousRootView
+                    drawScene()
+                }
+                'w', 'ц' -> {
+                    inventoryRootView.selectPrevious()
+                    drawScene()
+                }
+                's', 'ы' -> {
+                    inventoryRootView.selectNext()
+                    drawScene()
+                }
             }
         }
     }

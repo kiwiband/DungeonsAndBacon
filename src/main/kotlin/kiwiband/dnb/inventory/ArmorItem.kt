@@ -3,7 +3,7 @@ package kiwiband.dnb.inventory
 import kiwiband.dnb.actors.creatures.Creature
 
 class ArmorItem(
-    private val defence: Int,
+    val defence: Int,
     private val name: String,
     private val description: String
 ) : EquipmentItem() {
