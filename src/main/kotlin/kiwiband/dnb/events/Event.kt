@@ -31,7 +31,7 @@ open class EventDispatcher<T : Event> {
     /**
      * Sends the [event] to all existing handlers
      */
-    fun run(event: T) {
+    open fun run(event: T) {
         removed.forEach { handlers.remove(it) }
         removed.clear()
         handlers.values.forEach { it(event) }

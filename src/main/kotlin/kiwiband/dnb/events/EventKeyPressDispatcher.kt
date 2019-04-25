@@ -7,7 +7,20 @@ data class DispatcherState(val id: Int,
                            val removed: MutableList<Int>)
 
 class EventKeyPressDispatcher: EventDispatcher<EventKeyPress>() {
-    val statesStack = ArrayDeque<DispatcherState>()
+    private val statesStack = ArrayDeque<DispatcherState>()
+
+    private val permanentHandlers = mutableListOf<(EventKeyPress) -> Unit>()
+
+    override fun run(event: EventKeyPress) {
+        super.run(event)
+        for (handler in permanentHandlers) {
+            handler(event)
+        }
+    }
+
+    fun addPermanentHandler(handler: (EventKeyPress) -> Unit) {
+        permanentHandlers.add(handler)
+    }
 
     fun pushLayer() {
         statesStack.push(DispatcherState(id, handlers, removed))

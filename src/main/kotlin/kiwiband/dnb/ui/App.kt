@@ -129,8 +129,8 @@ class App {
         rootView = inventoryRootView
         drawScene()
         EventKeyPress.dispatcher.addHandler {
-            when(it.key.character) {
-                'i', 'ш'-> {
+            when (it.key.character) {
+                'i', 'ш' -> {
                     EventKeyPress.dispatcher.popLayer()
                     rootView = previousRootView
                     drawScene()
@@ -161,15 +161,13 @@ class App {
 
         drawScene()
 
-        val eventKeyPressId = EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
-        val eventEscapeId = EventKeyPress.dispatcher.addHandler {
+        EventKeyPress.dispatcher.addPermanentHandler {
             if (it.key.keyType == KeyType.Escape) {
                 inputManager.stop()
             }
         }
-        val eventGameOverId = EventGameOver.dispatcher.addHandler {
-            inputManager.stop()
-        }
+        val eventKeyPressId = EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
+        val eventGameOverId = EventGameOver.dispatcher.addHandler { inputManager.stop() }
 
         val eventInventoryOpenId = EventKeyPress.dispatcher.addHandler {
             if (it.key.keyType == KeyType.Character) {
@@ -184,7 +182,6 @@ class App {
         game.endGame()
 
         EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
-        EventKeyPress.dispatcher.removeHandler(eventEscapeId)
         EventGameOver.dispatcher.removeHandler(eventGameOverId)
         EventGameOver.dispatcher.removeHandler(eventInventoryOpenId)
 
