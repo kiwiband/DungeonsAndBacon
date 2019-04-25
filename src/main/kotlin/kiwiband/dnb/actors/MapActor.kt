@@ -1,5 +1,6 @@
 package kiwiband.dnb.actors
 
+import kiwiband.dnb.events.EventDestroyActor
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
@@ -63,7 +64,15 @@ abstract class MapActor : Comparable<MapActor> {
     protected open fun onTick() {}
 
     /**
-     * Perform actions on destroying a creature
+     * Destroys this actor
+     */
+    fun destroy() {
+        EventDestroyActor.dispatcher.run(EventDestroyActor(this))
+        onDestroy()
+    }
+
+    /**
+     * Performs actions on destroying a creature
      */
     protected open fun onDestroy() {
         EventTick.dispatcher.removeHandler(eventTickId)

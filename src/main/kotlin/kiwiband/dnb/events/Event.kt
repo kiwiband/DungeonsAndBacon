@@ -1,6 +1,7 @@
 package kiwiband.dnb.events
 
 import com.googlecode.lanterna.input.KeyStroke
+import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.math.Vec2
 import java.util.*
 
@@ -56,6 +57,7 @@ class EventTick : Event() {
     }
 }
 
+
 class EventGameOver : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventGameOver>()
@@ -69,5 +71,14 @@ class EventGameOver : Event() {
 class EventKeyPress(val key: KeyStroke) : Event() {
     companion object {
         val dispatcher = EventKeyPressDispatcher()
+    }
+}
+
+/**
+ * Event for destroying actors
+ */
+class EventDestroyActor(val actor: MapActor): Event() {
+    companion object {
+        val dispatcher = EventDispatcher<EventDestroyActor>()
     }
 }
