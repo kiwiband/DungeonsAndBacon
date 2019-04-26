@@ -5,14 +5,20 @@ import kiwiband.dnb.events.EventDispatcher
 import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
+import kiwiband.dnb.ui.App
 import kiwiband.dnb.ui.Renderer
+import kiwiband.dnb.ui.views.LoadMapView
 import kiwiband.dnb.ui.views.View
+import kiwiband.dnb.ui.views.layout.BoxLayout
 
-class LoadMapActivity(rootView: View, renderer: Renderer):
-    Activity(rootView, renderer) {
+class LoadMapActivity(renderer: Renderer): Activity(renderer) {
 
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
+
+    override fun createRootView(): View {
+        return BoxLayout(LoadMapView(App.SCREEN_WIDTH - 2, App.SCREEN_HEIGHT - 2))
+    }
 
     override fun onStart() {
         if (!mapSaver.checkSaved(mapFile)) {
