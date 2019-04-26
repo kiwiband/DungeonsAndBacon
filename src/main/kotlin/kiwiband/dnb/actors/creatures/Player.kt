@@ -6,6 +6,7 @@ import kiwiband.dnb.actors.statics.DropBag
 import kiwiband.dnb.events.EventDestroyActor
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventMove
+import kiwiband.dnb.events.Registration
 import kiwiband.dnb.inventory.EquipmentItem
 import kiwiband.dnb.inventory.EquipmentSet
 import kiwiband.dnb.inventory.Inventory
@@ -32,13 +33,13 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
 
     override fun getViewAppearance(): Char = viewAppearance
 
-    private var eventMoveId: Int = -1
+    private var eventMove: Registration? = null
     private val moveDirection: Vec2M = Vec2M()
     override var viewPriority: Int = 10000
 
     override fun onBeginGame() {
         super.onBeginGame()
-        eventMoveId = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
+        eventMove = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
         inventory.add(ItemFactory.getRandomArmor())
     }
 
@@ -53,7 +54,7 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
     override fun onDestroy() {
         super.onDestroy()
         EventGameOver.dispatcher.run(EventGameOver())
-        EventMove.dispatcher.removeHandler(eventMoveId)
+        eventMove?.finish()
     }
 
     override fun blockInteract(actor: MapActor) {

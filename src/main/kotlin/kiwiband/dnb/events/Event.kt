@@ -3,7 +3,6 @@ package kiwiband.dnb.events
 import com.googlecode.lanterna.input.KeyStroke
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.math.Vec2
-import java.util.*
 
 sealed class Event
 
@@ -13,28 +12,33 @@ sealed class Event
 open class EventDispatcher<T : Event> {
     protected var id = 0
 
-    protected var handlers: MutableMap<Int, (T) -> Unit> = TreeMap()
+    protected var handlers = mutableListOf<EventHandler<T>>()
 
     protected var removed: MutableList<Int> = mutableListOf()
 
     /**
      * @return added handler's id
      */
-    fun addHandler(handler: (T) -> Unit): Int {
-        handlers[id] = handler
-        return id++
-    }
-
-    fun removeHandler(id: Int) = removed.add(id)
-
+    fun addHandler(handler: (T) -> Unit): Registration = EventHandler(handler).also { handlers.add(it) }
 
     /**
      * Sends the [event] to all existing handlers
      */
     open fun run(event: T) {
-        removed.forEach { handlers.remove(it) }
-        removed.clear()
-        handlers.values.forEach { it(event) }
+        handlers.forEach { if (it.isActive) it.run(event) }
+        handlers.filter { it.isActive }
+    }
+}
+
+open class EventHandler<T : Event>(private val handler: (T) -> Unit) : Registration {
+    var isActive = true
+
+    fun run(event: T) {
+        handler(event)
+    }
+
+    override fun finish() {
+        isActive = false
     }
 }
 
@@ -92,4 +96,4 @@ class EventSpawnActor(val actor: MapActor): Event() {
 /**
  * Event on finishing the activity with some result.
  */
-open class EventActivityFinished<U>(val result: U): Event()
+abstract class EventActivityFinished<U>(val result: U): Event()

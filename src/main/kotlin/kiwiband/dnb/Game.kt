@@ -5,6 +5,7 @@ import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventDestroyActor
 import kiwiband.dnb.events.EventSpawnActor
 import kiwiband.dnb.events.EventTick
+import kiwiband.dnb.events.Registration
 import kiwiband.dnb.map.LocalMap
 
 /**
@@ -20,9 +21,7 @@ class Game(val map: LocalMap) {
     private val actorsToDestroy = mutableListOf<MapActor>()
 
     private val actorsToSpawn = mutableListOf<MapActor>()
-    private var eventDestroyActorId: Int = 0
-    private var eventTickId: Int = 0
-    private var eventSpawnActorId: Int = 0
+    private val eventsRegistrations = mutableListOf<Registration>()
 
     private fun onTick() {
         tickTime++
@@ -48,19 +47,17 @@ class Game(val map: LocalMap) {
      * Starts the game, resetting game timer and initializing player.
      */
     fun startGame() {
-        eventDestroyActorId = EventDestroyActor.dispatcher.addHandler { actorsToDestroy.add(it.actor) }
-        eventSpawnActorId = EventSpawnActor.dispatcher.addHandler { actorsToSpawn.add(it.actor) }
+        eventsRegistrations.add(EventDestroyActor.dispatcher.addHandler { actorsToDestroy.add(it.actor) })
+        eventsRegistrations.add(EventSpawnActor.dispatcher.addHandler { actorsToSpawn.add(it.actor) })
         player.onBeginGame()
         map.actors.forEach { if (it !is Player) it.onBeginGame() }
-        eventTickId = EventTick.dispatcher.addHandler { onTick() }
+        eventsRegistrations.add(EventTick.dispatcher.addHandler { onTick() })
     }
 
     /**
      * Ends the game, removing the game's tick handler from tick dispatcher.
      */
     fun endGame() {
-        EventTick.dispatcher.removeHandler(eventTickId)
-        EventDestroyActor.dispatcher.removeHandler(eventDestroyActorId)
-        EventSpawnActor.dispatcher.removeHandler(eventSpawnActorId)
+        eventsRegistrations.forEach { it.finish() }
     }
 }
