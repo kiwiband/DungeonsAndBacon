@@ -13,16 +13,19 @@ open class EventDispatcher<T : Event> {
     protected var handlers = mutableListOf<EventHandler<T>>()
 
     /**
-     * @return added handler's id
+     * @return added handler's registration.
      */
     fun addHandler(handler: (T) -> Unit): Registration = EventHandler(handler).also { handlers.add(it) }
 
     /**
-     * Sends the [event] to all existing handlers
+     * Sends the [event] to all existing handlers.
      */
     open fun run(event: T) {
-        handlers.forEach { if (it.isActive) it.run(event) }
-        handlers.filter { it.isActive }
+        var needsFilter = false
+        handlers.forEach { if (it.isActive) it.run(event) else needsFilter = true }
+        if (needsFilter) {
+            handlers = handlers.filter { it.isActive } as MutableList<EventHandler<T>>
+        }
     }
 }
 
@@ -39,8 +42,8 @@ open class EventHandler<T : Event>(private val handler: (T) -> Unit) : Registrat
 }
 
 /**
- * Event for player movement
- * @param direction direction to move
+ * Event for player movement.
+ * @param direction direction to move.
  */
 class EventMove(val direction: Vec2) : Event() {
     companion object {
@@ -57,7 +60,9 @@ class EventTick : Event() {
     }
 }
 
-
+/**
+ * Event for game over.
+ */
 class EventGameOver : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventGameOver>()
@@ -75,7 +80,7 @@ class EventKeyPress(val key: KeyStroke) : Event() {
 }
 
 /**
- * Event for destroying actors
+ * Event for destroying actors.
  */
 class EventDestroyActor(val actor: MapActor): Event() {
     companion object {
@@ -83,6 +88,9 @@ class EventDestroyActor(val actor: MapActor): Event() {
     }
 }
 
+/**
+ * Event for spawning actors.
+ */
 class EventSpawnActor(val actor: MapActor): Event() {
     companion object {
         val dispatcher = EventDispatcher<EventSpawnActor>()
