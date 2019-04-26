@@ -27,19 +27,10 @@ import kiwiband.dnb.ui.views.layout.VerticalLayout
  * Run start() method to start
  */
 class App {
-    //private val gameRootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
-    //private var rootView: View = gameRootView
-
     private val terminal = DefaultTerminalFactory().createTerminal()
-
     private val inputManager = InputManager(terminal)
     private val screen = TerminalScreen(terminal)
-
-    private val mapSaver = MapSaver()
-    private val mapFile = "./maps/saved_map.dnb"
-
     private val renderer = Renderer(screen)
-
 
     private fun constructScene(game: Game): View {
         val gameRootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -110,18 +101,19 @@ class App {
 
             val scene = constructScene(game)
 
-            val gameActivity = GameActivity(inputManager, game, scene, renderer)
+            val gameActivity = GameActivity(game, scene, renderer)
 
             gameActivity.start()
         }
 
-        EventGameActivityFinished.dispatcher.addHandler { event ->
+        EventGameActivityFinished.dispatcher.addHandler {
             inputManager.stop()
-            inputManager.join()
-            renderer.stopScreen()
         }
 
         createGame()
+
+        inputManager.join()
+        screen.stopScreen()
     }
 
     companion object {

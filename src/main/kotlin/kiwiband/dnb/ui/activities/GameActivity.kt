@@ -15,7 +15,7 @@ import kiwiband.dnb.ui.views.GameOverView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
 
-class GameActivity(private val inputManager: InputManager, private val game: Game, rootView: View, private val renderer: Renderer): ResultActivity<Boolean>(rootView, renderer) {
+class GameActivity(private val game: Game, rootView: View, renderer: Renderer): ResultActivity<Boolean>(rootView, renderer) {
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
 
@@ -49,13 +49,15 @@ class GameActivity(private val inputManager: InputManager, private val game: Gam
     override fun onStart() {
         drawScene()
 
-        val eventEscapePressId = EventKeyPress.dispatcher.addHandler {
+        EventKeyPress.dispatcher.addHandler {
             if (it.key.keyType == KeyType.Escape) {
                 EventGameOver.dispatcher.run(EventGameOver())
             }
         }
-        val eventKeyPressId = EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
-        val eventGameOverId = EventGameOver.dispatcher.addHandler {
+
+        EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
+
+        EventGameOver.dispatcher.addHandler {
             val isDead = game.player.isDead()
             if (isDead) {
                 deleteMap()
