@@ -48,6 +48,9 @@ class InventoryActivity(private val player: Player, renderer: Renderer) : Activi
     }
 }
 
+/**
+ * An event that gets run on closing the inventory. Used for redrawing the screen.
+ */
 class EventInventoryClosed: EventActivityFinished<Unit>(Unit) {
     companion object {
         val dispatcher = EventDispatcher<EventInventoryClosed>()

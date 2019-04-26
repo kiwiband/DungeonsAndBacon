@@ -89,4 +89,7 @@ class EventSpawnActor(val actor: MapActor): Event() {
     }
 }
 
+/**
+ * Event on finishing the activity with some result.
+ */
 open class EventActivityFinished<U>(val result: U): Event()

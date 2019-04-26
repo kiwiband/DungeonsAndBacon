@@ -11,6 +11,11 @@ import kiwiband.dnb.ui.views.LoadMapView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
 
+
+/**
+ * An activity that loads the map.
+ * On receiving the map, finishes and runs the EventMapLoaded event.
+ */
 class LoadMapActivity(renderer: Renderer): Activity(renderer) {
 
     private val mapSaver = MapSaver()
@@ -29,7 +34,7 @@ class LoadMapActivity(renderer: Renderer): Activity(renderer) {
         EventKeyPress.dispatcher.addHandler { onKeyPress(it) }
     }
 
-    fun loadMap(result: LocalMap) {
+    private fun loadMap(result: LocalMap) {
         finish()
         EventMapLoaded.dispatcher.run(EventMapLoaded(result))
     }
@@ -42,6 +47,9 @@ class LoadMapActivity(renderer: Renderer): Activity(renderer) {
     }
 }
 
+/**
+ * An event that gets run on receiving a map.
+ */
 class EventMapLoaded(result: LocalMap): EventActivityFinished<LocalMap>(result) {
     companion object {
         val dispatcher = EventDispatcher<EventMapLoaded>()

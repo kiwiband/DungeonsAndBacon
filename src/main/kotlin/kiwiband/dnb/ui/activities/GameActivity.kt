@@ -106,6 +106,10 @@ class GameActivity(private val game: Game, private val renderer: Renderer): Acti
     }
 }
 
+/**
+ * An event that gets run on finishing the game activity.
+ * @param result if the player is dead (or the game is just closed)
+ */
 class EventGameActivityFinished(result: Boolean): EventActivityFinished<Boolean>(result) {
     companion object {
         val dispatcher = EventDispatcher<EventGameActivityFinished>()

@@ -19,6 +19,9 @@ class App {
     private val screen = TerminalScreen(terminal)
     private val renderer = Renderer(screen)
 
+    /**
+     * Runs the first activity.
+     */
     private fun startGame() {
         val loadMapActivity = LoadMapActivity(renderer)
         loadMapActivity.start()
@@ -33,19 +36,21 @@ class App {
 
         inputManager.startKeyHandle()
 
+        // once the map is loaded, we can start the game activity.
         EventMapLoaded.dispatcher.addHandler { event ->
             val game = Game(event.result)
             val gameActivity = GameActivity(game, renderer)
-
             gameActivity.start()
         }
 
+        // once the game has ended, we can stop the input manager and end the game.
         EventGameActivityFinished.dispatcher.addHandler {
             inputManager.stop()
         }
 
         startGame()
 
+        // wait for the end of the game here.
         inputManager.join()
         screen.stopScreen()
     }

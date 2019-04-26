@@ -138,10 +138,16 @@ class Renderer(private val screen: Screen) {
         writeCharacter(CORNER_BOTTOM_RIGHT, position)
     }
 
+    /**
+     * Clears the entire screen, regardless of offset.
+     */
     fun clearScreen() {
         screen.clear()
     }
 
+    /**
+     * Refreshes the screen.
+     */
     fun refreshScreen() {
         screen.refresh()
     }
