@@ -146,6 +146,10 @@ class Renderer(private val screen: Screen) {
         screen.refresh()
     }
 
+    fun stopScreen() {
+        screen.stopScreen()
+    }
+
     companion object {
 
         private const val BORDER_HORIZONTAL = '─'

@@ -88,3 +88,5 @@ class EventSpawnActor(val actor: MapActor): Event() {
         val dispatcher = EventDispatcher<EventSpawnActor>()
     }
 }
+
+open class EventActivityFinished<U>(val result: U): Event()

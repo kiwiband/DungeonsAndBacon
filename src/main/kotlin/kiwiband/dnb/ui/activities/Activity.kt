@@ -20,13 +20,11 @@ abstract class ResultActivity<T>(private val rootView: View,
 
     fun start() {
         EventKeyPress.dispatcher.pushLayer()
-        EventKeyPress.dispatcher.addHandler { onKeyPress(it) }
         onStart()
     }
 
     open fun onStart() {}
-    open fun onKeyPress(keyPress: EventKeyPress) {}
-    open fun onFinish(result: T?) {}
+    open fun onFinish(result: T) {}
 }
 
 abstract class Activity(rootView: View, renderer: Renderer): ResultActivity<Unit>(rootView, renderer)

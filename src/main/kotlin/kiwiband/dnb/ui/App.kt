@@ -13,6 +13,9 @@ import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.ui.activities.EventGameActivityFinished
+import kiwiband.dnb.ui.activities.EventMapLoaded
+import kiwiband.dnb.ui.activities.GameActivity
 import kiwiband.dnb.ui.activities.LoadMapActivity
 import kiwiband.dnb.ui.views.*
 import kiwiband.dnb.ui.views.layout.BoxLayout
@@ -24,49 +27,23 @@ import kiwiband.dnb.ui.views.layout.VerticalLayout
  * Run start() method to start
  */
 class App {
-    private val gameRootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
-    private var rootView: View = gameRootView
+    //private val gameRootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
+    //private var rootView: View = gameRootView
 
     private val terminal = DefaultTerminalFactory().createTerminal()
 
     private val inputManager = InputManager(terminal)
     private val screen = TerminalScreen(terminal)
-    private lateinit var game: Game
 
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
 
     private val renderer = Renderer(screen)
 
-    private fun drawScene() {
-        screen.clear()
 
-        renderer.setOffset(0, 0)
-        rootView.draw(renderer)
+    private fun constructScene(game: Game): View {
+        val gameRootView = HorizontalLayout(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-        screen.refresh()
-    }
-
-    private fun handleMoveKeys(keyStroke: KeyStroke) {
-        if (keyStroke.keyType != KeyType.Character) return
-        when (keyStroke.character) {
-            'w', 'ц' -> Vec2(0, -1)
-            'a', 'ф' -> Vec2(-1, 0)
-            's', 'ы' -> Vec2(0, 1)
-            'd', 'в' -> Vec2(1, 0)
-            else -> null
-        }?.also {
-            EventMove.dispatcher.run(EventMove(it))
-            tick()
-        }
-    }
-
-    private fun tick() {
-        EventTick.dispatcher.run(EventTick())
-        drawScene()
-    }
-
-    private fun constructScene() {
         val mapView = MapView(game.map, 48, 22)
         val playerView = PlayerView(game.player, 28, 10)
         val infoView = InfoView(28, 10)
@@ -78,40 +55,16 @@ class App {
         sidebar.addChild(BoxLayout(playerView))
 
         gameRootView.addChild(sidebar)
+        return gameRootView
     }
 
     private fun createGame() {
-        val mapLock = Object()
-
-        var map: LocalMap? = null
-
         val view = BoxLayout(LoadMapView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2))
-        val loadMapActivity = LoadMapActivity(view, renderer) {
-            synchronized(mapLock) {
-                map = it
-                mapLock.notify()
-            }
-        }
-
+        val loadMapActivity = LoadMapActivity(view, renderer)
         loadMapActivity.start()
-
-        synchronized(mapLock) {
-            while (map == null) {
-                mapLock.wait()
-            }
-        }
-        game = Game(map!!)
     }
-
-    private fun saveMap() {
-        mapSaver.saveToFile(game.map, mapFile)
-    }
-
-    private fun deleteMap() {
-        mapSaver.deleteFile(mapFile)
-    }
-
-    private fun openInventory() {
+/*
+    private fun openInventory(game: Game) {
         EventKeyPress.dispatcher.pushLayer()
         val inventoryRootView = InventoryView(game.player.inventory, SCREEN_WIDTH, SCREEN_HEIGHT)
         val previousRootView = rootView
@@ -142,7 +95,7 @@ class App {
             }
         }
     }
-
+*/
     /**
      * Console application entry point.
      */
@@ -152,47 +105,23 @@ class App {
 
         inputManager.startKeyHandle()
 
+        EventMapLoaded.dispatcher.addHandler { event ->
+            val game = Game(event.result)
+
+            val scene = constructScene(game)
+
+            val gameActivity = GameActivity(inputManager, game, scene, renderer)
+
+            gameActivity.start()
+        }
+
+        EventGameActivityFinished.dispatcher.addHandler { event ->
+            inputManager.stop()
+            inputManager.join()
+            renderer.stopScreen()
+        }
+
         createGame()
-        constructScene()
-
-        drawScene()
-
-        val eventEscapePressId = EventKeyPress.dispatcher.addHandler {
-            if (it.key.keyType == KeyType.Escape) {
-                inputManager.stop()
-            }
-        }
-        val eventKeyPressId = EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
-        val eventGameOverId = EventGameOver.dispatcher.addHandler { inputManager.stop() }
-
-        val eventInventoryOpenId = EventKeyPress.dispatcher.addHandler {
-            if (it.key.keyType == KeyType.Character) {
-                when (it.key.character) {
-                    'i', 'ш' -> openInventory()
-                }
-            }
-        }
-
-        game.startGame()
-        inputManager.join()
-        game.endGame()
-
-        EventKeyPress.dispatcher.removeHandler(eventEscapePressId)
-        EventKeyPress.dispatcher.removeHandler(eventKeyPressId)
-        EventGameOver.dispatcher.removeHandler(eventGameOverId)
-        EventGameOver.dispatcher.removeHandler(eventInventoryOpenId)
-
-        if (game.player.isDead()) {
-            deleteMap()
-            gameRootView.clear()
-            gameRootView.addChild(BoxLayout(GameOverView(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2)))
-            drawScene()
-            Thread.sleep(2000)
-        } else {
-            saveMap()
-        }
-
-        screen.stopScreen()
     }
 
     companion object {
