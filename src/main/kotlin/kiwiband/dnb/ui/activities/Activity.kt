@@ -4,7 +4,7 @@ import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 
-abstract class ResultActivity<T>(private val rootView: View,
+abstract class Activity(private val rootView: View,
                                  private val renderer: Renderer) {
     protected fun drawScene() {
         renderer.clearScreen()
@@ -13,9 +13,9 @@ abstract class ResultActivity<T>(private val rootView: View,
         renderer.refreshScreen()
     }
 
-    protected fun finish(result: T) {
+    protected fun finish() {
         EventKeyPress.dispatcher.popLayer()
-        onFinish(result)
+        onFinish()
     }
 
     fun start() {
@@ -24,7 +24,5 @@ abstract class ResultActivity<T>(private val rootView: View,
     }
 
     open fun onStart() {}
-    open fun onFinish(result: T) {}
+    open fun onFinish() {}
 }
-
-abstract class Activity(rootView: View, renderer: Renderer): ResultActivity<Unit>(rootView, renderer)

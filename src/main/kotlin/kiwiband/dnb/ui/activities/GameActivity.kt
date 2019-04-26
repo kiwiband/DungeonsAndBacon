@@ -15,7 +15,7 @@ import kiwiband.dnb.ui.views.GameOverView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
 
-class GameActivity(private val game: Game, rootView: View, renderer: Renderer): ResultActivity<Boolean>(rootView, renderer) {
+class GameActivity(private val game: Game, rootView: View, renderer: Renderer): Activity(rootView, renderer) {
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
 
@@ -65,7 +65,7 @@ class GameActivity(private val game: Game, rootView: View, renderer: Renderer): 
                 saveMap(game)
             }
             game.endGame()
-            finish(isDead)
+            finish()
             EventGameActivityFinished.dispatcher.run(EventGameActivityFinished(isDead))
         }
 /*

@@ -9,27 +9,29 @@ import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 
 class LoadMapActivity(rootView: View, renderer: Renderer):
-    ResultActivity<LocalMap>(rootView, renderer) {
+    Activity(rootView, renderer) {
 
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
 
     override fun onStart() {
         if (!mapSaver.checkSaved(mapFile)) {
-            finish(LocalMap.generateMap(88, 32))
+            loadMap(LocalMap.generateMap(88, 32))
+            return
         }
         drawScene()
         EventKeyPress.dispatcher.addHandler { onKeyPress(it) }
     }
 
-    override fun onFinish(result: LocalMap) {
+    fun loadMap(result: LocalMap) {
+        finish()
         EventMapLoaded.dispatcher.run(EventMapLoaded(result))
     }
 
     private fun onKeyPress(keyPress: EventKeyPress) {
         when (keyPress.key.character) {
-            'y', 'н' -> finish(mapSaver.loadFromFile(mapFile))
-            'n', 'т' -> finish(LocalMap.generateMap(88, 32))
+            'y', 'н' -> loadMap(mapSaver.loadFromFile(mapFile))
+            'n', 'т' -> loadMap(LocalMap.generateMap(88, 32))
         }
     }
 }
