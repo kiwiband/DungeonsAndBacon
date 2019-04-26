@@ -3,10 +3,7 @@ package kiwiband.dnb.actors.creatures
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.DropBag
-import kiwiband.dnb.events.EventDestroyActor
-import kiwiband.dnb.events.EventGameOver
-import kiwiband.dnb.events.EventMove
-import kiwiband.dnb.events.Registration
+import kiwiband.dnb.events.*
 import kiwiband.dnb.inventory.EquipmentItem
 import kiwiband.dnb.inventory.EquipmentSet
 import kiwiband.dnb.inventory.Inventory
@@ -21,7 +18,7 @@ import kotlin.random.Random
  * @param map map where the character is on
  * @param position initial position on the [map]
  */
-class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status) {
+class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status, TickOrder.PLAYER) {
     private val viewAppearance = '@'
 
     val inventory = Inventory(20)

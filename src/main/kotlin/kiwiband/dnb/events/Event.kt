@@ -6,6 +6,8 @@ import kiwiband.dnb.math.Vec2
 
 sealed class Event
 
+typealias EventHandlers<T> = MutableList<EventHandler<T>>
+
 /**
  * Class dispatching the events.
  */
@@ -15,16 +17,34 @@ open class EventDispatcher<T : Event> {
     /**
      * @return added handler's registration.
      */
-    fun addHandler(handler: (T) -> Unit): Registration = EventHandler(handler).also { handlers.add(it) }
+    open fun addHandler(handler: (T) -> Unit): Registration = EventHandler(handler).also { handlers.add(it) }
 
     /**
      * Sends the [event] to all existing handlers.
      */
     open fun run(event: T) {
-        var needsFilter = false
-        handlers.forEach { if (it.isActive) it.run(event) else needsFilter = true }
-        if (needsFilter) {
-            handlers = handlers.filter { it.isActive } as MutableList<EventHandler<T>>
+        var actual = true
+        handlers.forEach { if (it.isActive) it.run(event) else actual = false }
+        handlers = if (actual) handlers else handlers.filter { it.isActive } as EventHandlers<T>
+    }
+
+    companion object {
+        /**
+         * Runs event in event handlers
+         * @return actual event handlers
+         */
+        fun <T : Event> runInHandlers(event: T, handlers: EventHandlers<T>): EventHandlers<T> {
+            var actual = true
+            handlers.forEach { if (it.isActive) it.run(event) else actual = false }
+            return if (actual) handlers else handlers.filter { it.isActive } as EventHandlers<T>
+        }
+
+        /**
+         * Adds [handler] in [handlers]
+         * @return added handler's registration.
+         */
+        fun <T : Event> addInHandlers(handler: (T) -> Unit, handlers: EventHandlers<T>): Registration {
+            return EventHandler(handler).also { handlers.add(it) }
         }
     }
 }
@@ -56,7 +76,7 @@ class EventMove(val direction: Vec2) : Event() {
  */
 class EventTick : Event() {
     companion object {
-        val dispatcher = EventDispatcher<EventTick>()
+        val dispatcher = EventTickDispatcher()
     }
 }
 
@@ -82,7 +102,7 @@ class EventKeyPress(val key: KeyStroke) : Event() {
 /**
  * Event for destroying actors.
  */
-class EventDestroyActor(val actor: MapActor): Event() {
+class EventDestroyActor(val actor: MapActor) : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventDestroyActor>()
     }
@@ -91,7 +111,7 @@ class EventDestroyActor(val actor: MapActor): Event() {
 /**
  * Event for spawning actors.
  */
-class EventSpawnActor(val actor: MapActor): Event() {
+class EventSpawnActor(val actor: MapActor) : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventSpawnActor>()
     }
@@ -100,4 +120,4 @@ class EventSpawnActor(val actor: MapActor): Event() {
 /**
  * Event on finishing the activity with some result.
  */
-abstract class EventActivityFinished<U>(val result: U): Event()
+abstract class EventActivityFinished<U>(val result: U) : Event()

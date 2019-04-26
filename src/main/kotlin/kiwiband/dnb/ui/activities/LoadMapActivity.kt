@@ -21,6 +21,7 @@ class LoadMapActivity(renderer: Renderer): Activity(renderer) {
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
 
+
     override fun createRootView(): View {
         return BoxLayout(LoadMapView(App.SCREEN_WIDTH - 2, App.SCREEN_HEIGHT - 2))
     }

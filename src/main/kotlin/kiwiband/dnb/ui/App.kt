@@ -8,6 +8,7 @@ import kiwiband.dnb.ui.activities.EventGameActivityFinished
 import kiwiband.dnb.ui.activities.EventMapLoaded
 import kiwiband.dnb.ui.activities.GameActivity
 import kiwiband.dnb.ui.activities.LoadMapActivity
+import kiwiband.dnb.ui.views.GameOverView
 
 /**
  * Application class.
@@ -46,6 +47,12 @@ class App {
         // once the game has ended, we can stop the input manager and end the game.
         EventGameActivityFinished.dispatcher.addHandler {
             inputManager.stop()
+            if (it.result) {
+                screen.clear()
+                GameOverView(SCREEN_WIDTH, SCREEN_HEIGHT).draw(renderer)
+                screen.refresh()
+                Thread.sleep(2000)
+            }
         }
 
         startGame()

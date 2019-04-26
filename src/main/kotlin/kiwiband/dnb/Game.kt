@@ -2,10 +2,7 @@ package kiwiband.dnb
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.Player
-import kiwiband.dnb.events.EventDestroyActor
-import kiwiband.dnb.events.EventSpawnActor
-import kiwiband.dnb.events.EventTick
-import kiwiband.dnb.events.Registration
+import kiwiband.dnb.events.*
 import kiwiband.dnb.map.LocalMap
 
 /**
@@ -49,9 +46,8 @@ class Game(val map: LocalMap) {
     fun startGame() {
         eventsRegistrations.add(EventDestroyActor.dispatcher.addHandler { actorsToDestroy.add(it.actor) })
         eventsRegistrations.add(EventSpawnActor.dispatcher.addHandler { actorsToSpawn.add(it.actor) })
-        player.onBeginGame()
-        map.actors.forEach { if (it !is Player) it.onBeginGame() }
-        eventsRegistrations.add(EventTick.dispatcher.addHandler { onTick() })
+        map.actors.forEach { it.onBeginGame() }
+        eventsRegistrations.add(EventTick.dispatcher.addHandler(TickOrder.BEFORE_DRAW_UI) { onTick() })
     }
 
     /**

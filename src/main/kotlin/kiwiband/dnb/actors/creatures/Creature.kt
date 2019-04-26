@@ -2,6 +2,7 @@ package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
+import kiwiband.dnb.events.TickOrder
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
@@ -9,7 +10,11 @@ import kiwiband.dnb.math.Vec2
 /**
  * @param map currently contained map
  */
-abstract class Creature(val map: LocalMap, val status: CreatureStatus) : MapActor() {
+abstract class Creature(
+    val map: LocalMap,
+    val status: CreatureStatus,
+    tickOrder: TickOrder = TickOrder.DEFAULT
+) : MapActor(tickOrder) {
 
     /**
      * Changes position of creature by [direction] and update the map

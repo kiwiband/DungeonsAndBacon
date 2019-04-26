@@ -3,6 +3,7 @@ package kiwiband.dnb.actors
 import kiwiband.dnb.events.EventDestroyActor
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.events.Registration
+import kiwiband.dnb.events.TickOrder
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
 import org.json.JSONObject
@@ -14,7 +15,7 @@ enum class ViewOrder {
 /**
  * Base class for all actors on a map
  */
-abstract class MapActor : Comparable<MapActor> {
+abstract class MapActor(private val tickOrder: TickOrder = TickOrder.DEFAULT) : Comparable<MapActor> {
     private var eventTick: Registration? = null
     open var viewOrder = ViewOrder.Default
     open var viewPriority = 0
@@ -42,7 +43,7 @@ abstract class MapActor : Comparable<MapActor> {
      * Must be called when an actor spawns on a local map
      */
     open fun onBeginGame() {
-        eventTick = EventTick.dispatcher.addHandler { onTick() }
+        eventTick = EventTick.dispatcher.addHandler(tickOrder) { onTick() }
     }
 
     /**
