@@ -2,12 +2,8 @@ package kiwiband.dnb.events
 
 import java.util.*
 
-data class DispatcherState(val id: Int,
-                           val handlers: MutableMap<Int, (EventKeyPress) -> Unit>,
-                           val removed: MutableList<Int>)
-
 class EventKeyPressDispatcher: EventDispatcher<EventKeyPress>() {
-    private val statesStack = ArrayDeque<DispatcherState>()
+    private val statesStack = ArrayDeque<MutableList<EventHandler<EventKeyPress>>>()
 
     private val permanentHandlers = mutableListOf<(EventKeyPress) -> Unit>()
 
@@ -23,16 +19,11 @@ class EventKeyPressDispatcher: EventDispatcher<EventKeyPress>() {
     }
 
     fun pushLayer() {
-        statesStack.push(DispatcherState(id, handlers, removed))
-        id = 0
-        handlers = TreeMap()
-        removed = mutableListOf()
+        statesStack.push(handlers)
+        handlers = mutableListOf()
     }
 
     fun popLayer() {
-        val state = statesStack.pop()
-        id = state.id
-        handlers = state.handlers
-        removed = state.removed
+        handlers = statesStack.pop()
     }
 }

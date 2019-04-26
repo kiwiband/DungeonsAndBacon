@@ -10,11 +10,7 @@ sealed class Event
  * Class dispatching the events.
  */
 open class EventDispatcher<T : Event> {
-    protected var id = 0
-
     protected var handlers = mutableListOf<EventHandler<T>>()
-
-    protected var removed: MutableList<Int> = mutableListOf()
 
     /**
      * @return added handler's id
