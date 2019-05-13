@@ -8,13 +8,13 @@ import kiwiband.dnb.map.LocalMap
 /**
  * Game model class.
  */
-class Game(val map: LocalMap) {
+class Game(val map: LocalMap, playerID: Int) {
     /**
      * Game time.
      */
     var tickTime = 0
         private set
-    val player: Player = map.actors.find { it is Player } as Player? ?: map.spawnPlayer()
+    val player: Player = map.actors.find { it is Player && it.playerID == playerID} as Player? ?: map.spawnPlayer(playerID)
     private val actorsToDestroy = mutableListOf<MapActor>()
 
     private val actorsToSpawn = mutableListOf<MapActor>()

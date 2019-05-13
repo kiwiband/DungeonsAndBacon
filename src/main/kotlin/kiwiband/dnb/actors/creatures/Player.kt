@@ -11,6 +11,7 @@ import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
+import org.json.JSONObject
 import kotlin.random.Random
 
 /**
@@ -18,7 +19,7 @@ import kotlin.random.Random
  * @param map map where the character is on
  * @param position initial position on the [map]
  */
-class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status, TickOrder.PLAYER) {
+class Player(map: LocalMap, position: Vec2, status: CreatureStatus, var playerID: Int) : Creature(map, status, TickOrder.PLAYER) {
     private val viewAppearance = '@'
 
     val inventory = Inventory(20)
@@ -80,6 +81,10 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
         if (item is EquipmentItem) {
             equipment.equip(item)
         }
+    }
+
+    override fun toJSON(): JSONObject {
+        return super.toJSON().put("id", playerID)
     }
 
     companion object {

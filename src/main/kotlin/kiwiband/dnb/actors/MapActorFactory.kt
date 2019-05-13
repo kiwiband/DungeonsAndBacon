@@ -22,7 +22,8 @@ object MapActorFactory {
                         actorJSON.getInt("lvl"),
                         actorJSON.getInt("hp"),
                         actorJSON.getInt("exp")
-                    )
+                    ),
+                    actorJSON.getInt("id")
                 )
             }
             Mob.TYPE_ID -> Mob(

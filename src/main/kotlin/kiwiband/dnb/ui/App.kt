@@ -31,7 +31,7 @@ class App {
     /**
      * Console application entry point.
      */
-    fun start() {
+    fun start(playerId: Int = 0) {
         screen.startScreen()
         screen.cursorPosition = null
 
@@ -39,7 +39,7 @@ class App {
 
         // once the map is loaded, we can start the game activity.
         EventMapLoaded.dispatcher.addHandler { event ->
-            val game = Game(event.result)
+            val game = Game(event.result, playerId)
             val gameActivity = GameActivity(game, renderer)
             gameActivity.start()
         }

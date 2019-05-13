@@ -41,12 +41,12 @@ class LocalMap(val width: Int, val height: Int) {
             .put("actors", actorsArray)
     }
 
-    fun spawnPlayer(): Player {
+    fun spawnPlayer(id: Int): Player {
         while (true) {
             val x = Random.nextInt(grid.width)
             val y = Random.nextInt(grid.height)
             if (grid.get(x, y) == FLOOR_THRESHOLD) {
-                val player = Player(this, Vec2M(x, y), CreatureStatus.generateDefault())
+                val player = Player(this, Vec2M(x, y), CreatureStatus.generateDefault(), id)
                 actors.add(player)
                 return player
             }
