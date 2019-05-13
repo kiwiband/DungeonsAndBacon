@@ -2,6 +2,7 @@ package kiwiband.dnb
 
 import com.googlecode.lanterna.input.KeyType
 import com.googlecode.lanterna.terminal.Terminal
+import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventKeyPress
 
 /**
@@ -27,7 +28,7 @@ class InputManager(private val terminal: Terminal) {
 
         EventKeyPress.dispatcher.addPermanentHandler {
             if (it.key.keyType == KeyType.EOF) {
-                stop()
+                EventGameOver.dispatcher.run(EventGameOver())
             }
         }
     }
