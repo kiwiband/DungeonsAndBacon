@@ -104,7 +104,8 @@ class Player(
                     obj.getInt("lvl"),
                     obj.getInt("hp"),
                     obj.getInt("exp")
-                )
+                ),
+                obj.getInt("id")
             )
             player.inventory = Inventory.fromJSON(obj.getJSONObject("inv"), player)
             for (item in player.inventory.items()) {
