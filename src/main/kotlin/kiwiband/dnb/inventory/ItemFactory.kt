@@ -1,21 +1,22 @@
 package kiwiband.dnb.inventory
 
-import kiwiband.dnb.ui.ASCIIART
+import kiwiband.dnb.inventory.WeaponItemsEnum.*
+import kiwiband.dnb.inventory.ArmorItemsEnum.*
 import kotlin.random.Random
 
 object ItemFactory {
     val weaponLibrary : List<WeaponItem> = listOf(
-        WeaponItem(1, "Dagger", "A simple dagger."),
-        WeaponItem(2, "Iron Sword", "Old rusty iron sword."),
-        WeaponItem(4, "Tachi", "Perfect japanese katana."),
-        WeaponItem(5, "Mysterious Bacon Axe", "The greatest ancient pure bacon axe.", ASCIIART.AXE)
-    )
+        DAGGER,
+        IRON_SWORD,
+        TACHI,
+        MYSTERIOUS_BACON_AXE
+    ).map { it.get() }
 
     val armorLibrary : List<ArmorItem> = listOf(
-        ArmorItem(1, "Leather Brassiere", "Funny leather armor. Looks nice.", ASCIIART.BRASSIERE),
-        ArmorItem(-1, "Thorn Armor", "The worst armor ever. Who's create this?"),
-        ArmorItem(3, "Bacon Plate", "Excellent armor of neat bacon slices.")
-    )
+        LEATHER_BRASSIERE,
+        THORN_ARMOR,
+        BACON_PLATE
+    ).map { it.get() }
 
     fun getRandomWeapon(): WeaponItem = weaponLibrary[Random.nextInt(weaponLibrary.size)].clone()
 

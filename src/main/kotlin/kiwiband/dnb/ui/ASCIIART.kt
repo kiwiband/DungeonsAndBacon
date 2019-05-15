@@ -31,5 +31,11 @@ object ASCIIART {
         | ║
     """.trimMargin()
 
+    val BAD_ICON = """
+        |
+        | @_@
+        |
+    """.trimMargin()
+
     const val PLAYER = "L(O_o)-(===>"
 }

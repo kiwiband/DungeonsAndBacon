@@ -1,6 +1,11 @@
 package kiwiband.dnb.inventory
 
-class Inventory(val capacity: Int) {
+import kiwiband.dnb.JSONSerializable
+import kiwiband.dnb.actors.creatures.Creature
+import org.json.JSONArray
+import org.json.JSONObject
+
+class Inventory(val capacity: Int) : JSONSerializable {
     private val items = mutableListOf<Item>()
 
     fun add(item: Item): Boolean {
@@ -21,4 +26,18 @@ class Inventory(val capacity: Int) {
     fun isFull(): Boolean = !hasSpace()
     fun hasSpace(): Boolean = items.size < capacity
     fun isEmpty(): Boolean = items.size == 0
+
+    override fun toJSON(): JSONObject = JSONObject()
+        .put("cap", capacity)
+        .put("itms", JSONArray().also { arr -> items.forEach { arr.put(it.toJSON()) } })
+
+    companion object {
+        fun fromJSON(obj: JSONObject, owner: Creature? = null): Inventory {
+            val inv = Inventory(obj.getInt("cap"))
+            for (item in obj.getJSONArray("itms")) {
+                inv.add(Item.fromJSON(item as JSONObject, owner))
+            }
+            return inv
+        }
+    }
 }

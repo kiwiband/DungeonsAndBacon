@@ -14,7 +14,7 @@ class EquipmentSet(val owner: Creature) {
     }
 
     private fun equipInSlot(slotItem: EquipmentItem?, item: EquipmentItem): EquipmentItem? {
-        slotItem?.onUnequip(owner)
-        return if (slotItem === item) null else item.apply { onEquip(owner) }
+        slotItem?.unequip()
+        return if (slotItem === item) null else item.also { it.equipBy(owner) }
     }
 }
