@@ -59,5 +59,18 @@ class Mob(
     companion object {
         const val TYPE_ID = "mb"
         private const val VIEW_RANGE = 5
+
+        fun fromJSON(obj: JSONObject, map: LocalMap): Mob {
+            return Mob(
+                map,
+                Vec2M(obj.getInt("x"), obj.getInt("y")),
+                obj.getInt("ai"),
+                CreatureStatus(
+                    obj.getInt("lvl"),
+                    obj.getInt("hp"),
+                    obj.getInt("exp")
+                )
+            )
+        }
     }
 }

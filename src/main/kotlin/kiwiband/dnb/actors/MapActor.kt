@@ -1,5 +1,6 @@
 package kiwiband.dnb.actors
 
+import kiwiband.dnb.JSONSerializable
 import kiwiband.dnb.events.EventDestroyActor
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.events.Registration
@@ -15,7 +16,7 @@ enum class ViewOrder {
 /**
  * Base class for all actors on a map
  */
-abstract class MapActor(private val tickOrder: TickOrder = TickOrder.DEFAULT) : Comparable<MapActor> {
+abstract class MapActor(private val tickOrder: TickOrder = TickOrder.DEFAULT) : Comparable<MapActor>, JSONSerializable {
     private var eventTick: Registration? = null
     open var viewOrder = ViewOrder.Default
     open var viewPriority = 0
@@ -87,7 +88,8 @@ abstract class MapActor(private val tickOrder: TickOrder = TickOrder.DEFAULT) : 
         }
     }
 
-    open fun toJSON(): JSONObject = JSONObject().put("x", pos.x).put("y", pos.y).put("t", getType())
+
+    override fun toJSON(): JSONObject = JSONObject().put("x", pos.x).put("y", pos.y).put("t", getType())
 
     abstract fun getType(): String
 

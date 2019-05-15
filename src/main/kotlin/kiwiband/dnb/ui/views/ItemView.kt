@@ -6,7 +6,7 @@ import kiwiband.dnb.ui.Renderer
 
 class ItemView(width: Int, height: Int, private val item: Item) : View(width, height) {
     override fun draw(renderer: Renderer) {
-        if (item is EquipmentItem && item.equipped) {
+        if (item is EquipmentItem && item.equipped()) {
             renderer.writeCharacter('*', Vec2(3, 3))
         }
         renderer.withOffset {

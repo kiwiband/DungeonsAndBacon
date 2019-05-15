@@ -2,6 +2,7 @@ package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.events.EventActivityFinished
 import kiwiband.dnb.events.EventDispatcher
+import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
@@ -30,6 +31,10 @@ class LoadMapActivity(renderer: Renderer): Activity(renderer) {
         if (!mapSaver.checkSaved(mapFile)) {
             loadMap(LocalMap.generateMap(88, 32))
             return
+        }
+        // when closes application
+        EventGameOver.dispatcher.addHandler {
+            EventGameActivityFinished.dispatcher.run(EventGameActivityFinished(false))
         }
         drawScene()
         EventKeyPress.dispatcher.addHandler { onKeyPress(it) }

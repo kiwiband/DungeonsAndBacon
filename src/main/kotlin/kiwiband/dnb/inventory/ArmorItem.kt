@@ -2,8 +2,10 @@ package kiwiband.dnb.inventory
 
 import kiwiband.dnb.actors.creatures.Creature
 import kiwiband.dnb.ui.ASCIIART
+import org.json.JSONObject
 
 class ArmorItem(
+    val id: Int,
     val defence: Int,
     private val name: String,
     private val description: String,
@@ -17,15 +19,15 @@ class ArmorItem(
 
     override fun getDescription() = description
 
-    override fun onEquip(creature: Creature) {
-        super.onEquip(creature)
-        creature.status.armorDefence += defence
+    override fun onEquip(owner: Creature) {
+        owner.status.armorDefence += defence
     }
 
-    override fun onUnequip(creature: Creature) {
-        super.onUnequip(creature)
-        creature.status.armorDefence -= defence
+    override fun onUnequip(owner: Creature) {
+        owner.status.armorDefence -= defence
     }
 
-    override fun clone() = ArmorItem(defence, name, description, icon)
+    override fun clone() = ArmorItem(id, defence, name, description, icon)
+
+    override fun toJSON(): JSONObject = super.toJSON().put("t", "a").put("id", id)
 }

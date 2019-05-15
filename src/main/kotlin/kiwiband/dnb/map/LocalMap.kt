@@ -3,6 +3,7 @@ package kiwiband.dnb.map
 import com.github.czyzby.noise4j.map.Grid
 import com.github.czyzby.noise4j.map.generator.room.RoomType
 import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
+import kiwiband.dnb.JSONSerializable
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.MapActorFactory
@@ -14,12 +15,13 @@ import kiwiband.dnb.actors.statics.WallActor
 import kiwiband.dnb.math.*
 import org.json.JSONArray
 import org.json.JSONObject
+import org.json.JSONString
 import kotlin.random.Random
 
 /**
  * Class for game map.
  */
-class LocalMap(val width: Int, val height: Int) {
+class LocalMap(val width: Int, val height: Int) : JSONSerializable {
 
     private val borders = Vec2(0, 0) to Vec2(width, height)
 
@@ -32,7 +34,7 @@ class LocalMap(val width: Int, val height: Int) {
      * Serializes the map to JSON.
      * @return JSON object
      */
-    fun toJSON(): JSONObject {
+    override fun toJSON(): JSONObject {
         val actorsArray = JSONArray()
         actors.forEach { actor -> actorsArray.put(actor.toJSON()) }
         return JSONObject()

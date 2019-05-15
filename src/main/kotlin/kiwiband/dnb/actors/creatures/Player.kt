@@ -11,6 +11,7 @@ import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
+import org.json.JSONObject
 import kotlin.random.Random
 
 /**
@@ -18,10 +19,16 @@ import kotlin.random.Random
  * @param map map where the character is on
  * @param position initial position on the [map]
  */
-class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(map, status, TickOrder.PLAYER) {
+class Player(
+    map: LocalMap,
+    position: Vec2,
+    status: CreatureStatus
+) : Creature(map, status, TickOrder.PLAYER) {
     private val viewAppearance = '@'
 
-    val inventory = Inventory(20)
+    var inventory: Inventory = Inventory(20).also { it.add(ItemFactory.getRandomArmor()) }
+        private set
+
     val equipment = EquipmentSet(this)
 
     init {
@@ -37,7 +44,6 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
     override fun onBeginGame() {
         super.onBeginGame()
         eventMove = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
-        inventory.add(ItemFactory.getRandomArmor())
     }
 
     override fun onTick() {
@@ -82,7 +88,30 @@ class Player(map: LocalMap, position: Vec2, status: CreatureStatus) : Creature(m
         }
     }
 
+    override fun toJSON(): JSONObject {
+        return super.toJSON().put("inv", inventory.toJSON())
+    }
+
     companion object {
         const val TYPE_ID = "plyr"
+
+        fun fromJSON(obj: JSONObject, map: LocalMap): Player {
+            val player = Player(
+                map,
+                Vec2M(obj.getInt("x"), obj.getInt("y")),
+                CreatureStatus(
+                    obj.getInt("lvl"),
+                    obj.getInt("hp"),
+                    obj.getInt("exp")
+                )
+            )
+            player.inventory = Inventory.fromJSON(obj.getJSONObject("inv"), player)
+            for (item in player.inventory.items()) {
+                if (item is EquipmentItem && item.equipped()) {
+                    player.equipment.equip(item)
+                }
+            }
+            return player
+        }
     }
 }
