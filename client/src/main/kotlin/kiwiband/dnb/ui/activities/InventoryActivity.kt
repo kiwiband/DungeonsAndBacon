@@ -1,23 +1,20 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.actors.creatures.Player
-import kiwiband.dnb.events.EventActivityFinished
-import kiwiband.dnb.events.EventDispatcher
 import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.ui.App.Companion.SCREEN_HEIGHT
 import kiwiband.dnb.ui.App.Companion.SCREEN_WIDTH
-import kiwiband.dnb.ui.AppContext
-import kiwiband.dnb.ui.Renderer
+import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InventoryView
 import kiwiband.dnb.ui.views.View
 
-class InventoryActivity(private val player: Player,
-                        context: AppContext,
+class InventoryActivity(context: GameAppContext,
                         callback: (Unit) -> Unit) : Activity<Unit>(context, callback) {
     private lateinit var inventoryRootView: InventoryView
 
+    private val mgr = context.gameManager
+
     override fun createRootView(): View {
-        inventoryRootView = InventoryView(player.inventory, SCREEN_WIDTH, SCREEN_HEIGHT)
+        inventoryRootView = InventoryView(mgr.getInventory(), SCREEN_WIDTH, SCREEN_HEIGHT)
         return inventoryRootView
     }
 
@@ -37,7 +34,7 @@ class InventoryActivity(private val player: Player,
             'e', 'у' -> {
                 val itemNum = inventoryRootView.getCurrentSelected()
                 if (itemNum >= 0) {
-                    player.useItem(itemNum)
+                    mgr.useItem(itemNum)//player.useItem(itemNum)
                     drawScene()
                 }
             }

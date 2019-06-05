@@ -2,15 +2,12 @@ package kiwiband.dnb.ui.activities
 
 import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.input.KeyType
-import kiwiband.dnb.Game
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventKeyPress
-import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.events.EventTick
-import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.App
-import kiwiband.dnb.ui.AppContext
+import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView
 import kiwiband.dnb.ui.views.PlayerView
@@ -19,18 +16,16 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 
-class GameActivity(private val game: Game,
-                   context: AppContext,
-                   callback: (Boolean) -> Unit): Activity<Boolean>(context, callback) {
+class GameActivity(private val gameContext: GameAppContext,
+                   callback: (Boolean) -> Unit): Activity<Boolean>(gameContext, callback) {
 
-    private val mapSaver = MapSaver()
-    private val mapFile = "./maps/saved_map.dnb"
+    private val mgr = gameContext.gameManager
 
     override fun createRootView(): View {
         val gameRootView = HorizontalLayout(App.SCREEN_WIDTH, App.SCREEN_HEIGHT)
 
-        val mapView = MapView(game.map, 48, 22)
-        val playerView = PlayerView(game.player, 28, 10)
+        val mapView = MapView(mgr, 48, 22)
+        val playerView = PlayerView(mgr, 28, 10)
         val infoView = InfoView(28, 10)
 
         gameRootView.addChild(BoxLayout(mapView))
@@ -52,30 +47,23 @@ class GameActivity(private val game: Game,
             'd', 'в' -> Vec2(1, 0)
             else -> null
         }?.also {
-            EventMove.dispatcher.run(EventMove(it))
-            tick()
+            mgr.movePlayer(it)
         }
     }
 
-    private fun tick() {
-        EventTick.dispatcher.run(EventTick())
-        drawScene()
+    private fun onTick() {
+        if (context.activities.peekLast() == this)
+            drawScene()
     }
 
-    private fun saveMap(game: Game) {
-        mapSaver.saveToFile(game.map, mapFile)
-    }
-
-    private fun deleteMap() {
-        mapSaver.deleteFile(mapFile)
-    }
-
-    private fun openInventory(game: Game) {
-        InventoryActivity(game.player, context, {}).start()
+    private fun openInventory() {
+        InventoryActivity(gameContext, {}).start()
     }
 
     override fun onStart() {
         drawScene()
+
+        //context.gameManager.setOnGameStateChange { game = it }
 
         EventKeyPress.dispatcher.addHandler {
             if (it.key.keyType == KeyType.Escape) {
@@ -83,28 +71,24 @@ class GameActivity(private val game: Game,
             }
         }
 
+        EventTick.dispatcher.addHandler { onTick() }
+
         EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
 
         EventKeyPress.dispatcher.addHandler {
             if (it.key.keyType == KeyType.Character) {
                 when (it.key.character) {
-                    'i', 'ш' -> openInventory(game)
+                    'i', 'ш' -> openInventory()
                 }
             }
         }
 
         EventGameOver.dispatcher.addHandler {
-            val isDead = game.player.isDead()
-            if (isDead) {
-                deleteMap()
-            } else {
-                saveMap(game)
-            }
-            game.endGame()
+            val isDead = mgr.finishGame()
             finish(isDead)
         }
 
-        game.startGame()
+        mgr.startGame()
     }
 
     override fun onFinish(result: Boolean) {
