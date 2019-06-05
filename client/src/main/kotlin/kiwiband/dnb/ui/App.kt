@@ -4,11 +4,11 @@ import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.Game
 import kiwiband.dnb.InputManager
-import kiwiband.dnb.ui.activities.EventGameActivityFinished
-import kiwiband.dnb.ui.activities.EventMapLoaded
+import kiwiband.dnb.ui.activities.Activity
 import kiwiband.dnb.ui.activities.GameActivity
 import kiwiband.dnb.ui.activities.LoadMapActivity
 import kiwiband.dnb.ui.views.GameOverView
+import java.util.*
 
 /**
  * Application class.
@@ -19,14 +19,9 @@ class App {
     private val inputManager = InputManager(terminal)
     private val screen = TerminalScreen(terminal)
     private val renderer = Renderer(screen)
+    private val activities = ArrayDeque<Activity<*>>()
+    private val context = AppContext(renderer, activities)
 
-    /**
-     * Runs the first activity.
-     */
-    private fun startGame() {
-        val loadMapActivity = LoadMapActivity(renderer)
-        loadMapActivity.start()
-    }
 
     /**
      * Console application entry point.
@@ -37,25 +32,23 @@ class App {
 
         inputManager.startKeyHandle()
 
-        // once the map is loaded, we can start the game activity.
-        EventMapLoaded.dispatcher.addHandler { event ->
-            val game = Game(event.result, playerId)
-            val gameActivity = GameActivity(game, renderer)
+        val loadMapActivity = LoadMapActivity(context) { map ->
+            val game = Game(map, playerId)
+            val gameActivity = GameActivity(game, context) { gameResult ->
+                inputManager.stop()
+                if (gameResult) {
+                    screen.clear()
+                    GameOverView(SCREEN_WIDTH, SCREEN_HEIGHT).draw(renderer)
+                    screen.refresh()
+                    Thread.sleep(2000)
+                }
+            }
             gameActivity.start()
         }
+        loadMapActivity.start()
 
-        // once the game has ended, we can stop the input manager and end the game.
-        EventGameActivityFinished.dispatcher.addHandler {
-            inputManager.stop()
-            if (it.result) {
-                screen.clear()
-                GameOverView(SCREEN_WIDTH, SCREEN_HEIGHT).draw(renderer)
-                screen.refresh()
-                Thread.sleep(2000)
-            }
-        }
+        // once the map is loaded, we can start the game activity.
 
-        startGame()
 
         // wait for the end of the game here.
         inputManager.join()

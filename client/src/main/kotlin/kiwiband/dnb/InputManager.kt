@@ -22,6 +22,8 @@ class InputManager(private val terminal: Terminal) {
             while(isHandle) {
                 val key = terminal.readInput()
                 EventKeyPress.dispatcher.run(EventKeyPress(key))
+                if (key.keyType == KeyType.EOF)
+                    break
             }
         }
         handleThread.start()

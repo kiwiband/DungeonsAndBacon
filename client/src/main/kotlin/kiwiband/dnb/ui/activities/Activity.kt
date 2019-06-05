@@ -1,7 +1,7 @@
 package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.events.EventKeyPress
-import kiwiband.dnb.ui.Renderer
+import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.View
 
 /**
@@ -14,8 +14,11 @@ import kiwiband.dnb.ui.views.View
  * - onFinish() gets invoked
  * After finishing the activity, the screen needs to be refreshed from outside.
  */
-abstract class Activity(private val renderer: Renderer) {
-
+abstract class Activity<T>(protected val context: AppContext,
+                           private val callback: (T) -> Unit) {
+    private val renderer = context.renderer
+    private val lock = Object()
+    private var result: T? = null
     /**
      * The root view of the activity. It is always placed in a top left corner.
      */
@@ -31,13 +34,21 @@ abstract class Activity(private val renderer: Renderer) {
         renderer.refreshScreen()
     }
 
+    protected fun close() {
+        EventKeyPress.dispatcher.popLayer()
+        val activities = context.activities
+        activities.pop()
+        activities.peekLast()?.drawScene()
+    }
+
     /**
      * Finishes the activity.
      * DO NOT call this before calling start() (i.e. in constructor)
      */
-    protected fun finish() {
-        EventKeyPress.dispatcher.popLayer()
-        onFinish()
+    protected fun finish(result: T) {
+        close()
+        onFinish(result)
+        callback(result)
     }
 
     /**
@@ -47,6 +58,7 @@ abstract class Activity(private val renderer: Renderer) {
     fun start() {
         rootView = createRootView()
         EventKeyPress.dispatcher.pushLayer()
+        context.activities.push(this)
         onStart()
     }
 
@@ -64,5 +76,5 @@ abstract class Activity(private val renderer: Renderer) {
     /**
      * A handler that gets invoked upon activity finish.
      */
-    open fun onFinish() {}
+    open fun onFinish(result: T) {}
 }
