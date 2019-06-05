@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package kiwiband.dnb.rpc;
+
+message Empty { }
+
+message String {
+    string str = 1;
+}
+
+service SyncService {
+    rpc sync(Empty) returns (String) { }
+}

@@ -2,7 +2,7 @@ package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.Vec2
-import kiwiband.dnb.ui.ASCIIART
+import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.ui.Renderer
 
 /**

@@ -1,4 +1,4 @@
-package kiwiband.dnb.ui
+package kiwiband.dnb
 
 object ASCIIART {
     val SHIELD = """

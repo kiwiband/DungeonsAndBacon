@@ -1,33 +1,33 @@
 package kiwiband.dnb.inventory
 
 import kiwiband.dnb.actors.creatures.Creature
-import kiwiband.dnb.ui.ASCIIART
+import kiwiband.dnb.ASCIIART
 import org.json.JSONObject
 
-class ArmorItem(
+class WeaponItem(
     val id: Int,
-    val defence: Int,
+    val damage: Int,
     private val name: String,
     private val description: String,
-    private val icon:String = ASCIIART.ARMOR
+    private val icon:String = ASCIIART.SWORD
 ) : EquipmentItem() {
     override fun getName() = name
 
     override fun getIcon() = icon
 
-    override fun getSlot() = EquipmentSlot.Armor
-
     override fun getDescription() = description
 
+    override fun getSlot() = EquipmentSlot.Weapon
+
     override fun onEquip(owner: Creature) {
-        owner.status.armorDefence += defence
+        owner.status.weaponAttack += damage
     }
 
     override fun onUnequip(owner: Creature) {
-        owner.status.armorDefence -= defence
+        owner.status.weaponAttack -= damage
     }
 
-    override fun clone() = ArmorItem(id, defence, name, description, icon)
+    override fun clone() = WeaponItem(id, damage, name, description, icon)
 
-    override fun toJSON(): JSONObject = super.toJSON().put("t", "a").put("id", id)
+    override fun toJSON(): JSONObject = super.toJSON().put("t", "w").put("id", id)
 }

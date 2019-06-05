@@ -1,6 +1,6 @@
 package kiwiband.dnb.inventory
 
-import kiwiband.dnb.ui.ASCIIART
+import kiwiband.dnb.ASCIIART
 import org.json.JSONObject
 
 enum class WeaponItemsEnum(private val item: WeaponItem) {
