@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package kiwiband.dnb.rpc;
+
+message Empty { }
+
+message JsonString {
+    string json = 1;
+}
+
+message PlayerId {
+    int32 id = 1;
+}
+
+service GameService {
+    rpc connect(Empty) returns (PlayerId) { }
+    rpc disconnect(PlayerId) returns (Empty) { }
+    rpc userEvent(JsonString) returns (Empty) { }
+    rpc updateMap(PlayerId) returns (stream JsonString) { }
+}
