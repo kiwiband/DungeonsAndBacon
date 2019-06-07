@@ -2,9 +2,15 @@ package kiwiband.dnb.events
 
 import com.googlecode.lanterna.input.KeyStroke
 import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
+import org.json.JSONObject
 
-sealed class Event
+sealed class Event {
+    open fun toJSON(): JSONObject {
+        return JSONObject()
+    }
+}
 
 typealias EventHandlers<T> = MutableList<EventHandler<T>>
 
@@ -66,6 +72,11 @@ open class EventHandler<T : Event>(private val handler: (T) -> Unit) : Registrat
  * @param direction direction to move.
  */
 class EventMove(val direction: Vec2) : Event() {
+
+    override fun toJSON(): JSONObject {
+        return JSONObject().put("type", "EventMove").put("direction", direction.toJSON())
+    }
+
     companion object {
         val dispatcher = EventDispatcher<EventMove>()
     }
@@ -114,6 +125,17 @@ class EventDestroyActor(val actor: MapActor) : Event() {
 class EventSpawnActor(val actor: MapActor) : Event() {
     companion object {
         val dispatcher = EventDispatcher<EventSpawnActor>()
+    }
+}
+
+/**
+ * Update the whole map.
+ * @param newMap the actual map.
+ */
+class EventUpdateMap(val newMap: LocalMap) : Event() {
+
+    companion object {
+        val dispatcher = EventDispatcher<EventUpdateMap>()
     }
 }
 

@@ -4,6 +4,7 @@ import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.Game
 import kiwiband.dnb.InputManager
+import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.manager.LocalGameManager
 import kiwiband.dnb.ui.activities.Activity
 import kiwiband.dnb.ui.activities.GameActivity
@@ -24,12 +25,16 @@ class App {
     private val renderer = Renderer(screen)
     private val activities = ArrayDeque<Activity<*>>()
     private val context = AppContext(renderer, activities)
+    private val serverCommunicationManager = ServerCommunicationManager()
 
 
     /**
      * Console application entry point.
      */
-    fun start(playerId: Int = 0) {
+    fun start() {
+
+        val playerId = serverCommunicationManager.connect()
+
         screen.startScreen()
         screen.cursorPosition = null
 
@@ -56,6 +61,9 @@ class App {
 
         // wait for the end of the game here.
         inputManager.join()
+
+        serverCommunicationManager.disconnect()
+
         screen.stopScreen()
     }
 

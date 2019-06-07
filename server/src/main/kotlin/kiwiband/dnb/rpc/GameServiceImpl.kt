@@ -25,8 +25,8 @@ class GameServiceImpl : GameServiceGrpc.GameServiceImplBase() {
         responseObserver.onCompleted()
     }
 
-    override fun userEvent(request: Gameservice.JsonString, responseObserver: StreamObserver<Gameservice.Empty>) {
-        println("User event happened: ${request.json}")
+    override fun userEvent(request: Gameservice.UserEvent, responseObserver: StreamObserver<Gameservice.Empty>) {
+        println("User event happened (player id: ${request.playerId}): ${request.json}")
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
     }

@@ -1,5 +1,7 @@
 package kiwiband.dnb.math
 
+import org.json.JSONObject
+
 /**
  * Immutable two-dimensional point.
  * @param x X coordinate
@@ -60,4 +62,8 @@ open class Vec2(var x: Int, var y: Int) {
     infix fun to(that: Vec2): Borders = Borders(this, that)
 
     override fun hashCode(): Int = 0xffff * x + y
+
+    fun toJSON(): JSONObject {
+        return JSONObject().put("x", x).put("y", y)
+    }
 }
