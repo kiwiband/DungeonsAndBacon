@@ -16,8 +16,10 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.HorizontalLayout
 import kiwiband.dnb.ui.views.layout.VerticalLayout
 
-class GameActivity(private val gameContext: GameAppContext,
-                   callback: (Boolean) -> Unit): Activity<Boolean>(gameContext, callback) {
+class GameActivity(
+    private val gameContext: GameAppContext,
+    callback: (Boolean) -> Unit
+) : Activity<Boolean>(gameContext, callback) {
 
     private val mgr = gameContext.gameManager
 
@@ -57,13 +59,11 @@ class GameActivity(private val gameContext: GameAppContext,
     }
 
     private fun openInventory() {
-        InventoryActivity(gameContext, {}).start()
+        InventoryActivity(gameContext) {}.start()
     }
 
     override fun onStart() {
         drawScene()
-
-        //context.gameManager.setOnGameStateChange { game = it }
 
         EventKeyPress.dispatcher.addHandler {
             if (it.key.keyType == KeyType.Escape) {

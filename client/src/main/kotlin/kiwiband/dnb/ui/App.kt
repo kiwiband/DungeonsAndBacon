@@ -10,6 +10,7 @@ import kiwiband.dnb.ui.activities.GameActivity
 import kiwiband.dnb.ui.activities.LoadMapActivity
 import kiwiband.dnb.ui.views.GameOverView
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Application class.
@@ -17,7 +18,8 @@ import java.util.*
  */
 class App {
     private val terminal = DefaultTerminalFactory().createTerminal()
-    private val inputManager = InputManager(terminal)
+    private val eventLock = ReentrantLock()
+    private val inputManager = InputManager(terminal, eventLock)
     private val screen = TerminalScreen(terminal)
     private val renderer = Renderer(screen)
     private val activities = ArrayDeque<Activity<*>>()

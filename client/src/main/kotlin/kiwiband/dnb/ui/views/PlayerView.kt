@@ -1,6 +1,5 @@
 package kiwiband.dnb.ui.views
 
-import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.manager.GameManager
