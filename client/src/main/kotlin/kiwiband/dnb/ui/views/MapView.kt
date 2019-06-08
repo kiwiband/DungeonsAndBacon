@@ -1,8 +1,7 @@
 package kiwiband.dnb.ui.views
 
-import kiwiband.dnb.actors.MapActor
-import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.manager.GameManager
+import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 
@@ -13,10 +12,9 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
 
     private val center = Vec2(width / 2, height / 2)
     private val borders = Vec2(0, 0) to Vec2(width, height)
-    private val mapBorders = Vec2(0, 0) to Vec2(mgr.getMap().width, mgr.getMap().height)
-    private val offsets = center to (mapBorders.b - center)
 
     override fun draw(renderer: Renderer) {
+        val offsets = getOffsets(getBorders())
         println("player: ${findPlayerPosition()} and ${findPlayerPosition().fitIn(offsets)}")
         println("center: $center")
         val offset = center - findPlayerPosition().fitIn(offsets)
@@ -30,6 +28,10 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
             }
         }
     }
+
+    private fun getBorders() = mgr.getMap().let { Vec2(0, 0) to Vec2(it.width, it.height) }
+
+    private fun getOffsets(mapBorders: Borders) = center to (mapBorders.b - center)
 
     private fun findPlayerPosition(): Vec2 {
         return mgr.getPlayer().pos
