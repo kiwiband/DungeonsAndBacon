@@ -17,7 +17,8 @@ object Main {
         var host = DEFAULT_HOST
         var port = DEFAULT_PORT
         if (confFile.exists()) {
-            confFile.useLines { lines ->
+            confFile.useLines { lins ->
+                val lines = lins.toList()
                 host = lines.elementAt(0)
                 port = lines.elementAt(1).toInt()
             }
