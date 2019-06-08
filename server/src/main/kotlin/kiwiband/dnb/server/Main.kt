@@ -1,6 +1,7 @@
 package kiwiband.dnb.server
 
 import io.grpc.ServerBuilder
+import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.map.LocalMap
 
 
@@ -15,6 +16,7 @@ fun main() {
     println("Server started")
 
     while (true) {
+        EventTick.dispatcher.run(EventTick())
         gameService.sendUpdate(map.toJSON().toString())
         Thread.sleep(1000)
     }

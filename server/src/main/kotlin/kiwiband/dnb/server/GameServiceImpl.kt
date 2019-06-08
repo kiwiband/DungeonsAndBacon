@@ -16,9 +16,8 @@ class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServi
 
     override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
         val id = currentPlayerId.getAndIncrement()
-        val map = gameSession.game.map
-        map.spawnPlayer(id)
-        currentMap.set(map.toJSON().toString())
+        gameSession.addNewPlayer(id)
+        currentMap.set(gameSession.game.map.toJSON().toString())
         responseObserver.onNext(Gameservice.InitialState.newBuilder().setPlayerId(id).setMapJson(currentMap.get()).build())
         println("Player $id joined the game")
         responseObserver.onCompleted()
@@ -26,6 +25,7 @@ class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServi
 
     override fun disconnect(request: Gameservice.PlayerId, responseObserver: StreamObserver<Gameservice.Empty>) {
         println("Player ${request.id} left the game")
+        gameSession.removePlayer(request.id)
         updateObservers.remove(request.id)?.onCompleted()
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
