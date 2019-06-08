@@ -11,7 +11,9 @@ import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 
-class MultiplayerGameManager(private val comm: ServerCommunicationManager, private val id: Int, var game: Game): GameManager {
+class MultiplayerGameManager(private val comm: ServerCommunicationManager, var game: Game): GameManager {
+
+    private val id = game.player.playerID
 
     private fun updateGame(map: LocalMap) {
         game = Game(map, id)

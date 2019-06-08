@@ -32,17 +32,13 @@ class App {
      * Console application entry point.
      */
     fun start() {
-
-        val playerId = serverCommunicationManager.connect()
-
         screen.startScreen()
         screen.cursorPosition = null
 
         inputManager.startKeyHandle()
 
-        val loadMapActivity = LoadMapActivity(context) { map ->
-            val game = Game(map, playerId)
-            val mgr = MultiplayerGameManager(serverCommunicationManager, playerId, game)
+        val loadMapActivity = LoadMapActivity(context, serverCommunicationManager) { game ->
+            val mgr = MultiplayerGameManager(serverCommunicationManager, game)
             val gameContext = GameAppContext(context, mgr)
             val gameActivity = GameActivity(gameContext) { gameResult ->
                 inputManager.stop()

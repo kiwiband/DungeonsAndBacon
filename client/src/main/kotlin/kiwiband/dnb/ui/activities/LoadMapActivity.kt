@@ -1,8 +1,9 @@
 package kiwiband.dnb.ui.activities
 
+import kiwiband.dnb.Game
+import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.events.EventUpdateMap
 import kiwiband.dnb.events.Registration
-import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.ui.App
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.LoadMapView
@@ -14,8 +15,10 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
  * An activity that loads the map.
  * On receiving the map, finishes and runs the EventMapLoaded event.
  */
-class LoadMapActivity(context: AppContext, callback: (LocalMap) -> Unit):
-    Activity<LocalMap>(context, callback) {
+class LoadMapActivity(context: AppContext,
+                      private val comm: ServerCommunicationManager,
+                      callback: (Game) -> Unit):
+    Activity<Game>(context, callback) {
 
     private lateinit var registration: Registration
 
@@ -24,9 +27,12 @@ class LoadMapActivity(context: AppContext, callback: (LocalMap) -> Unit):
     }
 
     override fun onStart() {
+        drawScene()
+        val playerId = comm.connect()
         registration = EventUpdateMap.dispatcher.addHandler {
             registration.finish()
-            finish(it.newMap)
+            val game = Game(it.newMap, playerId)
+            finish(game)
         }
     }
 }
