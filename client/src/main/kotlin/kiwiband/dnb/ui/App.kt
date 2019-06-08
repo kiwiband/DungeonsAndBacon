@@ -55,7 +55,6 @@ class App {
 
         // wait for the end of the game here.
         inputManager.join()
-        serverCommunicationManager.disconnect()
 
         screen.stopScreen()
     }

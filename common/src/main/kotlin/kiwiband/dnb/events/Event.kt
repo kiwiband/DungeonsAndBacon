@@ -14,13 +14,13 @@ sealed class Event : JSONSerializable {
 
     companion object {
         fun runFromJSON(json: JSONObject) {
-            when (json["type"]) {
+            return when (json["type"]) {
                 "EventMove" -> {
                     val direction = json.getJSONObject("direction")
-                    return EventMove.dispatcher.run(EventMove(Vec2(direction.getInt("x"), direction.getInt("y"))))
+                    EventMove.dispatcher.run(EventMove(Vec2(direction.getInt("x"), direction.getInt("y"))))
                 }
                 "EventItemUsed" -> {
-                    return EventItemUsed.dispatcher.run(EventItemUsed(json.getInt("itemNum")))
+                    EventItemUsed.dispatcher.run(EventItemUsed(json.getInt("itemNum")))
                 }
                 else -> {
                     throw RuntimeException("Could not parse event from json")
