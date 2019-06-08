@@ -10,7 +10,11 @@ import kiwiband.dnb.rpc.Gameservice
 import org.json.JSONObject
 import java.util.concurrent.locks.ReentrantLock
 
-class ServerCommunicationManager(private val eventLock: ReentrantLock) {
+class ServerCommunicationManager(
+    private val host: String,
+    private val port: Int,
+    private val eventLock: ReentrantLock
+) {
 
     private lateinit var gameService: GameServiceGrpc.GameServiceBlockingStub
     private lateinit var gameServiceAsync: GameServiceGrpc.GameServiceStub
@@ -19,7 +23,8 @@ class ServerCommunicationManager(private val eventLock: ReentrantLock) {
 
 
     fun connect(): Pair<Int, LocalMap> {
-        val channel = ManagedChannelBuilder.forAddress("localhost", 12345).usePlaintext().build()
+        println("Connecting to server at $host:$port")
+        val channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
         gameService = GameServiceGrpc.newBlockingStub(channel)
         gameServiceAsync = GameServiceGrpc.newStub(channel)
         val state = gameService.connect(Gameservice.Empty.getDefaultInstance())
