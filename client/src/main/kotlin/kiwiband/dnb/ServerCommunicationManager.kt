@@ -21,7 +21,7 @@ class ServerCommunicationManager(private val eventLock: ReentrantLock) {
         gameService = GameServiceGrpc.newBlockingStub(channel)
         gameServiceAsync = GameServiceGrpc.newStub(channel)
         id = gameService.connect(Gameservice.Empty.getDefaultInstance()).id
-        println("Connected to server! id: $id")
+        println("Connected to server with id: $id")
         val idMessage = Gameservice.PlayerId.newBuilder().setId(id).build()
         gameServiceAsync.updateMap(idMessage, MapUpdateHandler())
         return id
@@ -48,7 +48,7 @@ class ServerCommunicationManager(private val eventLock: ReentrantLock) {
         }
 
         override fun onError(t: Throwable) {
-            println("Error: ${t.message}")
+            println("Error getting map update: ${t.message}")
         }
 
         override fun onCompleted() {

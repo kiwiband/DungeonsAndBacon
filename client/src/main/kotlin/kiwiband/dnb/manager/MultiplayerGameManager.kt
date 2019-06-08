@@ -15,13 +15,13 @@ class MultiplayerGameManager(private val comm: ServerCommunicationManager, var g
 
     private val id = game.player.playerID
 
+    init {
+        EventUpdateMap.dispatcher.addHandler { updateGame(it.newMap) }
+    }
+
     private fun updateGame(map: LocalMap) {
         game = Game(map, id)
         EventTick.dispatcher.run(EventTick())
-    }
-
-    init {
-        EventUpdateMap.dispatcher.addHandler { updateGame(it.newMap) }
     }
 
     override fun movePlayer(direction: Vec2) {

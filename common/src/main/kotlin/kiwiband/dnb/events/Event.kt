@@ -1,13 +1,14 @@
 package kiwiband.dnb.events
 
 import com.googlecode.lanterna.input.KeyStroke
+import kiwiband.dnb.JSONSerializable
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 import org.json.JSONObject
 
-sealed class Event {
-    open fun toJSON(): JSONObject {
+sealed class Event : JSONSerializable {
+    override fun toJSON(): JSONObject {
         return JSONObject()
     }
 }
