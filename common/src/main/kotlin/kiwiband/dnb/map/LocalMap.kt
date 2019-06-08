@@ -69,7 +69,7 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
         }
     }
 
-    fun findPlayer(id: Int) = actors.find { it is Player && it.playerID == id} as Player?
+    fun findPlayer(id: Int) = actors.find { it is Player && it.playerId == id} as Player?
 
     fun getActors(pos: Vec2): Collection<MapActor> = if (pos in borders) actors[pos] else listOf(endMap)
 

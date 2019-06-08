@@ -23,7 +23,7 @@ class Player(
     map: LocalMap,
     position: Vec2,
     status: CreatureStatus,
-    var playerID: Int
+    var playerId: Int
 ) : Creature(map, status, TickOrder.PLAYER) {
     private val viewAppearance = '@'
 
@@ -44,7 +44,7 @@ class Player(
 
     override fun onBeginGame() {
         super.onBeginGame()
-        eventMove = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
+        eventMove = EventMove.dispatcher.addHandler { if (it.playerId == playerId) moveDirection.set(it.direction) }
         EventItemUsed.dispatcher.addHandler { useItem(it.itemNum) }
     }
 
@@ -91,7 +91,7 @@ class Player(
     }
 
     override fun toJSON(): JSONObject {
-        return super.toJSON().put("inv", inventory.toJSON()).put("id", playerID)
+        return super.toJSON().put("inv", inventory.toJSON()).put("id", playerId)
     }
 
     companion object {

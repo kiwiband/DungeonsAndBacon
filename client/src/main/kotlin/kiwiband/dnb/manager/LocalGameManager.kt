@@ -37,7 +37,7 @@ class LocalGameManager(private val game: Game): GameManager {
     }
 
     override fun movePlayer(direction: Vec2) {
-        EventMove.dispatcher.run(EventMove(direction))
+        EventMove.dispatcher.run(EventMove(direction, 0))
         EventTick.dispatcher.run(EventTick())
     }
 

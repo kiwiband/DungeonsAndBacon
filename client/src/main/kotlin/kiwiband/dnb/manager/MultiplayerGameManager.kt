@@ -26,7 +26,7 @@ class MultiplayerGameManager(private val comm: ServerCommunicationManager, var p
     }
 
     override fun movePlayer(direction: Vec2) {
-        comm.sendEvent(EventMove(direction))
+        comm.sendEvent(EventMove(direction, playerId))
     }
 
     override fun useItem(itemNum: Int) {

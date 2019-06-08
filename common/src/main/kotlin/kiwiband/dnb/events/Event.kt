@@ -14,13 +14,13 @@ sealed class Event : JSONSerializable {
 
     companion object {
         fun runFromJSON(json: JSONObject) {
-            return when (json["type"]) {
+            when (json["t"]) {
                 "EventMove" -> {
-                    val direction = json.getJSONObject("direction")
-                    EventMove.dispatcher.run(EventMove(Vec2(direction.getInt("x"), direction.getInt("y"))))
+                    val dir = json.getJSONObject("dir")
+                    return EventMove.dispatcher.run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getInt("id")))
                 }
                 "EventItemUsed" -> {
-                    EventItemUsed.dispatcher.run(EventItemUsed(json.getInt("itemNum")))
+                    return EventItemUsed.dispatcher.run(EventItemUsed(json.getInt("itm")))
                 }
                 else -> {
                     throw RuntimeException("Could not parse event from json")
@@ -89,10 +89,10 @@ open class EventHandler<T : Event>(private val handler: (T) -> Unit) : Registrat
  * Event for player movement.
  * @param direction direction to move.
  */
-class EventMove(val direction: Vec2) : Event() {
+class EventMove(val direction: Vec2, val playerId: Int) : Event() {
 
     override fun toJSON(): JSONObject {
-        return JSONObject().put("type", "EventMove").put("direction", direction.toJSON())
+        return JSONObject().put("t", "EventMove").put("dir", direction.toJSON()).put("id", playerId)
     }
 
     companion object {
@@ -159,7 +159,7 @@ class EventUpdateMap(val newMap: LocalMap) : Event() {
 
 class EventItemUsed(val itemNum: Int): Event() {
     override fun toJSON(): JSONObject {
-        return JSONObject().put("type", "EventItemUsed").put("itemNum", itemNum)
+        return JSONObject().put("t", "EventItemUsed").put("itm", itemNum)
     }
 
     companion object {
