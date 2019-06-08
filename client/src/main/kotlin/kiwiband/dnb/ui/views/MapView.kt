@@ -14,12 +14,9 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
     private val borders = Vec2(0, 0) to Vec2(width, height)
 
     override fun draw(renderer: Renderer) {
-        val offsets = getOffsets(getBorders())
-        println("player: ${findPlayerPosition()} and ${findPlayerPosition().fitIn(offsets)}")
-        println("center: $center")
+        val offsets = getOffsets(getMapBorders())
         val offset = center - findPlayerPosition().fitIn(offsets)
 
-        println("borders: $borders")
         println(offset)
         println(borders - offset)
         mgr.getMap().actors.forEachCell(borders - offset) { cell ->
@@ -29,9 +26,9 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
         }
     }
 
-    private fun getBorders() = mgr.getMap().let { Vec2(0, 0) to Vec2(it.width, it.height) }
+    private fun getMapBorders() = mgr.getMap().let { Vec2(0, 0) to Vec2(it.width, it.height) }
 
-    private fun getOffsets(mapBorders: Borders) = center to (mapBorders.b - center)
+    private fun getOffsets(mapBorders: Borders): Borders = center to (mapBorders.b - center).mixMax(center + Vec2(1, 1))
 
     private fun findPlayerPosition(): Vec2 {
         return mgr.getPlayer().pos
