@@ -1,5 +1,6 @@
 package kiwiband.dnb.server
 
+import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
@@ -40,8 +41,16 @@ class GameServiceImpl(mapJson: String) : GameServiceGrpc.GameServiceImplBase() {
     fun sendUpdate(mapJson: String) {
         currentMap.set(mapJson)
         val message = Gameservice.JsonString.newBuilder().setJson(mapJson).build()
-        updateObservers.forEach { (_, observer) ->
-            observer.onNext(message)
+        val removedObservers = mutableListOf<Int>()
+        updateObservers.forEach { (id, observer) ->
+            try {
+                observer.onNext(message)
+            } catch (e: StatusRuntimeException) {
+                e.printStackTrace()
+                println("Player $id removed")
+                removedObservers.add(id)
+            }
         }
+        removedObservers.forEach { updateObservers.remove(it) }
     }
 }
