@@ -1,5 +1,6 @@
 package kiwiband.dnb.math
 
+import kiwiband.dnb.JSONSerializable
 import org.json.JSONObject
 
 /**
@@ -8,11 +9,11 @@ import org.json.JSONObject
  * @param y Y coordinate
  */
 @Suppress("unused")
-open class Vec2(var x: Int, var y: Int) {
+open class Vec2(var x: Int, var y: Int) : JSONSerializable {
     constructor(v: Vec2) : this(v.x, v.y)
     constructor() : this(0, 0)
 
-    fun isZero() : Boolean = x == 0 && y == 0
+    fun isZero(): Boolean = x == 0 && y == 0
 
     operator fun unaryMinus() = Vec2(-x, -y)
 
@@ -63,7 +64,7 @@ open class Vec2(var x: Int, var y: Int) {
 
     override fun hashCode(): Int = 0xffff * x + y
 
-    fun toJSON(): JSONObject {
+    override fun toJSON(): JSONObject {
         return JSONObject().put("x", x).put("y", y)
     }
 

@@ -11,6 +11,23 @@ sealed class Event : JSONSerializable {
     override fun toJSON(): JSONObject {
         return JSONObject()
     }
+
+    companion object {
+        fun parseJSON(json: JSONObject): Event {
+            when (json["type"]) {
+                "EventMove" -> {
+                    val direction = json.getJSONObject("direction")
+                    return EventMove(Vec2(direction.getInt("x"), direction.getInt("y")))
+                }
+                "EventItemUsed" -> {
+                    return EventItemUsed(json.getInt("itemNum"))
+                }
+                else -> {
+                    throw RuntimeException("Could not parse event from json")
+                }
+            }
+        }
+    }
 }
 
 typealias EventHandlers<T> = MutableList<EventHandler<T>>
