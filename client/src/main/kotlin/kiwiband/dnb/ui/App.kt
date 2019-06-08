@@ -25,7 +25,7 @@ class App {
     private val renderer = Renderer(screen)
     private val activities = ArrayDeque<Activity<*>>()
     private val context = AppContext(renderer, activities)
-    private val serverCommunicationManager = ServerCommunicationManager()
+    private val serverCommunicationManager = ServerCommunicationManager(eventLock)
 
 
     /**

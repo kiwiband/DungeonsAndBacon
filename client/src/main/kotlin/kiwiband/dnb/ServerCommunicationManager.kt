@@ -8,8 +8,9 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
 import org.json.JSONObject
+import java.util.concurrent.locks.ReentrantLock
 
-class ServerCommunicationManager {
+class ServerCommunicationManager(private val eventLock: ReentrantLock) {
 
     private lateinit var gameService: GameServiceGrpc.GameServiceBlockingStub
     private lateinit var gameServiceAsync: GameServiceGrpc.GameServiceStub
@@ -36,12 +37,14 @@ class ServerCommunicationManager {
         gameService.disconnect(Gameservice.PlayerId.newBuilder().setId(id).build())
     }
 
-    private class MapUpdateHandler : StreamObserver<Gameservice.JsonString> {
+    private inner class MapUpdateHandler : StreamObserver<Gameservice.JsonString> {
         override fun onNext(value: Gameservice.JsonString) {
             println("Update map: ${value.json}")
+            eventLock.lock()
             EventUpdateMap.dispatcher.run(
                 EventUpdateMap(LocalMap.loadMap(JSONObject(value.json)))
             )
+            eventLock.unlock()
         }
 
         override fun onError(t: Throwable) {
