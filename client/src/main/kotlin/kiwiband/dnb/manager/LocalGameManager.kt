@@ -14,6 +14,7 @@ class LocalGameManager(private val game: Game): GameManager {
 
     private val mapSaver = MapSaver()
     private val mapFile = "./maps/saved_map.dnb"
+    private lateinit var player: Player
 
     private fun saveMap(game: Game) {
         mapSaver.saveToFile(game.map, mapFile)
@@ -24,7 +25,7 @@ class LocalGameManager(private val game: Game): GameManager {
     }
 
     override fun getInventory(): Inventory {
-        return game.player.inventory
+        return player.inventory
     }
 
     override fun getMap(): LocalMap {
@@ -32,7 +33,7 @@ class LocalGameManager(private val game: Game): GameManager {
     }
 
     override fun getPlayer(): Player {
-        return game.player
+        return player
     }
 
     override fun movePlayer(direction: Vec2) {
@@ -42,16 +43,17 @@ class LocalGameManager(private val game: Game): GameManager {
 
     override fun useItem(itemNum: Int) {
         EventItemUsed.dispatcher.run(EventItemUsed(itemNum))
-        game.player.useItem(itemNum)
+        player.useItem(itemNum)
     }
 
     override fun startGame() {
+        player = game.getOrCreatePlayer(0)
         game.startGame()
     }
 
     override fun finishGame(): Boolean {
-        val isDead = game.player.isDead()
-        if (game.player.isDead()) {
+        val isDead = player.isDead()
+        if (player.isDead()) {
             deleteMap()
         } else {
             saveMap(game)

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
-class GameServiceImpl(mapJson: String) : GameServiceGrpc.GameServiceImplBase() {
+class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServiceGrpc.GameServiceImplBase() {
 
     private val currentPlayerId = AtomicInteger()
     private val updateObservers = ConcurrentHashMap<Int, StreamObserver<Gameservice.JsonString>>()
@@ -16,6 +16,9 @@ class GameServiceImpl(mapJson: String) : GameServiceGrpc.GameServiceImplBase() {
 
     override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
         val id = currentPlayerId.getAndIncrement()
+        val map = gameSession.game.map
+        map.spawnPlayer(id)
+        currentMap.set(map.toJSON().toString())
         responseObserver.onNext(Gameservice.InitialState.newBuilder().setPlayerId(id).setMapJson(currentMap.get()).build())
         println("Player $id joined the game")
         responseObserver.onCompleted()
