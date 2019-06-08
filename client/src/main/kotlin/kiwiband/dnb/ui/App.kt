@@ -7,8 +7,8 @@ import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.manager.MultiplayerGameManager
 import kiwiband.dnb.ui.activities.Activity
 import kiwiband.dnb.ui.activities.GameActivity
+import kiwiband.dnb.ui.activities.GameOverActivity
 import kiwiband.dnb.ui.activities.LoadMapActivity
-import kiwiband.dnb.ui.views.GameOverView
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -43,10 +43,7 @@ class App {
                 inputManager.stop()
                 serverCommunicationManager.disconnect()
                 if (gameResult) {
-                    screen.clear()
-                    GameOverView(SCREEN_WIDTH, SCREEN_HEIGHT).draw(renderer)
-                    screen.refresh()
-                    Thread.sleep(2000)
+                    GameOverActivity(gameContext).start()
                 }
             }
             gameActivity.start()
