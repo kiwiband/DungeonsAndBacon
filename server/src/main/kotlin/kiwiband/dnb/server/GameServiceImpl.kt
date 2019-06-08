@@ -2,8 +2,10 @@ package kiwiband.dnb.server
 
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
+import kiwiband.dnb.events.Event
 import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
+import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -33,6 +35,8 @@ class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServi
 
     override fun userEvent(request: Gameservice.UserEvent, responseObserver: StreamObserver<Gameservice.Empty>) {
         println("User event happened (player id: ${request.playerId}): ${request.json}")
+        Event.runFromJSON(JSONObject(request.json))
+
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
     }
