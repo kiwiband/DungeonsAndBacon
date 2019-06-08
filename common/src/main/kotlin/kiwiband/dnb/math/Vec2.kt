@@ -66,4 +66,8 @@ open class Vec2(var x: Int, var y: Int) {
     fun toJSON(): JSONObject {
         return JSONObject().put("x", x).put("y", y)
     }
+
+    override fun toString(): String {
+        return "$x, $y"
+    }
 }

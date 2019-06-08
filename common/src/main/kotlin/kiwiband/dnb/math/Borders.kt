@@ -59,5 +59,9 @@ class Borders(val a: Vec2, val b: Vec2) {
 
     operator fun plus(offset: Vec2) = Borders(a + offset, b + offset)
     operator fun minus(offset: Vec2) = Borders(a - offset, b - offset)
+
+    override fun toString(): String {
+        return "$a to $b"
+    }
 }
 
