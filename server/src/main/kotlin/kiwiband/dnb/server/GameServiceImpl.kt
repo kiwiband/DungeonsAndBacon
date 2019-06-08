@@ -1,6 +1,8 @@
-package kiwiband.dnb.rpc
+package kiwiband.dnb.server
 
 import io.grpc.stub.StreamObserver
+import kiwiband.dnb.rpc.GameServiceGrpc
+import kiwiband.dnb.rpc.Gameservice
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
