@@ -2,8 +2,6 @@ package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.Game
 import kiwiband.dnb.ServerCommunicationManager
-import kiwiband.dnb.events.EventUpdateMap
-import kiwiband.dnb.events.Registration
 import kiwiband.dnb.ui.App
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.LoadMapView
@@ -19,8 +17,6 @@ class LoadMapActivity(context: AppContext,
                       private val comm: ServerCommunicationManager,
                       callback: (Game) -> Unit):
     Activity<Game>(context, callback) {
-
-    private lateinit var registration: Registration
 
     override fun createRootView(): View {
         return BoxLayout(LoadMapView(App.SCREEN_WIDTH - 2, App.SCREEN_HEIGHT - 2))
