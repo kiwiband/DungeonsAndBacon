@@ -41,6 +41,7 @@ class App {
             val gameContext = GameAppContext(context, mgr)
             val gameActivity = GameActivity(gameContext) { gameResult ->
                 inputManager.stop()
+                serverCommunicationManager.disconnect()
                 if (gameResult) {
                     screen.clear()
                     GameOverView(SCREEN_WIDTH, SCREEN_HEIGHT).draw(renderer)
@@ -57,7 +58,6 @@ class App {
 
         // wait for the end of the game here.
         inputManager.join()
-
         serverCommunicationManager.disconnect()
 
         screen.stopScreen()

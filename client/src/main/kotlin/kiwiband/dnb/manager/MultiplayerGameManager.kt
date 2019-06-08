@@ -1,12 +1,8 @@
 package kiwiband.dnb.manager
 
-import kiwiband.dnb.Game
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.actors.creatures.Player
-import kiwiband.dnb.events.EventItemUsed
-import kiwiband.dnb.events.EventMove
-import kiwiband.dnb.events.EventTick
-import kiwiband.dnb.events.EventUpdateMap
+import kiwiband.dnb.events.*
 import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
@@ -20,7 +16,12 @@ class MultiplayerGameManager(private val comm: ServerCommunicationManager, var p
 
     private fun updateMap(map: LocalMap) {
         localMap = map
-        localPlayer = map.findPlayer(playerId) ?: localMap.spawnPlayer(playerId)
+        val player = map.findPlayer(playerId)
+        if (player == null) {
+            EventGameOver.dispatcher.run(EventGameOver())
+            return
+        }
+        localPlayer = player
         EventTick.dispatcher.run(EventTick())
     }
 
@@ -33,7 +34,7 @@ class MultiplayerGameManager(private val comm: ServerCommunicationManager, var p
     }
 
     override fun finishGame(): Boolean {
-        return false
+        return true
     }
 
     override fun startGame() {

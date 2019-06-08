@@ -44,7 +44,6 @@ class ServerCommunicationManager(private val eventLock: ReentrantLock) {
 
     private inner class MapUpdateHandler : StreamObserver<Gameservice.JsonString> {
         override fun onNext(value: Gameservice.JsonString) {
-            println("Map has been updated")
             eventLock.lock()
             EventUpdateMap.dispatcher.run(
                 EventUpdateMap(LocalMap.loadMap(JSONObject(value.json)))
