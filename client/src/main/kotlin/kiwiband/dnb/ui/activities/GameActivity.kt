@@ -59,7 +59,7 @@ class GameActivity(
     }
 
     private fun openInventory() {
-        InventoryActivity(gameContext) {}.start()
+        InventoryActivity(gameContext).start()
     }
 
     override fun onStart() {
