@@ -2,6 +2,7 @@ package kiwiband.dnb.manager
 
 import kiwiband.dnb.Game
 import kiwiband.dnb.actors.creatures.Player
+import kiwiband.dnb.events.EventItemUsed
 import kiwiband.dnb.events.EventMove
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.inventory.Inventory
@@ -34,14 +35,13 @@ class LocalGameManager(private val game: Game): GameManager {
         return game.player
     }
 
-    override fun setOnGameStateChange(gameHandler: (Game) -> Unit) { }
-
     override fun movePlayer(direction: Vec2) {
         EventMove.dispatcher.run(EventMove(direction))
         EventTick.dispatcher.run(EventTick())
     }
 
     override fun useItem(itemNum: Int) {
+        EventItemUsed.dispatcher.run(EventItemUsed(itemNum))
         game.player.useItem(itemNum)
     }
 

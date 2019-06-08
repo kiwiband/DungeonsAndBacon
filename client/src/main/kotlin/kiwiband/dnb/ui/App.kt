@@ -5,7 +5,7 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.Game
 import kiwiband.dnb.InputManager
 import kiwiband.dnb.ServerCommunicationManager
-import kiwiband.dnb.manager.LocalGameManager
+import kiwiband.dnb.manager.MultiplayerGameManager
 import kiwiband.dnb.ui.activities.Activity
 import kiwiband.dnb.ui.activities.GameActivity
 import kiwiband.dnb.ui.activities.LoadMapActivity
@@ -42,7 +42,8 @@ class App {
 
         val loadMapActivity = LoadMapActivity(context) { map ->
             val game = Game(map, playerId)
-            val gameContext = GameAppContext(context, LocalGameManager(game))
+            val mgr = MultiplayerGameManager(serverCommunicationManager, playerId, game)
+            val gameContext = GameAppContext(context, mgr)
             val gameActivity = GameActivity(gameContext) { gameResult ->
                 inputManager.stop()
                 if (gameResult) {

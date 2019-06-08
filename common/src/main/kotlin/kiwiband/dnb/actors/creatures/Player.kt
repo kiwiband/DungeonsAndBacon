@@ -45,6 +45,7 @@ class Player(
     override fun onBeginGame() {
         super.onBeginGame()
         eventMove = EventMove.dispatcher.addHandler { moveDirection.set(it.direction) }
+        EventItemUsed.dispatcher.addHandler { useItem(it.itemNum) }
     }
 
     override fun onTick() {

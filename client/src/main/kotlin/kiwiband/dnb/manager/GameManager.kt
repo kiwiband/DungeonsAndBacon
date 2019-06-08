@@ -1,6 +1,5 @@
 package kiwiband.dnb.manager
 
-import kiwiband.dnb.Game
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
@@ -10,8 +9,6 @@ interface GameManager {
     fun movePlayer(direction: Vec2)
 
     fun useItem(itemNum: Int)
-
-    fun setOnGameStateChange(gameHandler: (Game) -> Unit)
 
     fun finishGame(): Boolean
 

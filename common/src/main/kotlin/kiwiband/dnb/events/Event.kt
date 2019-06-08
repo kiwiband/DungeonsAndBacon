@@ -139,7 +139,12 @@ class EventUpdateMap(val newMap: LocalMap) : Event() {
     }
 }
 
-/**
- * Event on finishing the activity with some result.
- */
-abstract class EventActivityFinished<U>(val result: U) : Event()
+class EventItemUsed(val itemNum: Int): Event() {
+    override fun toJSON(): JSONObject {
+        return JSONObject().put("type", "EventItemUsed").put("itemNum", itemNum)
+    }
+
+    companion object {
+        val dispatcher = EventDispatcher<EventItemUsed>()
+    }
+}
