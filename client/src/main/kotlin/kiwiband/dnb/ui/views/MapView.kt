@@ -17,8 +17,6 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
         val offsets = getOffsets(getMapBorders())
         val offset = center - findPlayerPosition().fitIn(offsets)
 
-        println(offset)
-        println(borders - offset)
         mgr.getMap().actors.forEachCell(borders - offset) { cell ->
             cell.firstOrNull()?.also {
                 renderer.writeCharacter(it.getViewAppearance(), it.pos + offset)
