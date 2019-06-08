@@ -15,7 +15,6 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
     private val borders = Vec2(0, 0) to Vec2(width, height)
     private val mapBorders = Vec2(0, 0) to Vec2(mgr.getMap().width, mgr.getMap().height)
     private val offsets = center to (mapBorders.b - center)
-    private val player: MapActor? = findPlayer()
 
     override fun draw(renderer: Renderer) {
         val offset = center - findPlayerPosition().fitIn(offsets)
@@ -28,8 +27,6 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
     }
 
     private fun findPlayerPosition(): Vec2 {
-        return player?.pos ?: center
+        return mgr.getPlayer().pos
     }
-
-    private fun findPlayer(): MapActor? = mgr.getMap().actors.find { it is Player }
 }

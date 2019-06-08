@@ -14,7 +14,7 @@ class Game(val map: LocalMap, playerID: Int) {
      */
     var tickTime = 0
         private set
-    val player: Player = map.actors.find { it is Player && it.playerID == playerID} as Player? ?: map.spawnPlayer(playerID)
+    val player: Player = map.findPlayer(playerID) ?: map.spawnPlayer(playerID)
     private val actorsToDestroy = mutableListOf<MapActor>()
 
     private val actorsToSpawn = mutableListOf<MapActor>()

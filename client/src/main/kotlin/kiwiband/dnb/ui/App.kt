@@ -2,7 +2,6 @@ package kiwiband.dnb.ui
 
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
-import kiwiband.dnb.Game
 import kiwiband.dnb.InputManager
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.manager.MultiplayerGameManager
@@ -37,8 +36,8 @@ class App {
 
         inputManager.startKeyHandle()
 
-        val loadMapActivity = LoadMapActivity(context, serverCommunicationManager) { game ->
-            val mgr = MultiplayerGameManager(serverCommunicationManager, game)
+        val loadMapActivity = LoadMapActivity(context, serverCommunicationManager) { (playerId, map) ->
+            val mgr = MultiplayerGameManager(serverCommunicationManager, playerId, map)
             val gameContext = GameAppContext(context, mgr)
             val gameActivity = GameActivity(gameContext) { gameResult ->
                 inputManager.stop()

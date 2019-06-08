@@ -2,6 +2,7 @@ package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.Game
 import kiwiband.dnb.ServerCommunicationManager
+import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.ui.App
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.LoadMapView
@@ -15,8 +16,8 @@ import kiwiband.dnb.ui.views.layout.BoxLayout
  */
 class LoadMapActivity(context: AppContext,
                       private val comm: ServerCommunicationManager,
-                      callback: (Game) -> Unit):
-    Activity<Game>(context, callback) {
+                      callback: (Pair<Int, LocalMap>) -> Unit):
+    Activity<Pair<Int, LocalMap>>(context, callback) {
 
     override fun createRootView(): View {
         return BoxLayout(LoadMapView(App.SCREEN_WIDTH - 2, App.SCREEN_HEIGHT - 2))
@@ -24,8 +25,6 @@ class LoadMapActivity(context: AppContext,
 
     override fun onStart() {
         drawScene()
-        val (playerId, map) = comm.connect()
-        val game = Game(map, playerId)
-        finish(game)
+        finish(comm.connect())
     }
 }

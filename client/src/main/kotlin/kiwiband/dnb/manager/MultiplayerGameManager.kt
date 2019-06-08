@@ -11,16 +11,16 @@ import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 
-class MultiplayerGameManager(private val comm: ServerCommunicationManager, var game: Game): GameManager {
-
-    private val id = game.player.playerID
+class MultiplayerGameManager(private val comm: ServerCommunicationManager, var playerId: Int, var localMap: LocalMap): GameManager {
+    var localPlayer: Player = localMap.findPlayer(playerId) ?: localMap.spawnPlayer(playerId)
 
     init {
-        EventUpdateMap.dispatcher.addHandler { updateGame(it.newMap) }
+        EventUpdateMap.dispatcher.addHandler { updateMap(it.newMap) }
     }
 
-    private fun updateGame(map: LocalMap) {
-        game = Game(map, id)
+    private fun updateMap(map: LocalMap) {
+        localMap = map
+        localPlayer = map.findPlayer(playerId) ?: localMap.spawnPlayer(playerId)
         EventTick.dispatcher.run(EventTick())
     }
 
@@ -41,15 +41,15 @@ class MultiplayerGameManager(private val comm: ServerCommunicationManager, var g
     }
 
     override fun getMap(): LocalMap {
-        return game.map
+        return localMap
     }
 
     override fun getPlayer(): Player {
-        return game.player
+        return localPlayer
     }
 
     override fun getInventory(): Inventory {
-        return game.player.inventory
+        return localPlayer.inventory
     }
 
 }
