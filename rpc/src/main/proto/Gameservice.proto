@@ -12,13 +12,18 @@ message PlayerId {
     int32 id = 1;
 }
 
+message InitialState {
+    int32 playerId = 1;
+    string mapJson = 2;
+}
+
 message UserEvent {
     int32 playerId = 1;
     string json = 2;
 }
 
 service GameService {
-    rpc connect(Empty) returns (PlayerId) { }
+    rpc connect(Empty) returns (InitialState) { }
     rpc disconnect(PlayerId) returns (Empty) { }
     rpc userEvent(UserEvent) returns (Empty) { }
     rpc updateMap(PlayerId) returns (stream JsonString) { }

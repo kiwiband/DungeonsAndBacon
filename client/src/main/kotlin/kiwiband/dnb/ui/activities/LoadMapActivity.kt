@@ -28,11 +28,8 @@ class LoadMapActivity(context: AppContext,
 
     override fun onStart() {
         drawScene()
-        val playerId = comm.connect()
-        registration = EventUpdateMap.dispatcher.addHandler {
-            registration.finish()
-            val game = Game(it.newMap, playerId)
-            finish(game)
-        }
+        val (playerId, map) = comm.connect()
+        val game = Game(map, playerId)
+        finish(game)
     }
 }

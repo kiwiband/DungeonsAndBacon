@@ -14,17 +14,22 @@ class ServerCommunicationManager(private val eventLock: ReentrantLock) {
 
     private lateinit var gameService: GameServiceGrpc.GameServiceBlockingStub
     private lateinit var gameServiceAsync: GameServiceGrpc.GameServiceStub
+    private val mapdUpdateHandler = MapUpdateHandler()
     private var id = -1
 
-    fun connect(): Int {
+
+    fun connect(): Pair<Int, LocalMap> {
         val channel = ManagedChannelBuilder.forAddress("localhost", 12345).usePlaintext().build()
         gameService = GameServiceGrpc.newBlockingStub(channel)
         gameServiceAsync = GameServiceGrpc.newStub(channel)
-        id = gameService.connect(Gameservice.Empty.getDefaultInstance()).id
+        val state = gameService.connect(Gameservice.Empty.getDefaultInstance())
+        id = state.playerId
+
         println("Connected to server with id: $id")
         val idMessage = Gameservice.PlayerId.newBuilder().setId(id).build()
-        gameServiceAsync.updateMap(idMessage, MapUpdateHandler())
-        return id
+
+        gameServiceAsync.updateMap(idMessage, mapdUpdateHandler)
+        return id to LocalMap.loadMap(JSONObject(state.mapJson))
     }
 
     fun sendEvent(event: Event) {

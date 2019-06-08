@@ -5,15 +5,14 @@ import kiwiband.dnb.map.LocalMap
 
 
 fun main() {
-    val gameService = GameServiceImpl()
+    val map = LocalMap.generateMap(40, 40)
+    val mapJson = map.toJSON().toString()
+
+    val gameService = GameServiceImpl(mapJson)
     ServerBuilder.forPort(12345).addService(gameService).build().start()
 
-    val map = LocalMap.generateMap(40, 40)
-
-    val json = map.toJSON().toString()
-
     while (true) {
-        gameService.sendUpdate(json)
+        gameService.sendUpdate(mapJson)
         Thread.sleep(1000)
     }
 }

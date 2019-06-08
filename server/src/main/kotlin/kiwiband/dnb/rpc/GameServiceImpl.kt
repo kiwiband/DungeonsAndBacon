@@ -5,15 +5,15 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
-class GameServiceImpl : GameServiceGrpc.GameServiceImplBase() {
+class GameServiceImpl(mapJson: String) : GameServiceGrpc.GameServiceImplBase() {
 
     private val currentPlayerId = AtomicInteger()
     private val updateObservers = ConcurrentHashMap<Int, StreamObserver<Gameservice.JsonString>>()
-    private val currentMap = AtomicReference<Gameservice.JsonString>()
+    private val currentMap = AtomicReference<String>(mapJson)
 
-    override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.PlayerId>) {
+    override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
         val id = currentPlayerId.getAndIncrement()
-        responseObserver.onNext(Gameservice.PlayerId.newBuilder().setId(id).build())
+        responseObserver.onNext(Gameservice.InitialState.newBuilder().setPlayerId(id).setMapJson(currentMap.get()).build())
         println("Player $id joined the game")
         responseObserver.onCompleted()
     }
@@ -33,12 +33,11 @@ class GameServiceImpl : GameServiceGrpc.GameServiceImplBase() {
 
     override fun updateMap(request: Gameservice.PlayerId, responseObserver: StreamObserver<Gameservice.JsonString>) {
         updateObservers[request.id] = responseObserver
-        responseObserver.onNext(currentMap.get())
     }
 
-    fun sendUpdate(json: String) {
-        val message = Gameservice.JsonString.newBuilder().setJson(json).build()
-        currentMap.set(message)
+    fun sendUpdate(mapJson: String) {
+        currentMap.set(mapJson)
+        val message = Gameservice.JsonString.newBuilder().setJson(mapJson).build()
         updateObservers.forEach { (_, observer) ->
             observer.onNext(message)
         }
