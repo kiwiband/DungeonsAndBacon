@@ -1,6 +1,7 @@
 package kiwiband.dnb.server
 
 import kiwiband.dnb.Game
+import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventBus
 import kiwiband.dnb.map.LocalMap
 
@@ -13,6 +14,22 @@ class GameSession {
 
     init {
         game.startGame()
+    }
+
+    /**
+     * Find a minimal non used id from all players on the map
+     */
+    fun getFreePlayerId(): Int {
+        var result = 0
+        val ids = game.map.actors.filter { it is Player }.map { (it as Player).playerId }.sorted()
+        for (id in ids) {
+            if (id == result) {
+                result++
+            } else {
+                break
+            }
+        }
+        return result
     }
 
     /**

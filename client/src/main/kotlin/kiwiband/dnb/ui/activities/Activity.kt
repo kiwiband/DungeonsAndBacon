@@ -34,7 +34,7 @@ abstract class Activity<T>(protected val context: AppContext,
     }
 
     protected fun close() {
-        context.eventBus.eventKeyPress.popLayer()
+        context.eventBus.pressKey.popLayer()
         val activities = context.activities
         activities.removeLast()
         activities.peekLast()?.drawScene()
@@ -56,7 +56,7 @@ abstract class Activity<T>(protected val context: AppContext,
      */
     fun start() {
         rootView = createRootView()
-        context.eventBus.eventKeyPress.pushLayer()
+        context.eventBus.pressKey.pushLayer()
         context.activities.addLast(this)
         onStart()
     }

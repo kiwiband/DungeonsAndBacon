@@ -1,6 +1,7 @@
 package kiwiband.dnb.map
 
 import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.math.Vec2
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -81,5 +82,5 @@ class MapGridTest {
 class MockActor : MapActor() {
     override fun getType(): String = throw UnsupportedOperationException()
 
-    override fun getViewAppearance(): Char = throw UnsupportedOperationException()
+    override fun getViewAppearance(): ViewAppearance = throw UnsupportedOperationException()
 }

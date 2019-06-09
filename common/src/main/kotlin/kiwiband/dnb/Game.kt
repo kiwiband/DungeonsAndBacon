@@ -43,10 +43,10 @@ class Game(val map: LocalMap, val eventBus: EventBus) {
      * Starts the game, resetting game timer and initializing player.
      */
     fun startGame() {
-        eventsRegistrations.add(eventBus.eventDestroyActor.addHandler { actorsToDestroy.add(it.actor) })
-        eventsRegistrations.add(eventBus.eventSpawnActor.addHandler { actorsToSpawn.add(it.actor) })
+        eventsRegistrations.add(eventBus.destroyActor.addHandler { actorsToDestroy.add(it.actor) })
+        eventsRegistrations.add(eventBus.spawnActor.addHandler { actorsToSpawn.add(it.actor) })
         map.actors.forEach { it.onBeginGame(this) }
-        eventsRegistrations.add(eventBus.eventTick.addHandler(TickOrder.BEFORE_DRAW_UI) { onTick() })
+        eventsRegistrations.add(eventBus.tick.addHandler(TickOrder.BEFORE_DRAW_UI) { onTick() })
     }
 
     /**

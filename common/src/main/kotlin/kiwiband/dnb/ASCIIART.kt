@@ -1,5 +1,7 @@
 package kiwiband.dnb
 
+import com.googlecode.lanterna.TextColor
+
 object ASCIIART {
     val SHIELD = """
         |.-.-.
@@ -38,4 +40,8 @@ object ASCIIART {
     """.trimMargin()
 
     const val PLAYER = "L(O_o)-(===>"
+
+    val GREEN = TextColor.RGB(0, 255, 0)
+    val RED = TextColor.RGB(255, 0, 0)
+    val WHITE = TextColor.RGB(255, 255, 255)
 }

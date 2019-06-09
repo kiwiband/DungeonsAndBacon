@@ -76,15 +76,15 @@ class GameActivity(
     override fun onStart() {
         drawScene()
 
-        context.eventBus.eventKeyPress.addHandler {
+        context.eventBus.pressKey.addHandler {
             handleEscapeKey(it.key)
             handleMoveKeys(it.key)
             handleInventoryKey(it.key)
         }
 
-        context.eventBus.eventTick.addHandler { onTick() }
+        context.eventBus.tick.addHandler { onTick() }
 
-        context.eventBus.eventGameOver.addHandler {
+        context.eventBus.gameOver.addHandler {
             val isDead = mgr.finishGame()
             finish(isDead)
         }

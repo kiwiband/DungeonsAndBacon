@@ -1,6 +1,6 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.events.EventKeyPress
+import kiwiband.dnb.events.EventPressKey
 import kiwiband.dnb.App.Companion.SCREEN_HEIGHT
 import kiwiband.dnb.App.Companion.SCREEN_WIDTH
 import kiwiband.dnb.ui.GameAppContext
@@ -17,8 +17,8 @@ class InventoryActivity(context: GameAppContext) : Activity<Unit>(context, {}) {
         return inventoryRootView
     }
 
-    private fun onKeyPressed(keyPress: EventKeyPress) {
-        when (keyPress.key.character) {
+    private fun onKeyPressed(pressKey: EventPressKey) {
+        when (pressKey.key.character) {
             'i', 'ш' -> {
                 finish(Unit)
             }
@@ -41,7 +41,7 @@ class InventoryActivity(context: GameAppContext) : Activity<Unit>(context, {}) {
     }
 
     override fun onStart() {
-        context.eventBus.eventKeyPress.addHandler { onKeyPressed(it) }
+        context.eventBus.pressKey.addHandler { onKeyPressed(it) }
         drawScene()
     }
 }

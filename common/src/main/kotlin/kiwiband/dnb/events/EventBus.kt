@@ -5,26 +5,24 @@ import org.json.JSONObject
 import java.lang.RuntimeException
 
 class EventBus {
-    val eventMove = EventDispatcher<EventMove>()
-    val eventTick = EventTickDispatcher()
-    val eventGameOver = EventDispatcher<EventGameOver>()
-    val eventKeyPress = EventKeyPressDispatcher()
-    val eventDestroyActor = EventDispatcher<EventDestroyActor>()
-    val eventSpawnActor = EventDispatcher<EventSpawnActor>()
-    val eventUpdateMap = EventDispatcher<EventUpdateMap>()
-    val eventItemUsed = EventDispatcher<EventItemUsed>()
+    val move = EventDispatcher<EventMove>()
+    val tick = EventTickDispatcher()
+    val gameOver = EventDispatcher<EventGameOver>()
+    val pressKey = EventPressKeyDispatcher()
+    val destroyActor = EventDispatcher<EventDestroyActor>()
+    val spawnActor = EventDispatcher<EventSpawnActor>()
+    val updateMap = EventDispatcher<EventUpdateMap>()
+    val useItem = EventDispatcher<EventUseItem>()
 
-    fun run(event: Event) {
-        when (event) {
-            is EventMove -> eventMove.run(event)
-            is EventTick -> eventTick.run(event)
-            is EventGameOver -> eventGameOver.run(event)
-            is EventKeyPress -> eventKeyPress.run(event)
-            is EventDestroyActor -> eventDestroyActor.run(event)
-            is EventSpawnActor -> eventSpawnActor.run(event)
-            is EventUpdateMap -> eventUpdateMap.run(event)
-            is EventItemUsed -> eventItemUsed.run(event)
-        }.let { /* exhaustive when */ }
+    fun run(event: Event) = when (event) {
+        is EventMove -> move.run(event)
+        is EventTick -> tick.run(event)
+        is EventGameOver -> gameOver.run(event)
+        is EventPressKey -> pressKey.run(event)
+        is EventDestroyActor -> destroyActor.run(event)
+        is EventSpawnActor -> spawnActor.run(event)
+        is EventUpdateMap -> updateMap.run(event)
+        is EventUseItem -> useItem.run(event)
     }
 
     fun runFromJSON(json: JSONObject) {
@@ -33,8 +31,8 @@ class EventBus {
                 val dir = json.getJSONObject("dir")
                 run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getInt("id")))
             }
-            "EventItemUsed" -> {
-                run(EventItemUsed(json.getInt("itm")))
+            "EventUseItem" -> {
+                run(EventUseItem(json.getInt("itm")))
             }
             else -> {
                 throw RuntimeException("Could not parse event from json")

@@ -1,8 +1,8 @@
 package kiwiband.dnb.ui
 
 import com.googlecode.lanterna.TextCharacter
-import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.screen.Screen
+import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.math.Vec2
 
@@ -16,6 +16,8 @@ class Renderer(private val screen: Screen) {
      * Drawing offset of this renderer
      */
     val offset: Vec2M = Vec2M()
+
+    private val defaultAppearance = ViewAppearance('.')
 
     /**
      * Sets the absolute offset of the renderer.
@@ -42,11 +44,16 @@ class Renderer(private val screen: Screen) {
      * @param internalOffset character position relative to offset
      */
     fun writeCharacter(character: Char, internalOffset: Vec2) {
+        defaultAppearance.char = character
+        writeCharacter(defaultAppearance, internalOffset)
+    }
+
+    fun writeCharacter(appearance: ViewAppearance, internalOffset: Vec2) {
         val resultOffset = offset + internalOffset
         screen.setCharacter(
             resultOffset.x,
             resultOffset.y,
-            TextCharacter(character, TextColor.ANSI.DEFAULT, TextColor.ANSI.DEFAULT)
+            TextCharacter(appearance.char, appearance.color, appearance.bgColor)
         )
     }
 

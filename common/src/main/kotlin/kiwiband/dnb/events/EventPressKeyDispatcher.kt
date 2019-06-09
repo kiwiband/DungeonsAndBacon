@@ -2,20 +2,20 @@ package kiwiband.dnb.events
 
 import java.util.*
 
-class EventKeyPressDispatcher internal constructor() : EventDispatcher<EventKeyPress>() {
+class EventPressKeyDispatcher internal constructor() : EventDispatcher<EventPressKey>() {
 
-    private val statesStack = ArrayDeque<MutableList<EventHandler<EventKeyPress>>>()
+    private val statesStack = ArrayDeque<MutableList<EventHandler<EventPressKey>>>()
 
-    private val permanentHandlers = mutableListOf<(EventKeyPress) -> Unit>()
+    private val permanentHandlers = mutableListOf<(EventPressKey) -> Unit>()
 
-    override fun run(event: EventKeyPress) {
+    override fun run(event: EventPressKey) {
         super.run(event)
         for (handler in permanentHandlers) {
             handler(event)
         }
     }
 
-    fun addPermanentHandler(handler: (EventKeyPress) -> Unit) {
+    fun addPermanentHandler(handler: (EventPressKey) -> Unit) {
         permanentHandlers.add(handler)
     }
 

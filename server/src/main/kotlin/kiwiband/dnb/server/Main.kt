@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock
  * Launcher for the server.
  */
 object Main {
-    private val DEFAULT_PORT = 12345;
+    private const val DEFAULT_PORT = 12345;
 
     @JvmStatic
     fun main(args: Array<String>) {

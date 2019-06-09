@@ -1,7 +1,10 @@
 package kiwiband.dnb.actors.creatures
 
+import com.googlecode.lanterna.TextColor
+import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.Game
 import kiwiband.dnb.actors.MapActor
+import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.DropBag
 import kiwiband.dnb.events.*
@@ -26,7 +29,7 @@ class Player(
     status: CreatureStatus,
     var playerId: Int
 ) : Creature(map, status, TickOrder.PLAYER) {
-    private val viewAppearance = '@'
+    val appearance = ViewAppearance('@', ASCIIART.GREEN)
 
     var inventory: Inventory = Inventory(20).also { it.add(ItemFactory.getRandomArmor()) }
         private set
@@ -37,7 +40,7 @@ class Player(
         super.pos.set(position)
     }
 
-    override fun getViewAppearance(): Char = viewAppearance
+    override fun getViewAppearance(): ViewAppearance = appearance
 
     private var eventMove: Registration? = null
     private val moveDirection: Vec2M = Vec2M()
@@ -45,8 +48,8 @@ class Player(
 
     override fun onBeginGame(game: Game) {
         super.onBeginGame(game)
-        eventMove = game.eventBus.eventMove.addHandler { if (it.playerId == playerId) moveDirection.set(it.direction) }
-        game.eventBus.eventItemUsed.addHandler { useItem(it.itemNum) }
+        eventMove = game.eventBus.move.addHandler { if (it.playerId == playerId) moveDirection.set(it.direction) }
+        game.eventBus.useItem.addHandler { useItem(it.itemNum) }
     }
 
     override fun onTick() {

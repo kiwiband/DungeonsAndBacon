@@ -14,7 +14,7 @@ class PlayerView(private val mgr: GameManager, width: Int, height: Int) : View(w
 
         renderer.writeText(ASCIIART.PLAYER, Vec2(7, 1))
 
-        renderer.writeText("HERONAME", Vec2(3, 4))
+        renderer.writeText("HERONAME ${(player.playerId) % 10}", Vec2(3, 4))
         renderer.writeText("HP ${player.status.health}/${player.status.maxHealth}", Vec2(3, 5))
         renderer.writeText("LVL ${player.status.level}", Vec2(3, 6))
         renderer.writeText("EXP ${player.status.experience}/${player.status.maxExperience}", Vec2(3, 7))

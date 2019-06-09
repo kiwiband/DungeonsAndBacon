@@ -1,5 +1,7 @@
 package kiwiband.dnb.manager
 
+import com.googlecode.lanterna.TextColor
+import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.*
@@ -16,7 +18,8 @@ class MultiplayerGameManager(
     var localPlayer: Player = localMap.findPlayer(playerId) ?: localMap.spawnPlayer(playerId)
 
     init {
-        eventBus.eventUpdateMap.addHandler { updateMap(it.newMap) }
+        eventBus.updateMap.addHandler { updateMap(it.newMap) }
+        recolorPlayers()
     }
 
     private fun updateMap(map: LocalMap) {
@@ -27,7 +30,17 @@ class MultiplayerGameManager(
             return
         }
         localPlayer = player
+        recolorPlayers()
         eventBus.run(EventTick())
+    }
+
+    private fun recolorPlayers() {
+        localMap.actors.forEach {
+            if (it is Player && it.playerId != playerId) {
+                it.appearance.color = ASCIIART.WHITE
+                it.appearance.char = ('0' + it.playerId % 10)
+            }
+        }
     }
 
     override fun movePlayer(direction: Vec2) {
@@ -35,7 +48,7 @@ class MultiplayerGameManager(
     }
 
     override fun useItem(itemNum: Int) {
-        comm.sendEvent(EventItemUsed(itemNum))
+        comm.sendEvent(EventUseItem(itemNum))
     }
 
     override fun finishGame(): Boolean {

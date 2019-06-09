@@ -26,7 +26,7 @@ class InputManager(
             while(isHandle) {
                 val key = terminal.readInput()
                 eventLock.lock()
-                eventBus.run(EventKeyPress(key))
+                eventBus.run(EventPressKey(key))
                 eventLock.unlock()
                 if (key.keyType == KeyType.EOF)
                     break
@@ -34,7 +34,7 @@ class InputManager(
         }
         handleThread.start()
 
-        eventBus.eventKeyPress.addPermanentHandler {
+        eventBus.pressKey.addPermanentHandler {
             if (it.key.keyType == KeyType.EOF) {
                 eventBus.run(EventGameOver())
             }

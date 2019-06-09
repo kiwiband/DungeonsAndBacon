@@ -40,7 +40,7 @@ class LocalGameManager(private val game: Game): GameManager {
     }
 
     override fun useItem(itemNum: Int) {
-        game.eventBus.run(EventItemUsed(itemNum))
+        game.eventBus.run(EventUseItem(itemNum))
         player.useItem(itemNum)
     }
 

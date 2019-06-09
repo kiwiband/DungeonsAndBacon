@@ -46,7 +46,7 @@ abstract class MapActor(
      */
     open fun onBeginGame(game: Game) {
         this.game = game
-        eventTick = game.eventBus.eventTick.addHandler(tickOrder) { onTick() }
+        eventTick = game.eventBus.tick.addHandler(tickOrder) { onTick() }
     }
 
     /**
@@ -95,5 +95,5 @@ abstract class MapActor(
 
     abstract fun getType(): String
 
-    abstract fun getViewAppearance(): Char
+    abstract fun getViewAppearance(): ViewAppearance
 }

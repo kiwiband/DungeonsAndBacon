@@ -1,5 +1,8 @@
 package kiwiband.dnb.actors.creatures
 
+import com.googlecode.lanterna.TextColor
+import kiwiband.dnb.ASCIIART
+import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.actors.creatures.ai.*
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.DropBag
@@ -24,13 +27,13 @@ class Mob(
     private var intelligence: AIBase
     override fun getViewAppearance() = appearance
 
-    private val appearance: Char
+    private val appearance: ViewAppearance
 
     init {
         intelligence = when (aiID) {
-            0 -> AITimid(this, VIEW_RANGE).also { appearance = '%' }
-            1 -> AIPassive(this).also { appearance = '$' }
-            else -> AIAggressive(this, VIEW_RANGE).also { appearance = '&' }
+            0 -> AITimid(this, VIEW_RANGE).also { appearance = ViewAppearance('%') }
+            1 -> AIPassive(this).also { appearance = ViewAppearance('$') }
+            else -> AIAggressive(this, VIEW_RANGE).also { appearance = ViewAppearance('&', ASCIIART.RED) }
         }
         pos.set(position)
     }

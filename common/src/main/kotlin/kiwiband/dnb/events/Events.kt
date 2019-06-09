@@ -52,7 +52,7 @@ class EventGameOver : Event()
  * Event for key press.
  * @param key key pressed
  */
-class EventKeyPress(val key: KeyStroke) : Event()
+class EventPressKey(val key: KeyStroke) : Event()
 
 /**
  * Event for destroying actors.
@@ -71,7 +71,7 @@ class EventSpawnActor(val actor: MapActor) : Event()
 class EventUpdateMap(val newMap: LocalMap) : Event()
 
 
-class EventItemUsed(val itemNum: Int) : Event() {
+class EventUseItem(val itemNum: Int) : Event() {
     override fun toJSON(): JSONObject {
         return super.toJSON().put("itm", itemNum)
     }
