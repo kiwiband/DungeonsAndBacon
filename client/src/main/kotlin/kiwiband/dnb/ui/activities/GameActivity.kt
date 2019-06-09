@@ -70,7 +70,7 @@ class GameActivity(
     }
 
     private fun openInventory() {
-        InventoryActivity(gameContext).start()
+        InventoryActivity(gameContext, mgr.getPlayer().playerId).start()
     }
 
     override fun onStart() {

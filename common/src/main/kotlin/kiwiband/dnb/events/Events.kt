@@ -71,8 +71,8 @@ class EventSpawnActor(val actor: MapActor) : Event()
 class EventUpdateMap(val newMap: LocalMap) : Event()
 
 
-class EventUseItem(val itemNum: Int) : Event() {
+class EventUseItem(val itemNum: Int, val playerId: Int) : Event() {
     override fun toJSON(): JSONObject {
-        return super.toJSON().put("itm", itemNum)
+        return super.toJSON().put("itm", itemNum).put("id", playerId)
     }
 }

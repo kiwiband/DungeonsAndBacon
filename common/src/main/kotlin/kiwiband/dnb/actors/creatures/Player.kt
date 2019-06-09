@@ -49,7 +49,11 @@ class Player(
     override fun onBeginGame(game: Game) {
         super.onBeginGame(game)
         eventMove = game.eventBus.move.addHandler { if (it.playerId == playerId) moveDirection.set(it.direction) }
-        game.eventBus.useItem.addHandler { useItem(it.itemNum) }
+        game.eventBus.useItem.addHandler {
+            if (it.playerId == playerId) {
+                useItem(it.itemNum)
+            }
+        }
     }
 
     override fun onTick() {
@@ -62,6 +66,7 @@ class Player(
 
     override fun onDestroy() {
         super.onDestroy()
+        game?.eventBus?.run(EventSpawnActor(DropBag(pos, *inventory.items().toTypedArray())))
         game?.eventBus?.run(EventGameOver())
         eventMove?.finish()
     }

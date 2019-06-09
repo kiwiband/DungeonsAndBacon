@@ -7,7 +7,7 @@ import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InventoryView
 import kiwiband.dnb.ui.views.View
 
-class InventoryActivity(context: GameAppContext) : Activity<Unit>(context, {}) {
+class InventoryActivity(context: GameAppContext, private val playerId: Int) : Activity<Unit>(context, {}) {
     private lateinit var inventoryRootView: InventoryView
 
     private val mgr = context.gameManager
@@ -33,7 +33,7 @@ class InventoryActivity(context: GameAppContext) : Activity<Unit>(context, {}) {
             'e', 'у' -> {
                 val itemNum = inventoryRootView.getCurrentSelected()
                 if (itemNum >= 0) {
-                    mgr.useItem(itemNum)//player.useItem(itemNum)
+                    mgr.useItem(itemNum, playerId)//player.useItem(itemNum)
                     drawScene()
                 }
             }

@@ -47,8 +47,8 @@ class MultiplayerGameManager(
         comm.sendEvent(EventMove(direction, playerId))
     }
 
-    override fun useItem(itemNum: Int) {
-        comm.sendEvent(EventUseItem(itemNum))
+    override fun useItem(itemNum: Int, playerId: Int) {
+        comm.sendEvent(EventUseItem(itemNum, playerId))
     }
 
     override fun finishGame(): Boolean {

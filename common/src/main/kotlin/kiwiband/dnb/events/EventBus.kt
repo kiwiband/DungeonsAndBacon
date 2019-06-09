@@ -32,7 +32,7 @@ class EventBus {
                 run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getInt("id")))
             }
             "EventUseItem" -> {
-                run(EventUseItem(json.getInt("itm")))
+                run(EventUseItem(json.getInt("itm"), json.getInt("id")))
             }
             else -> {
                 throw RuntimeException("Could not parse event from json")
