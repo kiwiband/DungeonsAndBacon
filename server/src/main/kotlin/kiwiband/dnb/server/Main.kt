@@ -6,10 +6,9 @@ import kiwiband.dnb.map.LocalMap
 import java.util.concurrent.locks.ReentrantLock
 
 /**
- * Launcher for the game.
+ * Launcher for the server.
  */
 object Main {
-
 
     @JvmStatic
     fun main(args: Array<String>) {

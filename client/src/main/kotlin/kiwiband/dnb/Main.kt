@@ -3,7 +3,7 @@ package kiwiband.dnb
 import java.io.File
 
 /**
- * Launcher for the game.
+ * Launcher for the client.
  */
 object Main {
 

@@ -10,6 +10,9 @@ import kiwiband.dnb.rpc.Gameservice
 import org.json.JSONObject
 import java.util.concurrent.locks.ReentrantLock
 
+/**
+ * A client-side of GRPC game service
+ */
 class ServerCommunicationManager(
     private val host: String,
     private val port: Int,
@@ -21,7 +24,9 @@ class ServerCommunicationManager(
     private val mapdUpdateHandler = MapUpdateHandler()
     private var id = -1
 
-
+    /**
+     * Connect to a game server and get a player id and the current game state
+     */
     fun connect(): Pair<Int, LocalMap> {
         println("Connecting to server at $host:$port")
         val channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
@@ -37,17 +42,30 @@ class ServerCommunicationManager(
         return id to LocalMap.loadMap(JSONObject(state.mapJson))
     }
 
+    /**
+     * Send an even to the game server
+     */
     fun sendEvent(event: Event) {
         gameService.userEvent(
             Gameservice.UserEvent.newBuilder().setPlayerId(id).setJson(event.toJSON().toString()).build()
         )
     }
 
+    /**
+     * Disconnect from the game server
+     */
     fun disconnect() {
         gameService.disconnect(Gameservice.PlayerId.newBuilder().setId(id).build())
     }
 
+    /**
+     * State update handler
+     */
     private inner class MapUpdateHandler : StreamObserver<Gameservice.JsonString> {
+
+        /**
+         * Get the current game state
+         */
         override fun onNext(value: Gameservice.JsonString) {
             eventLock.lock()
             EventUpdateMap.dispatcher.run(
