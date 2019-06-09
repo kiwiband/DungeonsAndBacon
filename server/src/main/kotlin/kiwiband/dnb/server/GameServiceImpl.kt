@@ -6,7 +6,6 @@ import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 
@@ -16,7 +15,6 @@ import java.util.concurrent.locks.ReentrantLock
 class GameServiceImpl(private val gameSession: GameSession, private val gameLock: ReentrantLock) :
     GameServiceGrpc.GameServiceImplBase() {
 
-    private val currentPlayerId = AtomicInteger()
     private val updateObservers = ConcurrentHashMap<Int, StreamObserver<Gameservice.JsonString>>()
     private val currentMap = AtomicReference<String>(gameSession.game.map.toString())
 

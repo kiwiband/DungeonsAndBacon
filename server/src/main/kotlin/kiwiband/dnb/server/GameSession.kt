@@ -1,6 +1,7 @@
 package kiwiband.dnb.server
 
 import kiwiband.dnb.Game
+import kiwiband.dnb.Settings
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.EventBus
 import kiwiband.dnb.map.LocalMap
@@ -10,7 +11,7 @@ import kiwiband.dnb.map.LocalMap
  */
 class GameSession {
 
-    val game: Game = Game(LocalMap.generateMap(MAP_WIDTH, MAP_HEIGHT), EventBus())
+    val game: Game = Game(LocalMap.generateMap(Settings.mapWidth, Settings.mapHeight), EventBus())
 
     init {
         game.startGame()

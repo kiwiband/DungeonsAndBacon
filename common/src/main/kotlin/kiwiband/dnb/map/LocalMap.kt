@@ -4,6 +4,7 @@ import com.github.czyzby.noise4j.map.Grid
 import com.github.czyzby.noise4j.map.generator.room.RoomType
 import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator
 import kiwiband.dnb.JSONSerializable
+import kiwiband.dnb.Settings
 
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.MapActorFactory
@@ -118,7 +119,7 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
                 }
                 false
             }
-            map.spawnMob(50)
+            map.spawnMob(Settings.mobsCount)
             return map
         }
 

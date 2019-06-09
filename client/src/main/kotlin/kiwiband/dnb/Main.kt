@@ -1,35 +1,35 @@
 package kiwiband.dnb
 
+import kiwiband.dnb.Settings.getIntFromMap
 import org.ini4j.Ini
 import java.io.File
-import java.lang.NumberFormatException
 
 /**
  * Launcher for the client.
  */
 object Main {
-    private const val DEFAULT_HOST = "localhost"
-    private const val DEFAULT_PORT = 12345
-
     @JvmStatic
     fun main(args: Array<String>) {
-        var host = DEFAULT_HOST
-        var port = DEFAULT_PORT
-        val settingsFile = File("settings.ini")
-        if (settingsFile.exists()) {
-            val settings = Ini(settingsFile)
-            settings["server"]?.also { serverProfile ->
-                host = serverProfile.getOrDefault("host", DEFAULT_HOST)
-                port = serverProfile.get("port")?.let {
-                    try {
-                        Integer.parseInt(it)
-                    } catch (e: NumberFormatException) {
-                        println("Wrong port format in settings.ini")
-                        DEFAULT_PORT
-                    }
-                } ?: DEFAULT_PORT
+        fillSettings()
+        App().start()
+    }
+
+    @JvmStatic
+    fun fillSettings() {
+        val serverFile = File("settings.ini")
+        if (serverFile.exists()) {
+            val ini = Ini(serverFile)
+            ini["server"]?.also { iniGeneral ->
+                iniGeneral["host"]?.also { Settings.host = it }
+                getIntFromMap(iniGeneral, "port")?.also { Settings.port = it }
             }
+            ini["single_player_map"]?.also { iniMap ->
+                getIntFromMap(iniMap, "width")?.also { Settings.mapWidth = it }
+                getIntFromMap(iniMap, "height")?.also { Settings.mapHeight = it }
+                getIntFromMap(iniMap, "mobs_count")?.also { Settings.mobsCount = it }
+            }
+        } else {
+            println("Can't find settings.ini")
         }
-        App(host, port).start()
     }
 }

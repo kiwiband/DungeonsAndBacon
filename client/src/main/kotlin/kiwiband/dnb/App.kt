@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock
  * Application class.
  * Run start() method to start
  */
-class App(host: String, port: Int) {
+class App() {
     private val eventBus = EventBus()
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val eventLock = ReentrantLock()
@@ -27,7 +27,7 @@ class App(host: String, port: Int) {
     private val renderer = Renderer(screen)
     private val activities = ArrayDeque<Activity<*>>()
     private val context = AppContext(renderer, activities, eventBus)
-    private val serverCommunicationManager = ServerCommunicationManager(host, port, eventLock, eventBus)
+    private val serverCommunicationManager = ServerCommunicationManager(Settings.host, Settings.port, eventLock, eventBus)
 
 
     /**
