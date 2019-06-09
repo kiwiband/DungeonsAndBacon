@@ -1,6 +1,5 @@
 package kiwiband.dnb
 
-import kiwiband.dnb.ui.App
 import java.io.File
 
 /**

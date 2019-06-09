@@ -8,19 +8,34 @@ import kiwiband.dnb.math.Vec2
 import org.json.JSONObject
 
 sealed class Event : JSONSerializable {
+
+    /**
+     * Serializes the event to JSON.
+     * @return JSON object
+     */
     override fun toJSON(): JSONObject {
         return JSONObject()
     }
 
+    /**
+     * @inherit
+     *
+     * Generate a string with JSON representation of the event
+     * @return Json string
+     */
+    override fun toString(): String {
+        return toJSON().toString()
+    }
+
     companion object {
         fun runFromJSON(json: JSONObject) {
-            when (json["t"]) {
+            return when (json["t"]) {
                 "EventMove" -> {
                     val dir = json.getJSONObject("dir")
-                    return EventMove.dispatcher.run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getInt("id")))
+                    EventMove.dispatcher.run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getInt("id")))
                 }
                 "EventItemUsed" -> {
-                    return EventItemUsed.dispatcher.run(EventItemUsed(json.getInt("itm")))
+                    EventItemUsed.dispatcher.run(EventItemUsed(json.getInt("itm")))
                 }
                 else -> {
                     throw RuntimeException("Could not parse event from json")

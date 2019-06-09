@@ -1,10 +1,11 @@
-package kiwiband.dnb.ui
+package kiwiband.dnb
 
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
-import kiwiband.dnb.InputManager
-import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.manager.MultiplayerGameManager
+import kiwiband.dnb.ui.AppContext
+import kiwiband.dnb.ui.GameAppContext
+import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.activities.Activity
 import kiwiband.dnb.ui.activities.GameActivity
 import kiwiband.dnb.ui.activities.GameOverActivity

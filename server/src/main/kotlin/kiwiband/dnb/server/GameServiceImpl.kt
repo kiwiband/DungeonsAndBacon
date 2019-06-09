@@ -9,17 +9,23 @@ import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.ReentrantLock
 
-class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServiceGrpc.GameServiceImplBase() {
+class GameServiceImpl(private val gameSession: GameSession, private val gameLock: ReentrantLock) :
+    GameServiceGrpc.GameServiceImplBase() {
 
     private val currentPlayerId = AtomicInteger()
     private val updateObservers = ConcurrentHashMap<Int, StreamObserver<Gameservice.JsonString>>()
-    private val currentMap = AtomicReference<String>(mapJson)
+    private val currentMap = AtomicReference<String>(gameSession.game.map.toString())
 
     override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
         val id = currentPlayerId.getAndIncrement()
+
+        gameLock.lock()
         gameSession.addNewPlayer(id)
-        currentMap.set(gameSession.game.map.toJSON().toString())
+        currentMap.set(gameSession.game.map.toString())
+        gameLock.unlock()
+
         responseObserver.onNext(Gameservice.InitialState.newBuilder().setPlayerId(id).setMapJson(currentMap.get()).build())
         println("Player $id joined the game")
         responseObserver.onCompleted()
@@ -27,7 +33,11 @@ class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServi
 
     override fun disconnect(request: Gameservice.PlayerId, responseObserver: StreamObserver<Gameservice.Empty>) {
         println("Player ${request.id} left the game")
+
+        gameLock.lock()
         gameSession.removePlayer(request.id)
+        gameLock.unlock()
+
         updateObservers.remove(request.id)?.onCompleted()
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
@@ -35,7 +45,10 @@ class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServi
 
     override fun userEvent(request: Gameservice.UserEvent, responseObserver: StreamObserver<Gameservice.Empty>) {
         println("User event happened (player id: ${request.playerId}): ${request.json}")
+
+        gameLock.lock()
         Event.runFromJSON(JSONObject(request.json))
+        gameLock.unlock()
 
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
@@ -45,7 +58,11 @@ class GameServiceImpl(mapJson: String, val gameSession: GameSession) : GameServi
         updateObservers[request.id] = responseObserver
     }
 
-    fun sendUpdate(mapJson: String) {
+    fun sendUpdate() {
+        gameLock.lock()
+        val mapJson = gameSession.game.map.toString()
+        gameLock.unlock()
+        
         currentMap.set(mapJson)
         val message = Gameservice.JsonString.newBuilder().setJson(mapJson).build()
         val removedObservers = mutableListOf<Int>()

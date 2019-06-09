@@ -42,6 +42,16 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
             .put("actors", actorsArray)
     }
 
+    /**
+     * @inherit
+     *
+     * Generate a string with JSON representation of the map
+     * @return Json string
+     */
+    override fun toString(): String {
+        return toJSON().toString()
+    }
+
     fun spawnPlayer(id: Int): Player {
         while (true) {
             val x = Random.nextInt(grid.width)

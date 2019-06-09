@@ -6,7 +6,7 @@ import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Vec2
-import kiwiband.dnb.ui.App
+import kiwiband.dnb.App
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView

@@ -37,6 +37,6 @@ class MapSaverTest {
         val saver = MapSaver()
         saver.saveToFile(expected, file.canonicalPath)
         val actual = saver.loadFromFile(file.canonicalPath)
-        assertEquals(expected.toJSON().toString(), actual.toJSON().toString())
+        assertEquals(expected.toString(), actual.toString())
     }
 }

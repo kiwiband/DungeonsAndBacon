@@ -1,9 +1,8 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.Game
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.ui.App
+import kiwiband.dnb.App
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.LoadMapView
 import kiwiband.dnb.ui.views.View

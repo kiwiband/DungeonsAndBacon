@@ -20,7 +20,7 @@ class MapSaver {
     fun saveToFile(map: LocalMap, filename: String) {
         val file = File(filename)
         file.parentFile.mkdirs()
-        file.writeText(map.toJSON().toString())
+        file.writeText(map.toString())
     }
 
     /**

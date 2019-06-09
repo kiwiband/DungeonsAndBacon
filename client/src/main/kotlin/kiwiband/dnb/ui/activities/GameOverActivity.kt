@@ -1,6 +1,6 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.ui.App
+import kiwiband.dnb.App
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.GameOverView
 import kiwiband.dnb.ui.views.View
