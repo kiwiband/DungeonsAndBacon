@@ -22,16 +22,9 @@ class GameServiceImpl(private val gameSession: GameSession, private val gameLock
      * Register a new player, spawn it on the map and return the player id
      */
     override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
+        val id = gameSession.getFreePlayerId()
 
         gameLock.lock()
-        var id = 0
-        updateObservers.keys().toList().sorted().forEach {
-            if (it == id) {
-                id++
-            } else {
-                return@forEach
-            }
-        }
         gameSession.addNewPlayer(id)
         currentMap.set(gameSession.game.map.toString())
         gameLock.unlock()
