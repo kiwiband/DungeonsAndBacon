@@ -21,6 +21,8 @@ class Mob(
     status: CreatureStatus
 ) : Creature(map, status) {
 
+    override var viewPriority: Int = 100
+
     constructor(map: LocalMap, position: Vec2M, status: CreatureStatus) :
             this(map, position, Random.nextInt(3), status)
 
