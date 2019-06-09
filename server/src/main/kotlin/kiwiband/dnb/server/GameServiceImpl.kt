@@ -24,7 +24,14 @@ class GameServiceImpl(private val gameSession: GameSession, private val gameLock
     override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
 
         gameLock.lock()
-        val id = gameSession.getFreePlayerId()
+        var id = 0
+        updateObservers.keys().toList().sorted().forEach {
+            if (it == id) {
+                id++
+            } else {
+                return@forEach
+            }
+        }
         gameSession.addNewPlayer(id)
         currentMap.set(gameSession.game.map.toString())
         gameLock.unlock()

@@ -66,7 +66,13 @@ class Player(
 
     override fun onDestroy() {
         super.onDestroy()
-        game?.eventBus?.run(EventSpawnActor(DropBag(pos, *inventory.items().toTypedArray())))
+        val items = inventory.items()
+        for (item in items) {
+            if (item is EquipmentItem) {
+                item.unequip()
+            }
+        }
+        game?.eventBus?.run(EventSpawnActor(DropBag(pos, *items.toTypedArray())))
         game?.eventBus?.run(EventGameOver())
         eventMove?.finish()
     }
@@ -92,7 +98,7 @@ class Player(
 
     override fun getType() = TYPE_ID
 
-    fun useItem(itemNum: Int) {
+    private fun useItem(itemNum: Int) {
         val item = inventory.get(itemNum)
         if (item is EquipmentItem) {
             equipment.equip(item)

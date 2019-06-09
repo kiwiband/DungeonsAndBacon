@@ -18,22 +18,6 @@ class GameSession {
     }
 
     /**
-     * Find a minimal non used id from all players on the map
-     */
-    fun getFreePlayerId(): Int {
-        var result = 0
-        val ids = game.map.actors.filter { it is Player }.map { (it as Player).playerId }.sorted()
-        for (id in ids) {
-            if (id == result) {
-                result++
-            } else {
-                break
-            }
-        }
-        return result
-    }
-
-    /**
      * Add a new player with the given id and spawn it on the map
      */
     fun addNewPlayer(id: Int) {

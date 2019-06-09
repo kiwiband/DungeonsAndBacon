@@ -18,7 +18,9 @@ class Inventory(val capacity: Int) : JSONSerializable {
 
     fun items(): List<Item> = items
 
-    fun get(i: Int): Item = items[i]
+    fun get(i: Int): Item? {
+        return if (i < items.size) items[i] else null
+    }
 
     fun remove(item: Item) = items.remove(item)
 
