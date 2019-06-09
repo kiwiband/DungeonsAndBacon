@@ -8,11 +8,11 @@ import kiwiband.dnb.map.LocalMap
 /**
  * Game model class.
  */
-class Game(val map: LocalMap) {
+class Game(val map: LocalMap, val eventBus: EventBus) {
     /**
      * Game time.
      */
-    var tickTime = 0
+    var tickTime: Long = 0
         private set
     private val actorsToDestroy = mutableListOf<MapActor>()
 
@@ -22,7 +22,7 @@ class Game(val map: LocalMap) {
     private fun onTick() {
         tickTime++
         destroyActors()
-        spawnActor()
+        spawnActors()
     }
 
     private fun destroyActors() {
@@ -32,10 +32,10 @@ class Game(val map: LocalMap) {
         actorsToDestroy.clear()
     }
 
-    private fun spawnActor() {
+    private fun spawnActors() {
         for (actor in actorsToSpawn) {
             map.actors.add(actor)
-            actor.onBeginGame()
+            actor.onBeginGame(this)
         }
         actorsToSpawn.clear()
     }
@@ -43,10 +43,10 @@ class Game(val map: LocalMap) {
      * Starts the game, resetting game timer and initializing player.
      */
     fun startGame() {
-        eventsRegistrations.add(EventDestroyActor.dispatcher.addHandler { actorsToDestroy.add(it.actor) })
-        eventsRegistrations.add(EventSpawnActor.dispatcher.addHandler { actorsToSpawn.add(it.actor) })
-        map.actors.forEach { it.onBeginGame() }
-        eventsRegistrations.add(EventTick.dispatcher.addHandler(TickOrder.BEFORE_DRAW_UI) { onTick() })
+        eventsRegistrations.add(eventBus.eventDestroyActor.addHandler { actorsToDestroy.add(it.actor) })
+        eventsRegistrations.add(eventBus.eventSpawnActor.addHandler { actorsToSpawn.add(it.actor) })
+        map.actors.forEach { it.onBeginGame(this) }
+        eventsRegistrations.add(eventBus.eventTick.addHandler(TickOrder.BEFORE_DRAW_UI) { onTick() })
     }
 
     /**

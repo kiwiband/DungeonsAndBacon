@@ -2,6 +2,7 @@ package kiwiband.dnb
 
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
+import kiwiband.dnb.events.EventBus
 import kiwiband.dnb.manager.MultiplayerGameManager
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.GameAppContext
@@ -18,14 +19,15 @@ import java.util.concurrent.locks.ReentrantLock
  * Run start() method to start
  */
 class App(host: String, port: Int) {
+    private val eventBus = EventBus()
     private val terminal = DefaultTerminalFactory().createTerminal()
     private val eventLock = ReentrantLock()
-    private val inputManager = InputManager(terminal, eventLock)
+    private val inputManager = InputManager(terminal, eventLock, eventBus)
     private val screen = TerminalScreen(terminal)
     private val renderer = Renderer(screen)
     private val activities = ArrayDeque<Activity<*>>()
-    private val context = AppContext(renderer, activities)
-    private val serverCommunicationManager = ServerCommunicationManager(host, port, eventLock)
+    private val context = AppContext(renderer, activities, eventBus)
+    private val serverCommunicationManager = ServerCommunicationManager(host, port, eventLock, eventBus)
 
 
     /**
@@ -38,8 +40,8 @@ class App(host: String, port: Int) {
         inputManager.startKeyHandle()
 
         val loadMapActivity = LoadMapActivity(context, serverCommunicationManager) { (playerId, map) ->
-            val mgr = MultiplayerGameManager(serverCommunicationManager, playerId, map)
-            val gameContext = GameAppContext(context, mgr)
+            val mgr = MultiplayerGameManager(serverCommunicationManager, playerId, map, eventBus)
+            val gameContext = GameAppContext(context, mgr, eventBus)
             val gameActivity = GameActivity(gameContext) { gameResult ->
                 inputManager.stop()
                 serverCommunicationManager.disconnect()

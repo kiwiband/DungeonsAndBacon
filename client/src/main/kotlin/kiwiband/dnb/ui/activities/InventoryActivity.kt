@@ -41,7 +41,7 @@ class InventoryActivity(context: GameAppContext) : Activity<Unit>(context, {}) {
     }
 
     override fun onStart() {
-        EventKeyPress.dispatcher.addHandler { onKeyPressed(it) }
+        context.eventBus.eventKeyPress.addHandler { onKeyPressed(it) }
         drawScene()
     }
 }

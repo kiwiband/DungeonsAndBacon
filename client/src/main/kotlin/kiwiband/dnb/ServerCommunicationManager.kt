@@ -3,6 +3,7 @@ package kiwiband.dnb
 import io.grpc.ManagedChannelBuilder
 import io.grpc.stub.StreamObserver
 import kiwiband.dnb.events.Event
+import kiwiband.dnb.events.EventBus
 import kiwiband.dnb.events.EventUpdateMap
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.rpc.GameServiceGrpc
@@ -16,7 +17,8 @@ import java.util.concurrent.locks.ReentrantLock
 class ServerCommunicationManager(
     private val host: String,
     private val port: Int,
-    private val eventLock: ReentrantLock
+    private val eventLock: ReentrantLock,
+    private val eventBus: EventBus
 ) {
 
     private lateinit var gameService: GameServiceGrpc.GameServiceBlockingStub
@@ -68,7 +70,7 @@ class ServerCommunicationManager(
          */
         override fun onNext(value: Gameservice.JsonString) {
             eventLock.lock()
-            EventUpdateMap.dispatcher.run(
+            eventBus.run(
                 EventUpdateMap(LocalMap.loadMap(JSONObject(value.json)))
             )
             eventLock.unlock()

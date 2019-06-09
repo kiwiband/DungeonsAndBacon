@@ -47,7 +47,7 @@ class Mob(
     override fun onDestroy() {
         super.onDestroy()
         if (Random.nextInt(0, 10) == 0) {
-            EventSpawnActor.dispatcher.run(EventSpawnActor(DropBag(pos, ItemFactory.getRandomItem())))
+            game?.eventBus?.run(EventSpawnActor(DropBag(pos, ItemFactory.getRandomItem())))
         }
     }
 

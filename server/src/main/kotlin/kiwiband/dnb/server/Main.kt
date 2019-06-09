@@ -39,7 +39,7 @@ object Main {
 
         while (true) {
             gameLock.lock()
-            EventTick.dispatcher.run(EventTick())
+            gameSession.game.eventBus.run(EventTick())
             gameService.sendUpdate()
             gameLock.unlock()
             Thread.sleep(1000)

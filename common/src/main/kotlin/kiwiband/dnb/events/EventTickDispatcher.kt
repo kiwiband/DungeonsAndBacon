@@ -4,7 +4,7 @@ import kiwiband.dnb.events.TickOrder.*
 
 private typealias TickHandler = EventHandler<EventTick>
 
-class EventTickDispatcher : EventDispatcher<EventTick>() {
+class EventTickDispatcher internal constructor(): EventDispatcher<EventTick>() {
     private var firstHandlers = mutableListOf<TickHandler>()
     private var playerHandlers = mutableListOf<TickHandler>()
     private var beforeDrawUIHandlers = mutableListOf<TickHandler>()

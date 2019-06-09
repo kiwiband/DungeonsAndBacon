@@ -1,6 +1,5 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.events.EventKeyPress
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.View
 
@@ -35,7 +34,7 @@ abstract class Activity<T>(protected val context: AppContext,
     }
 
     protected fun close() {
-        EventKeyPress.dispatcher.popLayer()
+        context.eventBus.eventKeyPress.popLayer()
         val activities = context.activities
         activities.removeLast()
         activities.peekLast()?.drawScene()
@@ -57,7 +56,7 @@ abstract class Activity<T>(protected val context: AppContext,
      */
     fun start() {
         rootView = createRootView()
-        EventKeyPress.dispatcher.pushLayer()
+        context.eventBus.eventKeyPress.pushLayer()
         context.activities.addLast(this)
         onStart()
     }

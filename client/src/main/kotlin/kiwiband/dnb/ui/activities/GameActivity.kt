@@ -3,8 +3,6 @@ package kiwiband.dnb.ui.activities
 import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.events.EventGameOver
-import kiwiband.dnb.events.EventKeyPress
-import kiwiband.dnb.events.EventTick
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.App
 import kiwiband.dnb.ui.GameAppContext
@@ -53,6 +51,19 @@ class GameActivity(
         }
     }
 
+    private fun handleInventoryKey(key: KeyStroke) {
+        if (key.keyType != KeyType.Character) return
+        when (key.character) {
+            'i', 'ш' -> openInventory()
+        }
+    }
+
+    private fun handleEscapeKey(key: KeyStroke) {
+        if (key.keyType == KeyType.Escape) {
+            context.eventBus.run(EventGameOver())
+        }
+    }
+
     private fun onTick() {
         if (context.activities.peekLast() == this)
             drawScene()
@@ -65,25 +76,15 @@ class GameActivity(
     override fun onStart() {
         drawScene()
 
-        EventKeyPress.dispatcher.addHandler {
-            if (it.key.keyType == KeyType.Escape) {
-                EventGameOver.dispatcher.run(EventGameOver())
-            }
+        context.eventBus.eventKeyPress.addHandler {
+            handleEscapeKey(it.key)
+            handleMoveKeys(it.key)
+            handleInventoryKey(it.key)
         }
 
-        EventTick.dispatcher.addHandler { onTick() }
+        context.eventBus.eventTick.addHandler { onTick() }
 
-        EventKeyPress.dispatcher.addHandler { handleMoveKeys(it.key) }
-
-        EventKeyPress.dispatcher.addHandler {
-            if (it.key.keyType == KeyType.Character) {
-                when (it.key.character) {
-                    'i', 'ш' -> openInventory()
-                }
-            }
-        }
-
-        EventGameOver.dispatcher.addHandler {
+        context.eventBus.eventGameOver.addHandler {
             val isDead = mgr.finishGame()
             finish(isDead)
         }

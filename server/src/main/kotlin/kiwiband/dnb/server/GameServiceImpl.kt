@@ -2,7 +2,6 @@ package kiwiband.dnb.server
 
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
-import kiwiband.dnb.events.Event
 import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
 import org.json.JSONObject
@@ -60,7 +59,7 @@ class GameServiceImpl(private val gameSession: GameSession, private val gameLock
         println("User event happened (player id: ${request.playerId}): ${request.json}")
 
         gameLock.lock()
-        Event.runFromJSON(JSONObject(request.json))
+        gameSession.game.eventBus.runFromJSON(JSONObject(request.json))
         gameLock.unlock()
 
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())

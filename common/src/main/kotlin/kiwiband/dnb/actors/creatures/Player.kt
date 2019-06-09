@@ -1,5 +1,6 @@
 package kiwiband.dnb.actors.creatures
 
+import kiwiband.dnb.Game
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.DropBag
@@ -42,10 +43,10 @@ class Player(
     private val moveDirection: Vec2M = Vec2M()
     override var viewPriority: Int = 10000
 
-    override fun onBeginGame() {
-        super.onBeginGame()
-        eventMove = EventMove.dispatcher.addHandler { if (it.playerId == playerId) moveDirection.set(it.direction) }
-        EventItemUsed.dispatcher.addHandler { useItem(it.itemNum) }
+    override fun onBeginGame(game: Game) {
+        super.onBeginGame(game)
+        eventMove = game.eventBus.eventMove.addHandler { if (it.playerId == playerId) moveDirection.set(it.direction) }
+        game.eventBus.eventItemUsed.addHandler { useItem(it.itemNum) }
     }
 
     override fun onTick() {
@@ -58,7 +59,7 @@ class Player(
 
     override fun onDestroy() {
         super.onDestroy()
-        EventGameOver.dispatcher.run(EventGameOver())
+        game?.eventBus?.run(EventGameOver())
         eventMove?.finish()
     }
 
@@ -76,7 +77,7 @@ class Player(
                 inventory.add(actor.getItem())
             }
             if (!actor.hasItems()) {
-                EventDestroyActor.dispatcher.run(EventDestroyActor(actor))
+                game?.eventBus?.run(EventDestroyActor(actor))
             }
         }
     }

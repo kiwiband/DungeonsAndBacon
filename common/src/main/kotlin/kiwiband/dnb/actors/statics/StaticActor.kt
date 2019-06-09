@@ -1,5 +1,6 @@
 package kiwiband.dnb.actors.statics
 
+import kiwiband.dnb.Game
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2
@@ -20,7 +21,7 @@ abstract class StaticActor(
     }
     override fun getViewAppearance(): Char = viewAppearance
     override fun collide(actor: MapActor): Collision = collision
-    override fun onBeginGame() {}
+    override fun onBeginGame(game: Game) {}
     override fun onDestroy() {}
     override fun onTick() {}
 }

@@ -7,22 +7,27 @@ import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 
-class MultiplayerGameManager(private val comm: ServerCommunicationManager, var playerId: Int, var localMap: LocalMap): GameManager {
+class MultiplayerGameManager(
+    private val comm: ServerCommunicationManager,
+    var playerId: Int,
+    var localMap: LocalMap,
+    private val eventBus: EventBus
+) : GameManager {
     var localPlayer: Player = localMap.findPlayer(playerId) ?: localMap.spawnPlayer(playerId)
 
     init {
-        EventUpdateMap.dispatcher.addHandler { updateMap(it.newMap) }
+        eventBus.eventUpdateMap.addHandler { updateMap(it.newMap) }
     }
 
     private fun updateMap(map: LocalMap) {
         localMap = map
         val player = map.findPlayer(playerId)
         if (player == null) {
-            EventGameOver.dispatcher.run(EventGameOver())
+            eventBus.run(EventGameOver())
             return
         }
         localPlayer = player
-        EventTick.dispatcher.run(EventTick())
+        eventBus.run(EventTick())
     }
 
     override fun movePlayer(direction: Vec2) {

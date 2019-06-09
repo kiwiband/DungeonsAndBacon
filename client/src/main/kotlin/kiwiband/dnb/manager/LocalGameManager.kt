@@ -2,9 +2,7 @@ package kiwiband.dnb.manager
 
 import kiwiband.dnb.Game
 import kiwiband.dnb.actors.creatures.Player
-import kiwiband.dnb.events.EventItemUsed
-import kiwiband.dnb.events.EventMove
-import kiwiband.dnb.events.EventTick
+import kiwiband.dnb.events.*
 import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
@@ -37,12 +35,12 @@ class LocalGameManager(private val game: Game): GameManager {
     }
 
     override fun movePlayer(direction: Vec2) {
-        EventMove.dispatcher.run(EventMove(direction, 0))
-        EventTick.dispatcher.run(EventTick())
+        game.eventBus.run(EventMove(direction, 0))
+        game.eventBus.run(EventTick())
     }
 
     override fun useItem(itemNum: Int) {
-        EventItemUsed.dispatcher.run(EventItemUsed(itemNum))
+        game.eventBus.run(EventItemUsed(itemNum))
         player.useItem(itemNum)
     }
 
