@@ -6,7 +6,7 @@ import org.json.JSONObject
 abstract class EquipmentItem : Item() {
     var owner: Creature? = null
 
-    abstract fun getSlot(): EquipmentSlot
+    abstract val slot: EquipmentSlot
 
     fun equipBy(owner: Creature) {
         unequip()

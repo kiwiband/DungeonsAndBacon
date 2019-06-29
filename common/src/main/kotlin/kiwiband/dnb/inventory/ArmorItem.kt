@@ -7,17 +7,12 @@ import org.json.JSONObject
 class ArmorItem(
     val id: Int,
     val defence: Int,
-    private val name: String,
-    private val description: String,
-    private val icon: String = ASCIIART.ARMOR
+    override val name: String,
+    override val description: String,
+    override val icon: String = ASCIIART.ARMOR
 ) : EquipmentItem() {
-    override fun getName() = name
 
-    override fun getIcon() = icon
-
-    override fun getSlot() = EquipmentSlot.Armor
-
-    override fun getDescription() = description
+    override val slot = EquipmentSlot.Armor
 
     override fun onEquip(owner: Creature) {
         owner.status.armorDefence += defence

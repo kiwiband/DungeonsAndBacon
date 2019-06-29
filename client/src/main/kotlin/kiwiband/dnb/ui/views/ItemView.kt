@@ -11,11 +11,11 @@ class ItemView(width: Int, height: Int, private val item: Item) : View(width, he
         }
         renderer.withOffset {
             renderer.offset.add(Vec2(5, 2))
-            renderer.writeMultiLineText(item.getIcon())
+            renderer.writeMultiLineText(item.icon)
         }
-        renderer.writeText(item.getName(), Vec2(13, 2))
+        renderer.writeText(item.name, Vec2(13, 2))
         renderer.writeText(itemStatString(), Vec2(13, 3))
-        renderer.writeText(item.getDescription(), Vec2(13, 4))
+        renderer.writeText(item.description, Vec2(13, 4))
     }
 
     private fun itemStatString() = when (item) {

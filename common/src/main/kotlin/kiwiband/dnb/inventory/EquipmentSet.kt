@@ -7,7 +7,7 @@ class EquipmentSet(val owner: Creature) {
     var armor: EquipmentItem? = null
 
     fun equip(item: EquipmentItem) {
-        when (item.getSlot()) {
+        when (item.slot) {
             EquipmentSlot.Weapon -> weapon = equipInSlot(weapon, item)
             EquipmentSlot.Armor -> armor = equipInSlot(armor, item)
         }

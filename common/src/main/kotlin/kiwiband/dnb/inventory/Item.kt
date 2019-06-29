@@ -5,10 +5,11 @@ import kiwiband.dnb.actors.creatures.Creature
 import org.json.JSONObject
 
 abstract class Item : JSONSerializable {
-    abstract fun getName(): String
-    abstract fun getDescription(): String
+    abstract val name: String
+    abstract val icon: String
+    abstract val description: String
+
     abstract fun clone(): Item
-    abstract fun getIcon(): String
 
     companion object {
         fun fromJSON(obj: JSONObject, owner: Creature? = null): Item {

@@ -30,13 +30,13 @@ enum class ArmorItemsEnum(private val item: ArmorItem) {
 
 object SpecialItems {
     val dummy = object : Item() {
-        override fun getName() = "dummy item"
+        override val name = "dummy item"
 
-        override fun getDescription() = "ooops... actually this item shouldn't be in a game"
+        override val description = "ooops... actually this item shouldn't be in a game"
 
         override fun clone() = this
 
-        override fun getIcon() = ASCIIART.BAD_ICON
+        override val icon = ASCIIART.BAD_ICON
 
         override fun toJSON(): JSONObject = JSONObject()
     }
