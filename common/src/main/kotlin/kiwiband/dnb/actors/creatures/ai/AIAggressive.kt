@@ -4,11 +4,11 @@ import kiwiband.dnb.actors.creatures.Creature
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.math.Vec2
 
-class AIAggressive(pawn: Creature, private val viewRange: Int) : AIBase(pawn) {
+class AIAggressive(private val viewRange: Int) : AIBase() {
 
     private var path: MutableList<Vec2>? = null
 
-    override fun nextMove() {
+    override fun nextMove(pawn: Creature) {
         val map = pawn.map
         val res = map.navigationGraph.pathToNearest(pawn.pos, viewRange) { cell ->
             cell.any { actor ->
@@ -27,4 +27,10 @@ class AIAggressive(pawn: Creature, private val viewRange: Int) : AIBase(pawn) {
         }
     }
 
+    override fun getID() = ID
+
+    companion object {
+        const val VIEW_RANGE = 5
+        const val ID = 0
+    }
 }

@@ -1,6 +1,5 @@
 package kiwiband.dnb.actors.creatures
 
-import com.googlecode.lanterna.TextColor
 import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.Game
 import kiwiband.dnb.actors.MapActor

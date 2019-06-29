@@ -9,7 +9,12 @@ import org.json.JSONObject
  * @param y Y coordinate
  */
 @Suppress("unused")
-open class Vec2(var x: Int, var y: Int) : JSONSerializable {
+open class Vec2(x: Int, y: Int) : JSONSerializable {
+    open var x: Int = x
+        protected set
+    open var y: Int = y
+        protected set
+
     constructor(v: Vec2) : this(v.x, v.y)
     constructor() : this(0, 0)
 

@@ -9,7 +9,7 @@ import kiwiband.dnb.Settings
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.MapActorFactory
 import kiwiband.dnb.actors.statics.StaticActor
-import kiwiband.dnb.actors.creatures.Mob
+import kiwiband.dnb.actors.creatures.MobFactory
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
 import kiwiband.dnb.actors.statics.WallActor
@@ -72,7 +72,7 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
                 val x = Random.nextInt(grid.width)
                 val y = Random.nextInt(grid.height)
                 if (grid.get(x, y) == FLOOR_THRESHOLD) {
-                    val mob = Mob(this, Vec2M(x, y), CreatureStatus.generateRandom())
+                    val mob = MobFactory.createMob(this, Vec2M(x, y), CreatureStatus.generateRandom())
                     actors.add(mob)
                     break
                 }

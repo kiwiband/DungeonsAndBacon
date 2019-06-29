@@ -1,6 +1,5 @@
 package kiwiband.dnb.manager
 
-import com.googlecode.lanterna.TextColor
 import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.actors.creatures.Player

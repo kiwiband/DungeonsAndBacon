@@ -4,7 +4,12 @@ package kiwiband.dnb.math
  * Mutable two-dimensional point.
  */
 @Suppress("UNUSED")
-class Vec2M(x: Int, y: Int) : Vec2(x, y) {
+class Vec2M(x: Int, y: Int) : Vec2() {
+    override var x: Int = x
+        public set
+    override var y: Int = y
+        public set
+
     constructor() : this(0, 0)
 
     constructor(v: Vec2) : this(v.x, v.y)
