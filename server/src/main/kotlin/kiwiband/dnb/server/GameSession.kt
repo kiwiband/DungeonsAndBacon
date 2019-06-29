@@ -48,9 +48,4 @@ class GameSession {
         }
         game.map.findPlayer(id)?.let { game.map.actors.remove(it) }
     }
-
-    companion object {
-        private const val MAP_WIDTH = 80
-        private const val MAP_HEIGHT = 24
-    }
 }
