@@ -8,11 +8,13 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2
 
-class LocalGameManager(private val game: Game): GameManager {
+class LocalGameManager(
+    private val game: Game,
+    private val mapSaver: MapSaver,
+    private val mapFile: String
+) : GameManager {
 
-    private val mapSaver = MapSaver()
-    private val mapFile = "./maps/saved_map.dnb"
-    private lateinit var player: Player
+    private val player: Player = game.getOrCreatePlayer(0)
 
     private fun saveMap(game: Game) {
         mapSaver.saveToFile(game.map, mapFile)
@@ -44,7 +46,6 @@ class LocalGameManager(private val game: Game): GameManager {
     }
 
     override fun startGame() {
-        player = game.getOrCreatePlayer(0)
         game.startGame()
     }
 

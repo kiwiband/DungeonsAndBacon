@@ -23,10 +23,16 @@ object Main {
                 iniGeneral["host"]?.also { Settings.host = it }
                 getIntFromMap(iniGeneral, "port")?.also { Settings.port = it }
             }
-            ini["single_player_map"]?.also { iniMap ->
+            ini["map"]?.also { iniMap ->
                 getIntFromMap(iniMap, "width")?.also { Settings.mapWidth = it }
                 getIntFromMap(iniMap, "height")?.also { Settings.mapHeight = it }
                 getIntFromMap(iniMap, "mobs_count")?.also { Settings.mobsCount = it }
+            }
+            ini["general"]?.also { iniMap ->
+                iniMap["multiplayer"]?.toLowerCase()?.also {
+                    if (it == "true") ClientSettings.multiplayer = true
+                    if (it == "false") ClientSettings.multiplayer = false
+                }
             }
         } else {
             println("Can't find settings.ini")
