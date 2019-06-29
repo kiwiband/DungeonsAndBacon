@@ -1,2 +1,6 @@
 rootProject.name = 'dnb'
 
+include 'client'
+include 'server'
+include 'common'
+include 'rpc'
