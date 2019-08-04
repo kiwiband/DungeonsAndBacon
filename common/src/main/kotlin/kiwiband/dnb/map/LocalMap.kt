@@ -36,11 +36,20 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
      */
     override fun toJSON(): JSONObject {
         val actorsArray = JSONArray()
-        actors.forEach { actor -> actorsArray.put(actor.toJSON()) }
+        val xExplored = JSONArray()
+        val yExplored = JSONArray()
+        actors.forEachCellIndexed { x, y, cell ->
+            cell.actors.forEach { actor -> actorsArray.put(actor.toJSON()) }
+            if (cell.explored) {
+                xExplored.put(x)
+                yExplored.put(y)
+            }
+        }
         return JSONObject()
             .put("width", width)
             .put("height", height)
             .put("actors", actorsArray)
+            .put("explored", JSONArray().put(xExplored).put(yExplored))
     }
 
     /**
@@ -139,6 +148,12 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
                         map.grid.set(it.pos.x, it.pos.y, WALL_THRESHOLD)
                     }
                 }
+            }
+            val explored = mapData.getJSONArray("explored")
+            val xExplored = explored[0] as JSONArray
+            val yExplored = explored[1] as JSONArray
+            for (i in 0 until xExplored.length()) {
+                map.actors[xExplored.getInt(i), yExplored.getInt(i)].explored = true
             }
             return map
         }
