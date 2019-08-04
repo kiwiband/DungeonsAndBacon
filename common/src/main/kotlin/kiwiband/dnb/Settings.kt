@@ -12,14 +12,17 @@ object Settings {
 
     var mobsCount = Default.MOBS_COUNT
 
+    var fovRadius = Default.FOV_RADIUS
+
     object Default {
         const val HOST = "localhost"
         const val PORT = 12345
-
         const val MAP_WIDTH = 80
-        const val MAP_HEIGHT = 24
 
+        const val MAP_HEIGHT = 24
         const val MOBS_COUNT = 50
+
+        const val FOV_RADIUS = 10
     }
 
     @JvmStatic

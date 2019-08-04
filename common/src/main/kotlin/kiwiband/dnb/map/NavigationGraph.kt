@@ -76,7 +76,7 @@ class NavigationGraph(val map: MapGrid) {
     }
 
     inner class MapCell(val x: Int, val y: Int) {
-        fun getActors() = map[x, y]
+        fun getActors() = map[x, y].actors
 
         fun getId() = y * map.width + x
 
@@ -94,7 +94,7 @@ class NavigationGraph(val map: MapGrid) {
         }
 
         private fun checkCell(x: Int, y: Int): Boolean =
-            map[x, y].all { it.collision != Collision.Block || it is Creature }
+            map[x, y].actors.all { it.collision != Collision.Block || it is Creature }
     }
 
     companion object {

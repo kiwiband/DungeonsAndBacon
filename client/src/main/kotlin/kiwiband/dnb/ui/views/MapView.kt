@@ -1,8 +1,11 @@
 package kiwiband.dnb.ui.views
 
+import kiwiband.dnb.ASCIIART
+import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.manager.GameManager
 import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.ui.Renderer
 
 /**
@@ -16,9 +19,23 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
     override fun draw(renderer: Renderer) {
         val offsets = getOffsets(getMapBorders())
         val offset = center - findPlayerPosition().fitIn(offsets)
-        mgr.getMap().actors.forEachCell(borders - offset) { cell ->
-            cell.firstOrNull()?.also {
-                renderer.writeCharacter(it.getViewAppearance(), it.pos + offset)
+
+        val pos = Vec2M()
+
+        mgr.getMap().actors.forEachCellIndexed(borders - offset) { x, y, cell ->
+            pos.set(x, y).add(offset)
+            when {
+                cell.lit -> {
+                    cell.actors.firstOrNull()?.also {
+                        renderer.writeCharacter(it.getViewAppearance(), pos)
+                    } ?: renderer.writeCharacter(EMPTY_CELL, pos)
+                }
+                cell.explored -> {
+                    cell.actors.find { it.litIfExplored }?.also {
+                        renderer.writeCharacter(it.getViewAppearance(), pos)
+                    } ?: renderer.writeCharacter(UNLIT_CELL, pos)
+                }
+                else -> renderer.writeCharacter(UNEXPLORED_CELL, pos)
             }
         }
     }
@@ -29,5 +46,11 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
 
     private fun findPlayerPosition(): Vec2 {
         return mgr.getPlayer().pos
+    }
+
+    companion object {
+        val EMPTY_CELL = ViewAppearance('.', ASCIIART.LIGHT_GRAY)
+        val UNLIT_CELL = ViewAppearance('.', ASCIIART.DARK_GRAY)
+        val UNEXPLORED_CELL = ViewAppearance('▒', ASCIIART.DARK_GRAY)
     }
 }

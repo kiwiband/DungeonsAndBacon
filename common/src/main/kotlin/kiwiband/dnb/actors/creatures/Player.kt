@@ -2,6 +2,7 @@ package kiwiband.dnb.actors.creatures
 
 import kiwiband.dnb.ASCIIART
 import kiwiband.dnb.Game
+import kiwiband.dnb.Settings
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.actors.creatures.status.CreatureStatus

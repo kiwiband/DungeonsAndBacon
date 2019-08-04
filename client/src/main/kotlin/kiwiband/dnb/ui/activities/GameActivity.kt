@@ -5,6 +5,7 @@ import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.App
+import kiwiband.dnb.events.TickOrder
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView
@@ -45,6 +46,7 @@ class GameActivity(
             'a', 'ф' -> Vec2(-1, 0)
             's', 'ы' -> Vec2(0, 1)
             'd', 'в' -> Vec2(1, 0)
+            ' ' -> Vec2(0, 0)
             else -> null
         }?.also {
             mgr.movePlayer(it)
@@ -74,15 +76,13 @@ class GameActivity(
     }
 
     override fun onStart() {
-        drawScene()
-
         context.eventBus.pressKey.addHandler {
             handleEscapeKey(it.key)
             handleMoveKeys(it.key)
             handleInventoryKey(it.key)
         }
 
-        context.eventBus.tick.addHandler { onTick() }
+        context.eventBus.tick.addHandler(TickOrder.DRAW_UI) { onTick() }
 
         context.eventBus.gameOver.addHandler {
             val isDead = mgr.finishGame()
@@ -90,6 +90,7 @@ class GameActivity(
         }
 
         mgr.startGame()
+        drawScene()
     }
 
     override fun onFinish(result: Boolean) {

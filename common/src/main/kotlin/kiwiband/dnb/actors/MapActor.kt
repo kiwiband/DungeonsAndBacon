@@ -5,6 +5,7 @@ import kiwiband.dnb.JSONSerializable
 import kiwiband.dnb.events.*
 import kiwiband.dnb.math.Collision
 import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.math.VisibilityLevel
 import org.json.JSONObject
 
 enum class ViewOrder {
@@ -21,6 +22,9 @@ abstract class MapActor(
     private var eventTick: Registration? = null
     open var viewOrder = ViewOrder.Default
     open var viewPriority = 0
+
+    open var visibilityLevel = VisibilityLevel.Pass
+    open val litIfExplored = false
 
     open val collision = Collision.Block
     open val pos = Vec2M()
