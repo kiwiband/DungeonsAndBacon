@@ -23,7 +23,7 @@ class Game(val map: LocalMap, val eventBus: EventBus) {
         tickTime++
         destroyActors()
         spawnActors()
-        updateFov()
+        map.updateLit()
     }
 
     private fun destroyActors() {
@@ -41,15 +41,8 @@ class Game(val map: LocalMap, val eventBus: EventBus) {
         actorsToSpawn.clear()
     }
 
-    private fun updateFov() {
-        map.actors.unlit()
-        getPlayers().forEach {
-            map.actors.fov(it.pos, Settings.fovRadius)
-        }
-    }
-
     private fun getPlayers(): Collection<Player> {
-        return map.findPlayer(0)?.let { listOf(it) } ?: listOf()
+        return map.actors.filter { it is Player }.map { it as Player }
     }
 
     /**
@@ -60,7 +53,7 @@ class Game(val map: LocalMap, val eventBus: EventBus) {
         eventsRegistrations.add(eventBus.spawnActor.addHandler { actorsToSpawn.add(it.actor) })
         map.actors.forEach { it.onBeginGame(this) }
         eventsRegistrations.add(eventBus.tick.addHandler(TickOrder.BEFORE_DRAW_UI) { onTick() })
-        updateFov()
+        map.updateLit()
     }
 
     /**

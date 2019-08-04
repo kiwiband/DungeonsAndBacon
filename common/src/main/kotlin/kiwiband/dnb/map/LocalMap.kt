@@ -93,6 +93,13 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
 
     fun getActors(pos: Vec2): Collection<MapActor> = if (pos in borders) actors[pos].actors else listOf(endMap)
 
+    fun updateLit() {
+        actors.unlit()
+        actors.filter { it is Player }.forEach {
+            actors.fov(it.pos, Settings.fovRadius)
+        }
+    }
+
     companion object {
 
         private const val WALL_THRESHOLD = 2F

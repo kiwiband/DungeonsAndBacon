@@ -30,6 +30,7 @@ class MultiplayerGameManager(
         }
         localPlayer = player
         recolorPlayers()
+        map.updateLit()
         eventBus.run(EventTick())
     }
 
