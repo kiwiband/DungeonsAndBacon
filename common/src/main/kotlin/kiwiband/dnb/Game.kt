@@ -41,10 +41,6 @@ class Game(val map: LocalMap, val eventBus: EventBus) {
         actorsToSpawn.clear()
     }
 
-    private fun getPlayers(): Collection<Player> {
-        return map.actors.filter { it is Player }.map { it as Player }
-    }
-
     /**
      * Starts the game, resetting game timer and initializing player.
      */

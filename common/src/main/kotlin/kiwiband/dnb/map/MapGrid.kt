@@ -112,11 +112,11 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
 
         while (xnext != x1 || ynext != y1) {
             val cell = getSafe(xnext, ynext)
-            if (cell != null && cell.visibilityLevel == VisibilityLevel.Block) {
+            cell?.lit()
+            if (cell == null || cell.visibilityLevel == VisibilityLevel.Block) {
                 return
             }
 
-            cell?.lit()
             // Line-to-point distance formula < 0.5
             when {
                 Math.abs(dy * (xnext - x0 + sx) - dx * (ynext - y0)) / dist < 0.5f -> xnext += sx
@@ -128,7 +128,7 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
             }
         }
 
-        destination?.lit()
+        destination.lit()
     }
 
     private fun size(index: Int) = data[index].count
