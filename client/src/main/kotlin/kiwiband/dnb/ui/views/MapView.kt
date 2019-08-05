@@ -1,6 +1,6 @@
 package kiwiband.dnb.ui.views
 
-import kiwiband.dnb.ASCIIART
+import kiwiband.dnb.Colors
 import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.manager.GameManager
 import kiwiband.dnb.math.Borders
@@ -49,8 +49,8 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
     }
 
     companion object {
-        val EMPTY_CELL = ViewAppearance('.', ASCIIART.LIGHT_GRAY)
-        val UNLIT_CELL = ViewAppearance('.', ASCIIART.DARK_GRAY)
-        val UNEXPLORED_CELL = ViewAppearance('▒', ASCIIART.DARK_GRAY)
+        val EMPTY_CELL = ViewAppearance('.', Colors.LIGHT_GRAY)
+        val UNLIT_CELL = ViewAppearance('.', Colors.DARK_GRAY)
+        val UNEXPLORED_CELL = ViewAppearance('▒', Colors.DARK_GRAY)
     }
 }

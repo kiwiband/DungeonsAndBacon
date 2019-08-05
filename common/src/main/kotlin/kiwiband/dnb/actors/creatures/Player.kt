@@ -1,8 +1,7 @@
 package kiwiband.dnb.actors.creatures
 
-import kiwiband.dnb.ASCIIART
+import kiwiband.dnb.Colors
 import kiwiband.dnb.Game
-import kiwiband.dnb.Settings
 import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.actors.creatures.status.CreatureStatus
@@ -29,7 +28,7 @@ class Player(
     status: CreatureStatus,
     var playerId: Int
 ) : Creature(map, status, TickOrder.PLAYER) {
-    val appearance = ViewAppearance('@', ASCIIART.GREEN)
+    val appearance = ViewAppearance('@', Colors.GREEN)
 
     var inventory: Inventory = Inventory(20).also { it.add(ItemFactory.getRandomArmor()) }
         private set

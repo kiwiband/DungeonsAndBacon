@@ -1,6 +1,6 @@
 package kiwiband.dnb.manager
 
-import kiwiband.dnb.ASCIIART
+import kiwiband.dnb.Colors
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.actors.creatures.Player
 import kiwiband.dnb.events.*
@@ -37,7 +37,7 @@ class MultiplayerGameManager(
     private fun recolorPlayers() {
         localMap.actors.forEach {
             if (it is Player && it.playerId != playerId) {
-                it.appearance.color = ASCIIART.WHITE
+                it.appearance.color = Colors.WHITE
                 it.appearance.char = ('0' + it.playerId % 10)
             }
         }

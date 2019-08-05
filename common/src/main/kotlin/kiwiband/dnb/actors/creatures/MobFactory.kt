@@ -1,6 +1,6 @@
 package kiwiband.dnb.actors.creatures
 
-import kiwiband.dnb.ASCIIART
+import kiwiband.dnb.Colors
 import kiwiband.dnb.actors.ViewAppearance
 import kiwiband.dnb.actors.creatures.ai.AIAggressive
 import kiwiband.dnb.actors.creatures.ai.AIPassive
@@ -12,7 +12,7 @@ import kotlin.random.Random
 
 object MobFactory {
     fun createAggressiveMob(map: LocalMap, position: Vec2, status: CreatureStatus): Mob {
-        return Mob(map, position, AIAggressive(AIAggressive.VIEW_RANGE), ViewAppearance('&', ASCIIART.RED), status)
+        return Mob(map, position, AIAggressive(AIAggressive.VIEW_RANGE), ViewAppearance('&', Colors.RED), status)
     }
 
     fun createTimidMob(map: LocalMap, position: Vec2, status: CreatureStatus): Mob {
