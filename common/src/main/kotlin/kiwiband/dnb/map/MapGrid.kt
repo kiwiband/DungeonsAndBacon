@@ -57,9 +57,9 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         return data[y * width + x]
     }
 
-    private fun getSafe(x: Int, y: Int): MapCell? {
+    fun getSafe(x: Int, y: Int): MapCell? {
         val ind = y * width + x
-        return if (ind >= 0 && ind < data.size) data[ind] else null
+        return if (x in 0..(width - 1) && y in 0..(height - 1)) data[ind] else null
     }
 
     @Suppress("unused")

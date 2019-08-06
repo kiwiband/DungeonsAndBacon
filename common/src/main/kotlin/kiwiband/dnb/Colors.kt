@@ -8,4 +8,5 @@ object Colors {
     val WHITE = TextColor.RGB(255, 255, 255)
     val DARK_GRAY = TextColor.RGB(40, 40, 40)
     val LIGHT_GRAY = TextColor.RGB(140, 140, 140)
+    val DARK_BLUE = TextColor.RGB(0, 0, 80)
 }

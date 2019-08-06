@@ -38,11 +38,13 @@ open class Vec2(x: Int, y: Int) : JSONSerializable {
     }
 
 
-    fun distance(v: Vec2M): Int = distance(v.x, v.y)
+    fun distance(v: Vec2): Int = distance(v.x, v.y)
 
     fun distance(vx: Int, vy: Int): Int = Math.abs(vx - x) + Math.abs(vy - y)
 
-    fun normalize(): Vec2M = Vec2M(Integer.signum(x), Integer.signum(y))
+    fun distanceEuler2(v: Vec2): Int = normEuler2(v.x - x, v.y - y)
+
+    fun normalize(): Vec2 = Vec2(Integer.signum(x), Integer.signum(y))
 
     /**
      * Fits a point in borders.
@@ -75,5 +77,11 @@ open class Vec2(x: Int, y: Int) : JSONSerializable {
 
     override fun toString(): String {
         return "$x, $y"
+    }
+
+    companion object {
+        fun normEuler2(x: Int, y: Int): Int {
+            return x * x + y * y
+        }
     }
 }

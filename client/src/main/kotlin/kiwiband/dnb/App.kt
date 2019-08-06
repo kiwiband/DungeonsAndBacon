@@ -68,7 +68,7 @@ class App {
         } else {
             val mapSaver = MapSaver()
             LocalLoadMapActivity(context, mapSaver, ClientSettings.mapFile) {
-                    map -> callback(LocalGameManager(Game(map, context.eventBus), mapSaver, ClientSettings.mapFile)) {}
+                    map -> callback(LocalGameManager(Game(map, eventBus), mapSaver, ClientSettings.mapFile)) {}
             }
         }
     }

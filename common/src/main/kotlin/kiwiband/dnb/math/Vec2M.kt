@@ -24,5 +24,7 @@ class Vec2M(x: Int, y: Int) : Vec2() {
 
     fun add(v: Vec2): Vec2M = set(x + v.x, y + v.y)
 
+    fun add(x: Int, y: Int): Vec2M = set(this.x + x, this.y + y)
+
     fun sub(v: Vec2): Vec2M = set(x - v.x, y - v.y)
 }

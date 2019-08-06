@@ -1,18 +1,19 @@
 package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.Colors
+import kiwiband.dnb.actors.MapActor
 import kiwiband.dnb.actors.ViewAppearance
-import kiwiband.dnb.manager.GameManager
 import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.Vec2M
+import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.Renderer
 
 /**
  * View containing the map.
  */
-class MapView(private val mgr: GameManager, width: Int, height: Int) : View(width, height) {
-
+class MapView(private val gameContext: GameAppContext, width: Int, height: Int) : View(width, height) {
+    private val mgr = gameContext.gameManager
     private val center = Vec2(width / 2, height / 2)
     private val borders = Vec2(0, 0) to Vec2(width, height)
 
@@ -27,16 +28,28 @@ class MapView(private val mgr: GameManager, width: Int, height: Int) : View(widt
             when {
                 cell.lit -> {
                     cell.actors.firstOrNull()?.also {
-                        renderer.writeCharacter(it.getViewAppearance(), pos)
+                        renderActor(renderer, it, pos)
                     } ?: renderer.writeCharacter(EMPTY_CELL, pos)
                 }
                 cell.explored -> {
                     cell.actors.find { it.litIfExplored }?.also {
-                        renderer.writeCharacter(it.getViewAppearance(), pos)
+                        renderActor(renderer, it, pos)
                     } ?: renderer.writeCharacter(UNLIT_CELL, pos)
                 }
                 else -> renderer.writeCharacter(UNEXPLORED_CELL, pos)
             }
+        }
+    }
+
+    private fun renderActor(renderer: Renderer, actor: MapActor, pos: Vec2) {
+        val appearance = actor.getViewAppearance()
+        if (actor === gameContext.selection.selectedActor) {
+            val bgColor = appearance.bgColor
+            appearance.bgColor = Colors.DARK_BLUE
+            renderer.writeCharacter(appearance, pos)
+            appearance.bgColor = bgColor
+        } else {
+            renderer.writeCharacter(appearance, pos)
         }
     }
 

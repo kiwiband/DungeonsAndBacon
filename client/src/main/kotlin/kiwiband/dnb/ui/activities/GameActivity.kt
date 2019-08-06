@@ -5,6 +5,7 @@ import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.App
+import kiwiband.dnb.Settings
 import kiwiband.dnb.events.TickOrder
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InfoView
@@ -25,9 +26,9 @@ class GameActivity(
     override fun createRootView(): View {
         val gameRootView = HorizontalLayout(App.SCREEN_WIDTH, App.SCREEN_HEIGHT)
 
-        val mapView = MapView(mgr, 48, 22)
+        val mapView = MapView(gameContext, 48, 22)
         val playerView = PlayerView(mgr, 28, 10)
-        val infoView = InfoView(28, 10)
+        val infoView = InfoView(gameContext.selection, 28, 10)
 
         gameRootView.addChild(BoxLayout(mapView))
 
@@ -57,10 +58,16 @@ class GameActivity(
         }
     }
 
-    private fun handleInventoryKey(key: KeyStroke) {
-        if (key.keyType != KeyType.Character) return
-        when (key.character) {
-            'i', 'ш' -> openInventory()
+    private fun handleActionsKey(key: KeyStroke) {
+        when(key.keyType) {
+            KeyType.Tab -> {
+                gameContext.selection.nextSelection()
+                drawScene()
+            }
+            KeyType.Character -> when (key.character) {
+                'i', 'ш' -> openInventory()
+            }
+            else -> return
         }
     }
 
@@ -72,7 +79,12 @@ class GameActivity(
 
     private fun onTick() {
         if (context.activities.peekLast() == this)
+            updateSelection()
             drawScene()
+    }
+
+    private fun updateSelection() {
+        gameContext.selection.updateSelection(mgr.getPlayer(), Settings.fovRadius)
     }
 
     private fun openInventory() {
@@ -83,7 +95,7 @@ class GameActivity(
         context.eventBus.pressKey.addHandler {
             handleEscapeKey(it.key)
             handleMoveKeys(it.key)
-            handleInventoryKey(it.key)
+            handleActionsKey(it.key)
         }
 
         context.eventBus.tick.addHandler(TickOrder.DRAW_UI) { onTick() }
@@ -94,6 +106,7 @@ class GameActivity(
         }
 
         mgr.startGame()
+        updateSelection()
         drawScene()
     }
 

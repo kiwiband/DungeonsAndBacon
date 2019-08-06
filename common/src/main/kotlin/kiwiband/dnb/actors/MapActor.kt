@@ -29,6 +29,9 @@ abstract class MapActor(
     open val collision = Collision.Block
     open val pos = Vec2M()
 
+    var alive = false
+        private set
+
     /**
      * @return result of colliding with the [actor]
      */
@@ -51,6 +54,7 @@ abstract class MapActor(
     open fun onBeginGame(game: Game) {
         this.game = game
         eventTick = game.eventBus.tick.addHandler(tickOrder) { onTick() }
+        alive = true
     }
 
     /**
@@ -76,6 +80,7 @@ abstract class MapActor(
      * Destroys this actor
      */
     fun destroy() {
+        alive = false
         game?.eventBus?.run(EventDestroyActor(this))
         onDestroy()
     }
