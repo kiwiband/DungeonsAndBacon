@@ -12,16 +12,20 @@ class Selection {
     private val selections = mutableListOf<Creature>()
     private var curSelectedInd = -1
 
+    private var actualSelections = false
+
     fun updateSelection(player: Player, radius: Int) {
-        updateSelections(player, radius)
+        actualSelections = false
         if (!enableSelection) return
         val selected = selectedActor
-        if (selected != null && selected.alive && selected.pos.distanceEuler2(player.pos) < radius * radius) {
+        if (selected != null && selected.alive && selected.lit
+            && selected.pos.distanceEuler2(player.pos) < radius * radius) {
             return
         }
+        updateSelections(player, radius)
         selectedActor = null
         curSelectedInd = -1
-        nextSelection()
+        nextSelection(player, radius)
         enableSelection = true
     }
 
@@ -38,16 +42,22 @@ class Selection {
                     continue
                 }
                 mapGrid.getSafe(p.x + x, p.y + y)?.also { cell ->
-                    cell.actors.find { it is Creature }?.also{
-                        selections.add(it as Creature)
+                    if (cell.lit) {
+                        cell.actors.find { it is Creature }?.also {
+                            selections.add(it as Creature)
+                        }
                     }
                 }
             }
         }
         selections.sortBy { Vec2.normEuler2(it.pos.x - p.x, it.pos.y - p.y) }
+        actualSelections = true
     }
 
-    fun nextSelection() {
+    fun nextSelection(player: Player, radius: Int) {
+        if (!actualSelections) {
+            updateSelections(player, radius)
+        }
         ++curSelectedInd
         if (curSelectedInd == selections.size) {
             enableSelection = if (selections.size != 0) false else !enableSelection

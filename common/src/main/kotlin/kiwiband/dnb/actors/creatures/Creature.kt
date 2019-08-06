@@ -16,7 +16,10 @@ abstract class Creature(
     tickOrder: TickOrder = TickOrder.DEFAULT
 ) : MapActor(tickOrder) {
 
-    /**
+    val lit: Boolean
+        get() = map.actors[pos].lit
+
+            /**
      * Changes position of creature by [direction] and update the map
      */
     open fun move(direction: Vec2) {

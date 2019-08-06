@@ -61,7 +61,7 @@ class GameActivity(
     private fun handleActionsKey(key: KeyStroke) {
         when(key.keyType) {
             KeyType.Tab -> {
-                gameContext.selection.nextSelection()
+                gameContext.selection.nextSelection(mgr.getPlayer(), Settings.fovRadius)
                 drawScene()
             }
             KeyType.Character -> when (key.character) {
