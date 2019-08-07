@@ -1,6 +1,5 @@
-package kiwiband.dnb.ui.views.layout
+package kiwiband.dnb.ui.views.layout.util
 
-import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.views.View
 
 /**

@@ -1,4 +1,4 @@
-package kiwiband.dnb.ui.views.layout
+package kiwiband.dnb.ui.views.layout.util
 
 class Padding(val left: Int, val top: Int, val right: Int, val bottom: Int) {
     constructor(all: Int) : this(all, all, all, all)

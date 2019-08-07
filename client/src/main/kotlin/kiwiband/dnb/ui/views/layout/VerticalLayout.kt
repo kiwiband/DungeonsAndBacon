@@ -2,7 +2,11 @@ package kiwiband.dnb.ui.views.layout
 
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
-import kiwiband.dnb.ui.views.layout.HorizontalAlignment.*
+import kiwiband.dnb.ui.views.layout.util.ChildView
+import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
+import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment.*
+import kiwiband.dnb.ui.views.layout.util.Padding
+import kiwiband.dnb.ui.views.layout.util.Size
 
 
 /**
@@ -12,12 +16,12 @@ class VerticalLayout(width: Int, height: Int) : SequenceLayout<VerticalSlot>(wid
 
     override fun defaultSlot() = VerticalSlot()
 
-    override fun addOffsetBeforeChildDraw(child: SequenceChildView<VerticalSlot>, renderer: Renderer) {
+    override fun addOffsetBeforeChildDraw(child: ChildView<VerticalSlot>, renderer: Renderer) {
         val p = child.slot.padding
         renderer.offset.add(horizontalOffset(child.slot.alignment, child.view, p), p.top)
     }
 
-    override fun addOffsetAfterChildDraw(child: SequenceChildView<VerticalSlot>, renderer: Renderer) {
+    override fun addOffsetAfterChildDraw(child: ChildView<VerticalSlot>, renderer: Renderer) {
         val p = child.slot.padding
         renderer.offset.add(-horizontalOffset(child.slot.alignment, child.view, p), p.bottom + child.view.height)
     }
@@ -31,7 +35,7 @@ class VerticalLayout(width: Int, height: Int) : SequenceLayout<VerticalSlot>(wid
         }
     }
 
-    override fun chooseDirection(width: Int, height: Int) = height
+    override fun chooseDimension(width: Int, height: Int) = height
 
     override fun resizeChildren(
         width: Int,

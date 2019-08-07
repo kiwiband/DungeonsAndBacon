@@ -2,6 +2,7 @@ package kiwiband.dnb.ui.views.layout
 
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
+import kiwiband.dnb.ui.views.layout.util.*
 
 
 /**
@@ -13,10 +14,10 @@ import kiwiband.dnb.ui.views.View
 abstract class SequenceLayout<S : SequenceSlot>(
     width: Int, height: Int,
     private val isHorizontal: Boolean
-) : Layout<S, SequenceChildView<S>>(width, height) {
+) : Layout<S, ChildView<S>>(width, height) {
 
-    fun addChild(view: View, slot: S): SequenceChildView<S> {
-        return SequenceChildView(view, slot).also {
+    fun addChild(view: View, slot: S): ChildView<S> {
+        return ChildView(view, slot).also {
             children.add(it)
             resize(width, height)
         }
@@ -36,8 +37,8 @@ abstract class SequenceLayout<S : SequenceSlot>(
         }
     }
 
-    protected abstract fun addOffsetBeforeChildDraw(child: SequenceChildView<S>, renderer: Renderer)
-    protected abstract fun addOffsetAfterChildDraw(child: SequenceChildView<S>, renderer: Renderer)
+    protected abstract fun addOffsetBeforeChildDraw(child: ChildView<S>, renderer: Renderer)
+    protected abstract fun addOffsetAfterChildDraw(child: ChildView<S>, renderer: Renderer)
 
     override fun resize(width: Int, height: Int) {
         setSize(width, height)
@@ -45,22 +46,22 @@ abstract class SequenceLayout<S : SequenceSlot>(
         var fillChildCount = 0
         for (child in children) {
             val p = child.slot.padding
-            knownSize += chooseDirection(p.horizontal(), p.vertical())
+            knownSize += chooseDimension(p.horizontal(), p.vertical())
             when (child.slot.size) {
                 Size.CONSTANT -> {
-                    knownSize += chooseDirection(child.view.initWidth, child.view.initHeight)
+                    knownSize += chooseDimension(child.view.initWidth, child.view.initHeight)
                 }
                 Size.FILL -> fillChildCount++
             }
         }
-        val mainSize = chooseDirection(width, height)
+        val mainSize = chooseDimension(width, height)
         val retainedSize = Math.max(mainSize - knownSize, 0)
         val fillChildSize = if (fillChildCount == 0) 0 else retainedSize / fillChildCount
         val fatChildrenCount = if (fillChildCount == 0) 0 else retainedSize % fillChildCount
         resizeChildren(width, height, fillChildSize, fatChildrenCount)
     }
 
-    protected abstract fun chooseDirection(width: Int, height: Int): Int
+    protected abstract fun chooseDimension(width: Int, height: Int): Int
 
     protected abstract fun resizeChildren(
         width: Int,
@@ -69,7 +70,5 @@ abstract class SequenceLayout<S : SequenceSlot>(
         fatChildrenCount: Int
     )
 }
-
-class SequenceChildView<T : SequenceSlot>(view: View, slot: T) : ChildView<T>(view, slot)
 
 abstract class SequenceSlot(val padding: Padding, val size: Size) : Slot()

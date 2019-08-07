@@ -13,6 +13,7 @@ import kiwiband.dnb.ui.views.MapView
 import kiwiband.dnb.ui.views.PlayerView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.*
+import kiwiband.dnb.ui.views.layout.util.Size
 
 class GameActivity(
     private val gameContext: GameAppContext,
