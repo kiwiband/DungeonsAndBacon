@@ -78,9 +78,4 @@ class App {
             }
         }
     }
-
-    companion object {
-        const val SCREEN_WIDTH = 80
-        const val SCREEN_HEIGHT = 24
-    }
 }

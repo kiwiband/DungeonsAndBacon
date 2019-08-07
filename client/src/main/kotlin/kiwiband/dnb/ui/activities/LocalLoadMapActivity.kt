@@ -1,13 +1,15 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.App
 import kiwiband.dnb.Settings
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.ui.AppContext
-import kiwiband.dnb.ui.views.LocalLoadMapView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
+import kiwiband.dnb.ui.views.layout.BoxSlot
+import kiwiband.dnb.ui.views.layout.TextView
+import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
+import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
 
 class LocalLoadMapActivity(
     context: AppContext,
@@ -19,7 +21,9 @@ class LocalLoadMapActivity(
     var hasMap = true
 
     override fun createRootView(): View {
-        return BoxLayout(LocalLoadMapView(App.SCREEN_WIDTH - 2, App.SCREEN_HEIGHT - 2))
+        val size = context.renderer.screen.terminalSize
+        return BoxLayout(TextView(TEXT), BoxSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
+            size.columns, size.rows)
     }
 
     override fun onStart() {
@@ -44,5 +48,9 @@ class LocalLoadMapActivity(
         if (hasMap) {
             context.eventBus.pressKey.popLayer()
         }
+    }
+
+    companion object {
+        const val TEXT = "Load an existing map?\n(y/n)"
     }
 }

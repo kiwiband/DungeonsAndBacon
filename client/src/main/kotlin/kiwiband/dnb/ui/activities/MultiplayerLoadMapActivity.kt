@@ -2,11 +2,13 @@ package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.map.LocalMap
-import kiwiband.dnb.App
 import kiwiband.dnb.ui.AppContext
-import kiwiband.dnb.ui.views.MultiplayerLoadMapView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
+import kiwiband.dnb.ui.views.layout.BoxSlot
+import kiwiband.dnb.ui.views.layout.TextView
+import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
+import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
 
 
 /**
@@ -19,11 +21,18 @@ class MultiplayerLoadMapActivity(context: AppContext,
     Activity<Pair<Int, LocalMap>>(context, callback) {
 
     override fun createRootView(): View {
-        return BoxLayout(MultiplayerLoadMapView(App.SCREEN_WIDTH - 2, App.SCREEN_HEIGHT - 2))
+        val size = context.renderer.screen.terminalSize
+        return BoxLayout(
+            TextView(TEXT), BoxSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
+            size.columns, size.rows)
     }
 
     override fun onStart() {
         drawScene()
         finish(comm.connect())
+    }
+
+    companion object {
+        const val TEXT = "Loading map..."
     }
 }

@@ -25,7 +25,7 @@ class InventoryView(private val inventory: Inventory, width: Int, height: Int) :
 
     override fun draw(renderer: Renderer) {
         val space = "${inventory.getSize()}/${inventory.capacity}"
-        renderer.writeText("----INVENTORY $space----", Vec2(28 - space.length / 2, 0))
+        renderer.writeText("----INVENTORY $space----", Vec2((width - 18 - space.length) / 2, 0))
 
         val maxPages = (inventory.getSize() + ITEMS_ON_PAGE - 1) / ITEMS_ON_PAGE
         val currentPage = if (maxPages == 0) 0 else currentSelected / ITEMS_ON_PAGE + 1
@@ -55,6 +55,10 @@ class InventoryView(private val inventory: Inventory, width: Int, height: Int) :
             renderer.offset.add(Vec2(0, 2 + selectedRow * ROW_HEIGHT))
             renderer.drawBox(width - 2, ROW_HEIGHT)
         }
+    }
+
+    override fun resize(width: Int, height: Int) {
+        setSize(width, height)
     }
 
     companion object {

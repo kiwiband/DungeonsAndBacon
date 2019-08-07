@@ -1,5 +1,6 @@
 package kiwiband.dnb.ui.views
 
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
 
 /**
@@ -10,6 +11,9 @@ import kiwiband.dnb.ui.Renderer
 abstract class View(val initWidth: Int, val initHeight: Int) {
     var width = initWidth
     var height = initHeight
+
+    constructor(sizes: Vec2) : this(sizes.x, sizes.y)
+
     /**
      * Renders a view on a renderer
      * @param renderer renderer to draw on

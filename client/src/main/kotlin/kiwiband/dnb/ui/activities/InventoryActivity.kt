@@ -13,7 +13,8 @@ class InventoryActivity(context: GameAppContext, private val playerId: Int) : Ac
     private val mgr = context.gameManager
 
     override fun createRootView(): View {
-        inventoryRootView = InventoryView(mgr.getInventory(), SCREEN_WIDTH, SCREEN_HEIGHT)
+        val size = context.renderer.screen.terminalSize
+        inventoryRootView = InventoryView(mgr.getInventory(), size.columns, size.rows)
         return inventoryRootView
     }
 

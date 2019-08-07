@@ -4,7 +4,6 @@ import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.events.EventGameOver
 import kiwiband.dnb.math.Vec2
-import kiwiband.dnb.App
 import kiwiband.dnb.Settings
 import kiwiband.dnb.events.TickOrder
 import kiwiband.dnb.ui.GameAppContext
@@ -23,7 +22,8 @@ class GameActivity(
     private val mgr = gameContext.gameManager
 
     override fun createRootView(): View {
-        val gameRootView = HorizontalLayout(App.SCREEN_WIDTH, App.SCREEN_HEIGHT)
+        val size = context.renderer.screen.terminalSize
+        val gameRootView = HorizontalLayout(size.columns, size.rows)
 
         val mapView = MapView(gameContext, 48, 22)
         val playerView = PlayerView(mgr, 28, 10)
