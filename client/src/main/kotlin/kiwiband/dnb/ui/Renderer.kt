@@ -3,6 +3,7 @@ package kiwiband.dnb.ui
 import com.googlecode.lanterna.TextCharacter
 import com.googlecode.lanterna.screen.Screen
 import kiwiband.dnb.actors.ViewAppearance
+import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2M
 import kiwiband.dnb.math.Vec2
 
@@ -16,6 +17,8 @@ class Renderer(var screen: Screen) {
      * Drawing offset of this renderer
      */
     val offset: Vec2M = Vec2M()
+
+    private var borders = Vec2() to Vec2(Int.MAX_VALUE, Int.MAX_VALUE)
 
     private val defaultAppearance = ViewAppearance('.')
 
@@ -38,6 +41,17 @@ class Renderer(var screen: Screen) {
         offset.set(previousOffset)
     }
 
+    fun withOffsetLimited(width: Int, height: Int, f: () -> Unit) {
+        withOffsetLimited(Vec2() to Vec2(width, height), f)
+    }
+
+    fun withOffsetLimited(borders: Borders, f: () -> Unit) {
+        val previousBorders = borders
+        this.borders = borders + offset
+        withOffset(f)
+        this.borders = previousBorders
+    }
+
     /**
      * Sets a character on a screen relative to current offset.
      * @param character character to set
@@ -50,11 +64,13 @@ class Renderer(var screen: Screen) {
 
     fun writeCharacter(appearance: ViewAppearance, internalOffset: Vec2) {
         val resultOffset = offset + internalOffset
-        screen.setCharacter(
-            resultOffset.x,
-            resultOffset.y,
-            TextCharacter(appearance.char, appearance.color, appearance.bgColor)
-        )
+        if (resultOffset in borders) {
+            screen.setCharacter(
+                resultOffset.x,
+                resultOffset.y,
+                TextCharacter(appearance.char, appearance.color, appearance.bgColor)
+            )
+        }
     }
 
     /**

@@ -18,13 +18,13 @@ open class WrapperLayout(
 
     override fun draw(renderer: Renderer) {
         val content = children.first()
-        renderer.withOffset {
+        renderer.withOffsetLimited(width, height) {
             renderer.offset.add(horizontalOffset(content), verticalOffset(content))
             content.view.draw(renderer)
         }
     }
 
-    private fun horizontalOffset(child: ChildView<WrapperSlot>): Int {
+    protected fun horizontalOffset(child: ChildView<WrapperSlot>): Int {
         val p = child.slot.padding
         val freeWidth = width - child.view.width
         return when (child.slot.horizontal) {
@@ -35,7 +35,7 @@ open class WrapperLayout(
         }
     }
 
-    private fun verticalOffset(child: ChildView<WrapperSlot>): Int {
+    protected fun verticalOffset(child: ChildView<WrapperSlot>): Int {
         val p = child.slot.padding
         val freeHeight = height - child.view.height
         return when (child.slot.vertical) {

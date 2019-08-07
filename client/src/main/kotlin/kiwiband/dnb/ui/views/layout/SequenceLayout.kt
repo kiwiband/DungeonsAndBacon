@@ -28,7 +28,7 @@ abstract class SequenceLayout<S : SequenceSlot>(
     abstract fun defaultSlot(): S
 
     override fun draw(renderer: Renderer) {
-        renderer.withOffset {
+        renderer.withOffsetLimited(width, height) {
             for (child in children) {
                 addOffsetBeforeChildDraw(child, renderer)
                 child.view.draw(renderer)
