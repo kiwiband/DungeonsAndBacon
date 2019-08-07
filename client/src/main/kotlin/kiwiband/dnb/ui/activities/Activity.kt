@@ -26,14 +26,14 @@ abstract class Activity<T>(protected val context: AppContext,
     /**
      * Refreshes a screen.
      */
-    protected fun drawScene() {
+    fun drawScene() {
         renderer.clearScreen()
         renderer.setOffset(0, 0)
         rootView.draw(renderer)
         renderer.refreshScreen()
     }
 
-    protected fun close() {
+    private fun close() {
         context.eventBus.pressKey.popLayer()
         val activities = context.activities
         activities.removeLast()
@@ -76,4 +76,8 @@ abstract class Activity<T>(protected val context: AppContext,
      * A handler that gets invoked upon activity finish.
      */
     open fun onFinish(result: T) {}
+
+    open fun resize(height: Int, width: Int) {
+        rootView.resize(width, height)
+    }
 }

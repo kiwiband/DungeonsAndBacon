@@ -20,10 +20,10 @@ import java.util.concurrent.locks.ReentrantLock
  */
 class App {
     private val eventBus = EventBus()
-    private val terminal = DefaultTerminalFactory().createTerminal()
+    private var terminal = DefaultTerminalFactory().createTerminal()
     private val eventLock = ReentrantLock()
     private val inputManager = InputManager(terminal, eventLock, eventBus)
-    private val screen = TerminalScreen(terminal)
+    private var screen = TerminalScreen(terminal)
     private val renderer = Renderer(screen)
     private val activities = ArrayDeque<Activity<*>>()
     private val context = AppContext(renderer, activities, eventBus)
@@ -51,7 +51,13 @@ class App {
         loadMapActivity.start()
 
         // once the map is loaded, we can start the game activity.
-
+        terminal.addResizeListener { _, newSize ->
+            screen.doResizeIfNecessary()
+            activities.forEach {
+                it.resize(newSize.rows, newSize.columns)
+            }
+            activities.lastOrNull()?.drawScene()
+        }
 
         // wait for the end of the game here.
         inputManager.join()

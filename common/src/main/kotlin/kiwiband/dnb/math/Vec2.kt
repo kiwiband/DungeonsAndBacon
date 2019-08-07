@@ -79,6 +79,8 @@ open class Vec2(x: Int, y: Int) : JSONSerializable {
         return "$x, $y"
     }
 
+    fun div(d: Int) = Vec2(x / d, y / d)
+
     companion object {
         fun normEuler2(x: Int, y: Int): Int {
             return x * x + y * y

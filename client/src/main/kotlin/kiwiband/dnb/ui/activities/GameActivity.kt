@@ -12,9 +12,7 @@ import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView
 import kiwiband.dnb.ui.views.PlayerView
 import kiwiband.dnb.ui.views.View
-import kiwiband.dnb.ui.views.layout.BoxLayout
-import kiwiband.dnb.ui.views.layout.HorizontalLayout
-import kiwiband.dnb.ui.views.layout.VerticalLayout
+import kiwiband.dnb.ui.views.layout.*
 
 class GameActivity(
     private val gameContext: GameAppContext,
@@ -30,11 +28,12 @@ class GameActivity(
         val playerView = PlayerView(mgr, 28, 10)
         val infoView = InfoView(gameContext.selection, 28, 10)
 
-        gameRootView.addChild(BoxLayout(mapView))
+        gameRootView.addChild(BoxLayout(mapView),
+            HorizontalSlot(Padding(2, 2, 8, 8), Size.CONSTANT, VerticalAlignment.FILL))
 
         val sidebar = VerticalLayout(30, 24)
-        sidebar.addChild(BoxLayout(infoView))
-        sidebar.addChild(BoxLayout(playerView))
+        sidebar.addChild(BoxLayout(infoView), VerticalSlot(verticalSize = Size.FILL))
+        sidebar.addChild(BoxLayout(playerView), VerticalSlot(verticalSize = Size.FILL))
 
         gameRootView.addChild(sidebar)
         return gameRootView

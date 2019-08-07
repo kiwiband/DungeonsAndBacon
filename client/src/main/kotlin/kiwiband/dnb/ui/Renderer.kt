@@ -11,7 +11,7 @@ import kiwiband.dnb.math.Vec2
  * Contains the drawing offset and some drawing primitives.
  * @param screen screen to render on
  */
-class Renderer(private val screen: Screen) {
+class Renderer(var screen: Screen) {
     /**
      * Drawing offset of this renderer
      */

@@ -14,8 +14,14 @@ import kiwiband.dnb.ui.Renderer
  */
 class MapView(private val gameContext: GameAppContext, width: Int, height: Int) : View(width, height) {
     private val mgr = gameContext.gameManager
-    private val center = Vec2(width / 2, height / 2)
-    private val borders = Vec2(0, 0) to Vec2(width, height)
+    private val center = Vec2M(width / 2, height / 2)
+    private var borders = Vec2() to Vec2(width, height)
+
+    override fun resize(width: Int, height: Int) {
+        setSize(width, height)
+        borders = Vec2() to Vec2(width, height)
+        center.set(borders.b.x / 2, borders.b.y / 2)
+    }
 
     override fun draw(renderer: Renderer) {
         val offsets = getOffsets(getMapBorders())
@@ -26,6 +32,7 @@ class MapView(private val gameContext: GameAppContext, width: Int, height: Int) 
         mgr.getMap().actors.forEachCellIndexed(borders - offset) { x, y, cell ->
             pos.set(x, y).add(offset)
             when {
+                cell == null -> renderer.writeCharacter(END_OF_MAP, pos)
                 cell.lit -> {
                     cell.actors.firstOrNull()?.also {
                         renderActor(renderer, it, pos)
@@ -55,8 +62,10 @@ class MapView(private val gameContext: GameAppContext, width: Int, height: Int) 
 
     private fun getMapBorders() = mgr.getMap().let { Vec2(0, 0) to Vec2(it.width, it.height) }
 
-    private fun getOffsets(mapBorders: Borders): Borders = center to (mapBorders.b - center).mixMax(center + Vec2(1, 1))
-
+    private fun getOffsets(mapBorders: Borders): Borders {
+        val toCenterOffset = (borders.b - mapBorders.b).mixMax(Vec2()).div(2)
+        return (center to (mapBorders.b - center).mixMax(center + Vec2(1, 1))) - toCenterOffset
+    }
     private fun findPlayerPosition(): Vec2 {
         return mgr.getPlayer().pos
     }
@@ -65,5 +74,6 @@ class MapView(private val gameContext: GameAppContext, width: Int, height: Int) 
         val EMPTY_CELL = ViewAppearance('.', Colors.LIGHT_GRAY)
         val UNLIT_CELL = ViewAppearance('.', Colors.DARK_GRAY)
         val UNEXPLORED_CELL = ViewAppearance('▒', Colors.DARK_GRAY)
+        val END_OF_MAP = ViewAppearance('x', Colors.DARK_GRAY)
     }
 }

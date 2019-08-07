@@ -74,13 +74,15 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         borders.forEach { consumer(get(it)) }
     }
 
-    fun forEachCellIndexed(borders: Borders, consumer: (Int, Int, MapCell) -> Unit) {
-        borders.forEach { consumer(it.x, it.y, get(it)) }
+    fun forEachCellIndexed(borders: Borders, consumer: (Int, Int, MapCell?) -> Unit) {
+        borders.forEach { consumer(it.x, it.y, getSafe(it.x, it.y)) }
     }
 
     @Suppress("unused")
     fun forEachCellIndexed(consumer: (Int, Int, MapCell) -> Unit) {
-        forEachCellIndexed(Vec2() to Vec2(width, height), consumer)
+        (Vec2() to Vec2(width, height)).forEach {
+            consumer(it.x, it.y, get(it))
+        }
     }
 
     fun unlit() = forEachCell { it.lit = false } // TODO optimize

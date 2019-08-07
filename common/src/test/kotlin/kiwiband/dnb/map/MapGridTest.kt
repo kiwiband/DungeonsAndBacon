@@ -14,16 +14,16 @@ class MapGridTest {
         val actor = MockActor()
 
         grid.add(actor)
-        assertEquals(1, grid[0, 0].size)
-        assertEquals(0, grid[1, 1].size)
+        assertEquals(1, grid[0, 0].count)
+        assertEquals(0, grid[1, 1].count)
 
         actor.pos.set(1, 1)
-        assertEquals(1, grid[0, 0].size)
-        assertEquals(0, grid[1, 1].size)
+        assertEquals(1, grid[0, 0].count)
+        assertEquals(0, grid[1, 1].count)
 
         grid.updateOne(Vec2(0, 0))
-        assertEquals(0, grid[0, 0].size)
-        assertEquals(1, grid[1, 1].size)
+        assertEquals(0, grid[0, 0].count)
+        assertEquals(1, grid[1, 1].count)
     }
 
     @Test
@@ -37,22 +37,22 @@ class MapGridTest {
         grid.add(actor2)
         grid.add(actor3)
 
-        assertEquals(3, grid[0, 0].size)
-        assertEquals(0, grid[1, 1].size)
+        assertEquals(3, grid[0, 0].count)
+        assertEquals(0, grid[1, 1].count)
 
         actor1.pos.set(1, 1)
-        assertEquals(3, grid[0, 0].size)
-        assertEquals(0, grid[1, 1].size)
+        assertEquals(3, grid[0, 0].count)
+        assertEquals(0, grid[1, 1].count)
 
         grid.updateOne(Vec2(0, 0))
-        assertEquals(2, grid[0, 0].size)
-        assertEquals(1, grid[1, 1].size)
+        assertEquals(2, grid[0, 0].count)
+        assertEquals(1, grid[1, 1].count)
 
         actor2.pos.set(1, 1)
         actor3.pos.set(1, 1)
         grid.updateOne(Vec2(0, 0))
-        assertEquals(1, grid[0, 0].size)
-        assertEquals(2, grid[1, 1].size)
+        assertEquals(1, grid[0, 0].count)
+        assertEquals(2, grid[1, 1].count)
     }
 
     @Test

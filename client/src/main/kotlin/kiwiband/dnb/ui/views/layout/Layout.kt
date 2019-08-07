@@ -8,16 +8,16 @@ import kiwiband.dnb.ui.views.View
  * @param offset relative position
  * @param view view
  */
-data class ChildView(val offset: Vec2, val view: View)
+open class ChildView<T : Slot>(val view: View, open val slot: T)
 
 /**
  * Base class for layouts - container views.
  */
-abstract class Layout(width: Int, height: Int) : View(width, height) {
+abstract class Layout<S : Slot, T : ChildView<S>>(width: Int, height: Int) : View(width, height) {
     /**
      * List of all views in layout
      */
-    protected val children = mutableListOf<ChildView>()
+    protected val children = mutableListOf<T>()
 
     /**
      * Removes all the children from the layout.
