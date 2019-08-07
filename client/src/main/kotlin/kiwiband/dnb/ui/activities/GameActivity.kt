@@ -32,7 +32,7 @@ class GameActivity(
         gameRootView.addChild(BoxLayout(mapView), HorizontalSlot(horizontalSize = Size.FILL))
 
         val sidebar = VerticalLayout(30, 24)
-        sidebar.addChild(BoxLayout(infoView), VerticalSlot(verticalSize = Size.FILL))
+        sidebar.addChild(BoxLayout(infoView), VerticalSlot())
         sidebar.addChild(BoxLayout(playerView), VerticalSlot(verticalSize = Size.FILL))
 
         gameRootView.addChild(sidebar)

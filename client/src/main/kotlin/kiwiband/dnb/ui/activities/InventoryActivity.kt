@@ -1,8 +1,6 @@
 package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.events.EventPressKey
-import kiwiband.dnb.App.Companion.SCREEN_HEIGHT
-import kiwiband.dnb.App.Companion.SCREEN_WIDTH
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InventoryView
 import kiwiband.dnb.ui.views.View
