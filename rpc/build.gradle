@@ -21,9 +21,6 @@ repositories {
 }
 
 dependencies {
-    compile project(':common')
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile 'com.google.protobuf:protobuf-java:3.+'
     compile 'io.grpc:grpc-stub:1.+'
     compile 'io.grpc:grpc-protobuf:1.+'

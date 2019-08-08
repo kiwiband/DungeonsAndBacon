@@ -19,9 +19,10 @@ repositories {
 
 dependencies {
     compile project(':rpc')
+    compile project(':common')
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
+    compile group:'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    compile group: 'org.json', name: 'json', version: '20180813'
     compile group: 'org.ini4j', name: 'ini4j', version: '0.5.1'
 }
 

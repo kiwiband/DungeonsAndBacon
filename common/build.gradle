@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     compile group: 'org.json', name: 'json', version: '20180813'
     compile 'com.github.czyzby:noise4j:0.1.0'
     compile group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.0.1'
