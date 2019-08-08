@@ -46,7 +46,7 @@ class Renderer(var screen: Screen) {
     }
 
     fun withOffsetLimited(borders: Borders, f: () -> Unit) {
-        val previousBorders = borders
+        val previousBorders = this.borders
         this.borders = borders + offset
         withOffset(f)
         this.borders = previousBorders
