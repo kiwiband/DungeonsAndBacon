@@ -10,7 +10,7 @@ import kiwiband.dnb.math.Vec2
 
 class MultiplayerGameManager(
     private val comm: ServerCommunicationManager,
-    var playerId: Int,
+    var playerId: String,
     var localMap: LocalMap,
     private val eventBus: EventBus
 ) : GameManager {
@@ -38,7 +38,7 @@ class MultiplayerGameManager(
         localMap.actors.forEach {
             if (it is Player && it.playerId != playerId) {
                 it.appearance.color = Colors.WHITE
-                it.appearance.char = ('0' + it.playerId % 10)
+                it.appearance.char = (it.playerId[0])
             }
         }
     }
@@ -47,7 +47,7 @@ class MultiplayerGameManager(
         comm.sendEvent(EventMove(direction, playerId))
     }
 
-    override fun useItem(itemNum: Int, playerId: Int) {
+    override fun useItem(itemNum: Int, playerId: String) {
         comm.sendEvent(EventUseItem(itemNum, playerId))
     }
 

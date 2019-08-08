@@ -32,7 +32,7 @@ sealed class Event : JSONSerializable {
  * Event for player movement.
  * @param direction direction to move.
  */
-class EventMove(val direction: Vec2, val playerId: Int) : Event() {
+class EventMove(val direction: Vec2, val playerId: String) : Event() {
     override fun toJSON(): JSONObject {
         return super.toJSON().put("dir", direction.toJSON()).put("id", playerId)
     }
@@ -71,7 +71,7 @@ class EventSpawnActor(val actor: MapActor) : Event()
 class EventUpdateMap(val newMap: LocalMap) : Event()
 
 
-class EventUseItem(val itemNum: Int, val playerId: Int) : Event() {
+class EventUseItem(val itemNum: Int, val playerId: String) : Event() {
     override fun toJSON(): JSONObject {
         return super.toJSON().put("itm", itemNum).put("id", playerId)
     }

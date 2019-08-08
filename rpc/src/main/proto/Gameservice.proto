@@ -9,22 +9,43 @@ message JsonString {
 }
 
 message PlayerId {
-    int32 id = 1;
+    string id = 1;
 }
 
-message InitialState {
-    int32 playerId = 1;
+message GameState {
+    string playerId = 1;
     string mapJson = 2;
 }
 
 message UserEvent {
-    int32 playerId = 1;
+    string playerId = 1;
     string json = 2;
 }
 
+message SessionId {
+    string id = 1;
+}
+
+message JoinRequest {
+    string playerId = 1;
+    string sessionId = 2;
+}
+
+message JoinResult {
+    enum Status {
+        OK = 0;
+        NO_SUCH_SESSION = 1;
+        ALREADY_CONNECTED = 2;
+        NO_SUCH_PLAYER = 3;
+    }
+
+    Status status = 1;
+}
+
 service GameService {
-    rpc connect(Empty) returns (InitialState) { }
-    rpc disconnect(PlayerId) returns (Empty) { }
-    rpc userEvent(UserEvent) returns (Empty) { }
-    rpc updateMap(PlayerId) returns (stream JsonString) { }
+    rpc createSession (PlayerId) returns (SessionId) {}
+    rpc joinSession (JoinRequest) returns (JoinResult) {}
+    rpc disconnect (PlayerId) returns (Empty) {}
+    rpc userEvent (UserEvent) returns (Empty) {}
+    rpc updateMap (PlayerId) returns (stream JsonString) {}
 }

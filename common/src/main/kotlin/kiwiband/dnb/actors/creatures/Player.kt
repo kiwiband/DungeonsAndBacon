@@ -26,7 +26,7 @@ class Player(
     map: LocalMap,
     position: Vec2,
     status: CreatureStatus,
-    var playerId: Int
+    var playerId: String
 ) : Creature(map, status, TickOrder.PLAYER) {
     val appearance = ViewAppearance('@', Colors.GREEN)
 
@@ -120,7 +120,7 @@ class Player(
                     obj.getInt("hp"),
                     obj.getInt("exp")
                 ),
-                obj.getInt("id")
+                obj.getString("id")
             )
             player.inventory = Inventory.fromJSON(obj.getJSONObject("inv"), player)
             for (item in player.inventory.items) {

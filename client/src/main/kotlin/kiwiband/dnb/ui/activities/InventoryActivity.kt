@@ -8,7 +8,7 @@ import kiwiband.dnb.ui.views.InventoryAction
 import kiwiband.dnb.ui.views.InventoryView
 import kiwiband.dnb.ui.views.View
 
-class InventoryActivity(context: GameAppContext, private val playerId: Int) : Activity<Unit>(context, {}) {
+class InventoryActivity(context: GameAppContext, internal val playerId: String) : Activity<Unit>(context, {}) {
     private lateinit var inventoryRootView: InventoryView
 
     private val mgr = context.gameManager

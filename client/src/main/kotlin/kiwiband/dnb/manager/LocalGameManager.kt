@@ -14,7 +14,7 @@ class LocalGameManager(
     private val mapFile: String
 ) : GameManager {
 
-    private val player: Player = game.getOrCreatePlayer(0)
+    private val player: Player = game.getOrCreatePlayer(DEFAULT_USER)
 
     private fun saveMap(game: Game) {
         mapSaver.saveToFile(game.map, mapFile)
@@ -33,11 +33,11 @@ class LocalGameManager(
     }
 
     override fun movePlayer(direction: Vec2) {
-        game.eventBus.run(EventMove(direction, 0))
+        game.eventBus.run(EventMove(direction, DEFAULT_USER))
         game.eventBus.run(EventTick())
     }
 
-    override fun useItem(itemNum: Int, playerId: Int) {
+    override fun useItem(itemNum: Int, playerId: String) {
         game.eventBus.run(EventUseItem(itemNum, playerId))
     }
 
@@ -54,5 +54,9 @@ class LocalGameManager(
         }
         game.endGame()
         return isDead
+    }
+
+    companion object {
+        const val DEFAULT_USER = "@user"
     }
 }

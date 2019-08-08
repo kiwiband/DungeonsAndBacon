@@ -62,7 +62,7 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
         return toJSON().toString()
     }
 
-    fun spawnPlayer(id: Int): Player {
+    fun spawnPlayer(id: String): Player {
         while (true) {
             val x = Random.nextInt(grid.width)
             val y = Random.nextInt(grid.height)
@@ -89,13 +89,13 @@ class LocalMap(val width: Int, val height: Int) : JSONSerializable {
         }
     }
 
-    fun findPlayer(id: Int) = actors.find { it is Player && it.playerId == id} as Player?
+    fun findPlayer(id: String) = actors.find { it is Player && it.playerId == id} as Player?
 
     fun getActors(pos: Vec2): Collection<MapActor> = if (pos in borders) actors[pos].actors else listOf(endMap)
 
     fun updateLit() {
         actors.unlit()
-        actors.filter { it is Player }.forEach {
+        actors.filterIsInstance<Player>().forEach {
             actors.fov(it.pos, Settings.fovRadius)
         }
     }

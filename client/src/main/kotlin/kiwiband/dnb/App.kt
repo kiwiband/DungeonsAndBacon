@@ -67,7 +67,8 @@ class App {
 
     private fun loadMapActivity(callback: (GameManager,  () -> Unit) -> Unit): Activity<out Any> {
         return if (ClientSettings.multiplayer) {
-            val commManager = ServerCommunicationManager(Settings.host, Settings.port, eventLock, eventBus)
+            val commManager = ServerCommunicationManager(Settings.host, Settings.port, eventLock, eventBus,
+                ClientSettings.playerId, ClientSettings.sessionId)
             MultiplayerLoadMapActivity(context, commManager) { (playerId, map) ->
                 callback(MultiplayerGameManager(commManager, playerId, map, eventBus)) { commManager.disconnect() }
             }

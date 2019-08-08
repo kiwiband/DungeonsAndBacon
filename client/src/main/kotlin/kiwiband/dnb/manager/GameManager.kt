@@ -8,7 +8,7 @@ import kiwiband.dnb.math.Vec2
 interface GameManager {
     fun movePlayer(direction: Vec2)
 
-    fun useItem(itemNum: Int, playerId: Int)
+    fun useItem(itemNum: Int, playerId: String)
 
     fun finishGame(): Boolean
 

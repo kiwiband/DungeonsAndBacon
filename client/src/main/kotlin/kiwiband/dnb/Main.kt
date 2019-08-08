@@ -16,9 +16,9 @@ object Main {
 
     @JvmStatic
     fun fillSettings(args: Array<String>) {
-        val serverFile = File("settings.ini")
-        if (serverFile.exists()) {
-            val ini = Ini(serverFile)
+        val settingsFile = File("settings.ini")
+        if (settingsFile.exists()) {
+            val ini = Ini(settingsFile)
             ini["server"]?.also { iniGeneral ->
                 iniGeneral["host"]?.also { Settings.host = it }
                 getIntFromMap(iniGeneral, "port")?.also { Settings.port = it }
@@ -28,10 +28,17 @@ object Main {
                 getIntFromMap(iniMap, "height")?.also { Settings.mapHeight = it }
                 getIntFromMap(iniMap, "mobs_count")?.also { Settings.mobsCount = it }
             }
-            ini["general"]?.also { iniMap ->
-                iniMap["multiplayer"]?.toLowerCase()?.also {
-                    if (it == "true") ClientSettings.multiplayer = true
-                    if (it == "false") ClientSettings.multiplayer = false
+            ini["general"]?.also { iniGeneral ->
+                iniGeneral["multiplayer"]?.toLowerCase()?.also {
+                    ClientSettings.multiplayer = it == "true"
+                }
+                iniGeneral["session_id"]?.also {
+                    ClientSettings.sessionId = it
+                }
+            }
+            ini["player"]?.also { iniPlayer ->
+                iniPlayer["player_id"]?.also {
+                    ClientSettings.playerId = it
                 }
             }
         } else {

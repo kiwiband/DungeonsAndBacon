@@ -4,34 +4,50 @@ import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
+import kiwiband.dnb.rpc.Gameservice.JoinResult.Status as JoinStatus
 import org.json.JSONObject
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicReference
-import java.util.concurrent.locks.ReentrantLock
 
 /**
  * An implementation of the GRPC game service
  */
-class GameServiceImpl(private val gameSession: GameSession, private val gameLock: ReentrantLock) :
+class GameServiceImpl :
     GameServiceGrpc.GameServiceImplBase() {
 
-    private val updateObservers = ConcurrentHashMap<Int, StreamObserver<Gameservice.JsonString>>()
-    private val currentMap = AtomicReference<String>(gameSession.game.map.toString())
+    private val updateObservers = ConcurrentHashMap<String, StreamObserver<Gameservice.JsonString>>()
+    val sessions = hashMapOf<String, GameSession>()
+    private val players = ConcurrentHashMap<String, String>()
 
-    /**
-     * Register a new player, spawn it on the map and return the player id
-     */
-    override fun connect(request: Gameservice.Empty, responseObserver: StreamObserver<Gameservice.InitialState>) {
-        val id = gameSession.getFreePlayerId()
-
-        gameLock.lock()
-        gameSession.addNewPlayer(id)
-        currentMap.set(gameSession.game.map.toString())
-        gameLock.unlock()
-
-        responseObserver.onNext(Gameservice.InitialState.newBuilder().setPlayerId(id).setMapJson(currentMap.get()).build())
-        println("Player $id joined the game")
+    override fun createSession(request: Gameservice.PlayerId, responseObserver: StreamObserver<Gameservice.SessionId>) {
+        val id = UUID.randomUUID().toString()
+        val gameSession = GameSession()
+        sessions[id] = gameSession
+        responseObserver.onNext(Gameservice.SessionId.newBuilder().setId(id).build())
         responseObserver.onCompleted()
+    }
+
+    override fun joinSession(request: Gameservice.JoinRequest, responseObserver: StreamObserver<Gameservice.JoinResult>) {
+        val result = Gameservice.JoinResult.newBuilder()
+        result.status = if (!sessions.containsKey(request.sessionId)) {
+            JoinStatus.NO_SUCH_SESSION
+        } else if (players.containsKey(request.playerId)) {
+            JoinStatus.ALREADY_CONNECTED
+        } else {
+            addPlayerToSession(request.playerId, request.sessionId)
+            JoinStatus.OK
+        }
+
+        responseObserver.onNext(result.build())
+        responseObserver.onCompleted()
+    }
+
+    private fun addPlayerToSession(playerId: String, sessionId: String) {
+        val session = sessions[sessionId]!!
+        session.lock()
+        session.addNewPlayer(playerId)
+        players[playerId] = sessionId
+        session.unlock()
     }
 
     /**
@@ -39,13 +55,17 @@ class GameServiceImpl(private val gameSession: GameSession, private val gameLock
      * Close and remove the player's observer
      */
     override fun disconnect(request: Gameservice.PlayerId, responseObserver: StreamObserver<Gameservice.Empty>) {
+
+        val session = getPlayerSession(request.id) ?: return // todo send response
+
         println("Player ${request.id} left the game")
 
-        gameLock.lock()
-        gameSession.removePlayer(request.id)
-        gameLock.unlock()
+        session.lock()
+        session.removePlayer(request.id)
+        players.remove(request.id)
+        session.unlock()
 
-        updateObservers.remove(request.id)?.onCompleted()
+        updateObservers.remove(request.id)?.onCompleted() // todo concurrency issue
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
     }
@@ -56,12 +76,19 @@ class GameServiceImpl(private val gameSession: GameSession, private val gameLock
     override fun userEvent(request: Gameservice.UserEvent, responseObserver: StreamObserver<Gameservice.Empty>) {
         println("User event happened (player id: ${request.playerId}): ${request.json}")
 
-        gameLock.lock()
-        gameSession.game.eventBus.runFromJSON(JSONObject(request.json))
-        gameLock.unlock()
+        val session = getPlayerSession(request.playerId) ?: return // todo send response
+
+        session.lock()
+        session.game.eventBus.runFromJSON(JSONObject(request.json))
+        session.unlock()
 
         responseObserver.onNext(Gameservice.Empty.getDefaultInstance())
         responseObserver.onCompleted()
+    }
+
+    private fun getPlayerSession(playerId: String): GameSession? {
+        val sessionId = players[playerId] ?: return null
+        return sessions[sessionId]!!
     }
 
     /**
@@ -74,23 +101,29 @@ class GameServiceImpl(private val gameSession: GameSession, private val gameLock
     /**
      * Send the up to date map to all registered observers
      */
-    fun sendUpdate() {
-        gameLock.lock()
-        val mapJson = gameSession.game.map.toString()
-        gameLock.unlock()
+    fun sendUpdate(session: GameSession) {
+        session.lock()
+        val mapJson = session.game.map.toString()
+        session.unlock()
 
-        currentMap.set(mapJson)
+        session.currentMap.set(mapJson)
         val message = Gameservice.JsonString.newBuilder().setJson(mapJson).build()
-        val removedObservers = mutableListOf<Int>()
+        val removedObservers = mutableListOf<String>()
         updateObservers.forEach { (id, observer) ->
             try {
                 observer.onNext(message)
             } catch (e: StatusRuntimeException) {
                 e.printStackTrace()
-                println("Player $id removed")
+                println("Player $id disconnected")
                 removedObservers.add(id)
             }
         }
-        removedObservers.forEach { updateObservers.remove(it) }
+        session.lock()
+        removedObservers.forEach { // todo test what happens on a sudden disconnect
+            updateObservers.remove(it)
+            session.removePlayer(it)
+            players.remove(it)
+        }
+        session.unlock()
     }
 }

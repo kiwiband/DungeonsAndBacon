@@ -6,7 +6,6 @@ import kiwiband.dnb.Settings.getIntFromMap
 import kiwiband.dnb.events.EventTick
 import org.ini4j.Ini
 import java.io.File
-import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Launcher for the server.
@@ -18,18 +17,19 @@ object Main {
 
         println("Port has been set: ${ServerSettings.port}")
 
-        val gameLock = ReentrantLock()
-        val gameSession = GameSession()
-        val gameService = GameServiceImpl(gameSession, gameLock)
+        val gameService = GameServiceImpl()
         ServerBuilder.forPort(ServerSettings.port).addService(gameService).build().start()
 
         println("Server started")
 
         while (true) {
-            gameLock.lock()
-            gameSession.game.eventBus.run(EventTick())
-            gameService.sendUpdate()
-            gameLock.unlock()
+            gameService.sessions.forEach { entry ->
+                val session = entry.value
+                session.lock()
+                session.game.eventBus.run(EventTick())
+                gameService.sendUpdate(session)
+                session.unlock()
+            }
             Thread.sleep(ServerSettings.tickTime)
         }
     }

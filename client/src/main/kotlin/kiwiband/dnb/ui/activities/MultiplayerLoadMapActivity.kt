@@ -17,8 +17,8 @@ import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
  */
 class MultiplayerLoadMapActivity(context: AppContext,
                                  private val comm: ServerCommunicationManager,
-                                 callback: (Pair<Int, LocalMap>) -> Unit):
-    Activity<Pair<Int, LocalMap>>(context, callback) {
+                                 callback: (Pair<String, LocalMap>) -> Unit):
+    Activity<Pair<String, LocalMap>>(context, callback) {
 
     override fun createRootView(): View {
         val size = context.renderer.screen.terminalSize

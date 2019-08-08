@@ -4,6 +4,8 @@ import kiwiband.dnb.Game
 import kiwiband.dnb.Settings
 import kiwiband.dnb.events.EventBus
 import kiwiband.dnb.map.LocalMap
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * An instance of a game on server
@@ -11,38 +13,31 @@ import kiwiband.dnb.map.LocalMap
 class GameSession {
 
     val game: Game = Game(LocalMap.generateMap(Settings.mapWidth, Settings.mapHeight), EventBus())
-    private val playerIds = HashSet<Int>()
+    val currentMap = AtomicReference(game.map.toString())
+    private val lock = ReentrantLock()
+    private val playerIds = HashSet<String>()
 
     init {
         game.startGame()
     }
 
-    /**
-     * Find the MEX of the existing player ids
-     */
-    fun getFreePlayerId(): Int {
-        var result = 0
-        synchronized(playerIds) {
-            while (playerIds.contains(result)) {
-                ++result
-            }
-            playerIds.add(result)
-        }
-        return result
-    }
+    fun lock() = lock.lock()
+
+    fun unlock()  = lock.unlock()
 
     /**
      * Add a new player with the given id and spawn it on the map
      */
-    fun addNewPlayer(id: Int) {
+    fun addNewPlayer(id: String) {
         val player = game.map.spawnPlayer(id)
         player.onBeginGame(game)
+        currentMap.set(game.map.toString())
     }
 
     /**
      * Remove a player with the given id from the map
      */
-    fun removePlayer(id: Int) {
+    fun removePlayer(id: String) {
         synchronized(playerIds) {
             playerIds.remove(id)
         }

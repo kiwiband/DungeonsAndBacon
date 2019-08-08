@@ -29,10 +29,10 @@ class EventBus {
         return when (json["t"]) {
             "EventMove" -> {
                 val dir = json.getJSONObject("dir")
-                run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getInt("id")))
+                run(EventMove(Vec2(dir.getInt("x"), dir.getInt("y")), json.getString("id")))
             }
             "EventUseItem" -> {
-                run(EventUseItem(json.getInt("itm"), json.getInt("id")))
+                run(EventUseItem(json.getInt("itm"), json.getString("id")))
             }
             else -> {
                 throw RuntimeException("Could not parse event from json")
