@@ -16,7 +16,8 @@ class Renderer(var screen: Screen) {
     /**
      * Drawing offset of this renderer
      */
-    val offset: Vec2M = Vec2M()
+    val offset = Vec2M()
+    private val tempVec = Vec2M()
 
     private var borders = Vec2() to Vec2(Int.MAX_VALUE, Int.MAX_VALUE)
 
@@ -63,11 +64,11 @@ class Renderer(var screen: Screen) {
     }
 
     fun writeCharacter(appearance: ViewAppearance, internalOffset: Vec2) {
-        val resultOffset = offset + internalOffset
-        if (resultOffset in borders) {
+        val pos = tempVec.set(internalOffset).add(offset)
+        if (pos in borders) {
             screen.setCharacter(
-                resultOffset.x,
-                resultOffset.y,
+                pos.x,
+                pos.y,
                 TextCharacter(appearance.char, appearance.color, appearance.bgColor)
             )
         }
@@ -80,7 +81,7 @@ class Renderer(var screen: Screen) {
      */
     fun writeText(text: String, offset: Vec2) {
         text.forEachIndexed { i, c ->
-            writeCharacter(c, offset + Vec2(i, 0))
+            writeCharacter(c, Vec2M(i, 0).add(offset))
         }
     }
 
