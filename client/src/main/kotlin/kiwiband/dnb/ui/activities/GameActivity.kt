@@ -2,10 +2,11 @@ package kiwiband.dnb.ui.activities
 
 import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.input.KeyType
-import kiwiband.dnb.events.EventGameOver
-import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.Settings
+import kiwiband.dnb.events.EventCloseGame
+import kiwiband.dnb.events.Registration
 import kiwiband.dnb.events.TickOrder
+import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.InfoView
 import kiwiband.dnb.ui.views.MapView
@@ -18,7 +19,7 @@ class GameActivity(
     private val gameContext: GameAppContext,
     callback: (Boolean) -> Unit
 ) : Activity<Boolean>(gameContext, callback) {
-
+    private val registrations = mutableListOf<Registration>()
     private val mgr = gameContext.gameManager
 
     override fun createRootView(): View {
@@ -72,7 +73,7 @@ class GameActivity(
 
     private fun handleEscapeKey(key: KeyStroke) {
         if (key.keyType == KeyType.Escape) {
-            context.eventBus.run(EventGameOver())
+            context.eventBus.run(EventCloseGame())
         }
     }
 
@@ -91,18 +92,17 @@ class GameActivity(
     }
 
     override fun onStart() {
-        context.eventBus.pressKey.addHandler {
+        registrations.add(context.eventBus.pressKey.addHandler {
             handleEscapeKey(it.key)
             handleMoveKeys(it.key)
             handleActionsKey(it.key)
-        }
+        })
 
-        context.eventBus.tick.addHandler(TickOrder.DRAW_UI) { onTick() }
+        registrations.add(context.eventBus.tick.addHandler(TickOrder.DRAW_UI) { onTick() })
 
-        context.eventBus.gameOver.addHandler {
-            val isDead = mgr.finishGame()
-            finish(isDead)
-        }
+        registrations.add(context.eventBus.gameOver.addHandler {
+            finish(!mgr.getPlayer().alive)
+        })
 
         mgr.startGame()
         updateSelection()
@@ -110,6 +110,6 @@ class GameActivity(
     }
 
     override fun onFinish(result: Boolean) {
-
+        registrations.forEach { it.finish() }
     }
 }

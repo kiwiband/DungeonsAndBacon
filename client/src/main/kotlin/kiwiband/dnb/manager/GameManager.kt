@@ -1,7 +1,6 @@
 package kiwiband.dnb.manager
 
 import kiwiband.dnb.actors.creatures.Player
-import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.math.Vec2
 
@@ -10,7 +9,7 @@ interface GameManager {
 
     fun useItem(itemNum: Int, playerId: String)
 
-    fun finishGame(): Boolean
+    fun finishGame()
 
     fun startGame()
 

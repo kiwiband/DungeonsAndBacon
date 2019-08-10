@@ -36,7 +36,7 @@ class InputManager(
 
         eventBus.pressKey.addPermanentHandler {
             if (it.key.keyType == KeyType.EOF) {
-                eventBus.run(EventGameOver())
+                eventBus.run(EventCloseGame())
             }
         }
     }

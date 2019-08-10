@@ -45,8 +45,6 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
     fun current() = children.getOrNull(selected)
 
     fun interact(arg: T): R? = current()?.interact(arg)
-
-    private fun checkIndex(ind: Int) = ind in 0..children.lastIndex
 }
 
 

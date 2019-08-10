@@ -38,12 +38,18 @@ class App {
         inputManager.startKeyHandle()
 
         val loadMapActivity = loadMapActivity { mgr: GameManager, gameOver: () -> Unit ->
+            eventBus.closeGame.addHandler {
+                mgr.finishGame()
+                inputManager.stop()
+            }
             val gameContext = GameAppContext(context, mgr, eventBus)
             val gameActivity = GameActivity(gameContext) { gameResult ->
-                inputManager.stop()
                 gameOver.invoke()
                 if (gameResult) {
-                    GameOverActivity(gameContext).start()
+                    GameOverActivity(gameContext).also {
+                        it.start()
+                        it.drawScene()
+                    }
                 }
             }
             gameActivity.start()

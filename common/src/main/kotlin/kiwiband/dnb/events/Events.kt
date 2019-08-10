@@ -49,6 +49,11 @@ class EventTick : Event()
 class EventGameOver : Event()
 
 /**
+ * Event for closing game
+ */
+class EventCloseGame : Event()
+
+/**
  * Event for key press.
  * @param key key pressed
  */

@@ -1,5 +1,6 @@
 package kiwiband.dnb.ui.activities
 
+import kiwiband.dnb.events.EventCloseGame
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.TextView
@@ -20,6 +21,9 @@ class GameOverActivity(gameContext: GameAppContext):
 
     override fun onStart() {
         drawScene()
+        context.eventBus.pressKey.addHandler {
+            context.eventBus.run(EventCloseGame())
+        }
     }
 
     companion object {

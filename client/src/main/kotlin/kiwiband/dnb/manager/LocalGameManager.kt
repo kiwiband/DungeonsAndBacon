@@ -2,8 +2,9 @@ package kiwiband.dnb.manager
 
 import kiwiband.dnb.Game
 import kiwiband.dnb.actors.creatures.Player
-import kiwiband.dnb.events.*
-import kiwiband.dnb.inventory.Inventory
+import kiwiband.dnb.events.EventMove
+import kiwiband.dnb.events.EventTick
+import kiwiband.dnb.events.EventUseItem
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.math.Vec2
@@ -45,15 +46,13 @@ class LocalGameManager(
         game.startGame()
     }
 
-    override fun finishGame(): Boolean {
-        val isDead = player.isDead()
+    override fun finishGame() {
         if (player.isDead()) {
             deleteMap()
         } else {
             saveMap(game)
         }
         game.endGame()
-        return isDead
     }
 
     companion object {
