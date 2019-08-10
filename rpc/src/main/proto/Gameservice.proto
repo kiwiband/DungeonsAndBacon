@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package kiwiband.dnb.rpc;
 
-message Empty { }
+message Empty {}
 
 message JsonString {
     string json = 1;
@@ -22,16 +22,12 @@ message UserEvent {
     string json = 2;
 }
 
-message SessionId {
-    string id = 1;
-}
-
 message JoinRequest {
     string playerId = 1;
     string sessionId = 2;
 }
 
-message JoinResult {
+message ConnectResult {
     enum Status {
         OK = 0;
         NO_SUCH_SESSION = 1;
@@ -40,11 +36,13 @@ message JoinResult {
     }
 
     Status status = 1;
+    string sessionId = 2;
+    string mapJson = 3;
 }
 
 service GameService {
-    rpc createSession (PlayerId) returns (SessionId) {}
-    rpc joinSession (JoinRequest) returns (JoinResult) {}
+    rpc createSession (PlayerId) returns (ConnectResult) {}
+    rpc joinSession (JoinRequest) returns (ConnectResult) {}
     rpc disconnect (PlayerId) returns (Empty) {}
     rpc userEvent (UserEvent) returns (Empty) {}
     rpc updateMap (PlayerId) returns (stream JsonString) {}

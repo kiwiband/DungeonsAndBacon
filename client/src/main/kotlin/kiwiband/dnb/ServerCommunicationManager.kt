@@ -18,30 +18,44 @@ class ServerCommunicationManager(
     private val host: String,
     private val port: Int,
     private val eventLock: ReentrantLock,
-    private val eventBus: EventBus
+    private val eventBus: EventBus,
+    private val playerId: String,
+    private var sessionId: String
 ) {
 
     private lateinit var gameService: GameServiceGrpc.GameServiceBlockingStub
     private lateinit var gameServiceAsync: GameServiceGrpc.GameServiceStub
     private val mapdUpdateHandler = MapUpdateHandler()
-    private var id = -1
 
     /**
      * Connect to a game server and get a player id and the current game state
      */
-    fun connect(): Pair<Int, LocalMap> {
+    fun connect(): Pair<String, LocalMap> {
         println("Connecting to server at $host:$port")
         val channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
         gameService = GameServiceGrpc.newBlockingStub(channel)
         gameServiceAsync = GameServiceGrpc.newStub(channel)
-        val state = gameService.connect(Gameservice.Empty.getDefaultInstance())
-        id = state.playerId
-
-        println("Connected to server with id: $id")
-        val idMessage = Gameservice.PlayerId.newBuilder().setId(id).build()
-
-        gameServiceAsync.updateMap(idMessage, mapdUpdateHandler)
-        return id to LocalMap.loadMap(JSONObject(state.mapJson))
+        val respnose = when (sessionId) {
+            "" -> {
+                val request = Gameservice.PlayerId.newBuilder()
+                request.id = playerId
+                gameService.createSession(request.build())
+            }
+            else -> {
+                val request = Gameservice.JoinRequest.newBuilder()
+                request.playerId = playerId
+                request.sessionId = sessionId
+                gameService.joinSession(request.build())
+            }
+        }
+        // todo handle error status
+        sessionId = respnose.sessionId
+        println("Connected to server with id: $playerId")
+        println("Session: $sessionId")
+        val idMessage = Gameservice.PlayerId.newBuilder()
+        idMessage.id = playerId
+        gameServiceAsync.updateMap(idMessage.build(), mapdUpdateHandler)
+        return playerId to LocalMap.loadMap(JSONObject(respnose.mapJson))
     }
 
     /**
@@ -49,7 +63,7 @@ class ServerCommunicationManager(
      */
     fun sendEvent(event: Event) {
         gameService.userEvent(
-            Gameservice.UserEvent.newBuilder().setPlayerId(id).setJson(event.toJSON().toString()).build()
+            Gameservice.UserEvent.newBuilder().setPlayerId(playerId).setJson(event.toJSON().toString()).build()
         )
     }
 
@@ -57,7 +71,7 @@ class ServerCommunicationManager(
      * Disconnect from the game server
      */
     fun disconnect() {
-        gameService.disconnect(Gameservice.PlayerId.newBuilder().setId(id).build())
+        gameService.disconnect(Gameservice.PlayerId.newBuilder().setId(playerId).build())
     }
 
     /**
@@ -81,7 +95,7 @@ class ServerCommunicationManager(
         }
 
         override fun onCompleted() {
-            println("Game session completed")
+            println("You left the session")
         }
     }
 }

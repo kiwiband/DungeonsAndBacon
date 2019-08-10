@@ -14,7 +14,7 @@ class PlayerView(private val mgr: GameManager, width: Int, height: Int) : View(w
 
         renderer.writeText(ASCIIART.PLAYER, Vec2(7, 1))
 
-        renderer.writeText("HERONAME ${(player.playerId) % 10}", Vec2(3, 4))
+        renderer.writeText("HERONAME ${player.playerId[0]}", Vec2(3, 4))
         Drawer.drawCreatureStatus(renderer, player.status, 4, 5)
     }
 }

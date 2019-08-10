@@ -4,7 +4,7 @@ import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import kiwiband.dnb.rpc.GameServiceGrpc
 import kiwiband.dnb.rpc.Gameservice
-import kiwiband.dnb.rpc.Gameservice.JoinResult.Status as JoinStatus
+import kiwiband.dnb.rpc.Gameservice.ConnectResult.Status as ConnectStatus
 import org.json.JSONObject
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -16,30 +16,50 @@ class GameServiceImpl :
     GameServiceGrpc.GameServiceImplBase() {
 
     private val updateObservers = ConcurrentHashMap<String, StreamObserver<Gameservice.JsonString>>()
-    val sessions = hashMapOf<String, GameSession>()
+    val sessions = ConcurrentHashMap<String, GameSession>()
     private val players = ConcurrentHashMap<String, String>()
 
-    override fun createSession(request: Gameservice.PlayerId, responseObserver: StreamObserver<Gameservice.SessionId>) {
-        val id = UUID.randomUUID().toString()
+    override fun createSession(request: Gameservice.PlayerId,
+                               responseObserver: StreamObserver<Gameservice.ConnectResult>) {
+        val sessionId = UUID.randomUUID().toString()
         val gameSession = GameSession()
-        sessions[id] = gameSession
-        responseObserver.onNext(Gameservice.SessionId.newBuilder().setId(id).build())
+
+        // we don't need to use locks here because the session is not visible to other threads yet
+        gameSession.addNewPlayer(request.id)
+        players[request.id] = sessionId
+        val response = buildConnectResult(ConnectStatus.OK, sessionId, gameSession.game.map.toString())
+        sessions[sessionId] = gameSession
+        responseObserver.onNext(response)
         responseObserver.onCompleted()
     }
 
-    override fun joinSession(request: Gameservice.JoinRequest, responseObserver: StreamObserver<Gameservice.JoinResult>) {
-        val result = Gameservice.JoinResult.newBuilder()
-        result.status = if (!sessions.containsKey(request.sessionId)) {
-            JoinStatus.NO_SUCH_SESSION
+    override fun joinSession(request: Gameservice.JoinRequest,
+                             responseObserver: StreamObserver<Gameservice.ConnectResult>) {
+        val response = if (!sessions.containsKey(request.sessionId)) {
+            buildConnectResult(ConnectStatus.NO_SUCH_SESSION, "", "")
         } else if (players.containsKey(request.playerId)) {
-            JoinStatus.ALREADY_CONNECTED
+            buildConnectResult(ConnectStatus.ALREADY_CONNECTED, "", "")
         } else {
             addPlayerToSession(request.playerId, request.sessionId)
-            JoinStatus.OK
+            val sessionId = request.sessionId
+            val session = sessions[sessionId]!!
+            session.lock()
+            val mapJson = session.game.map.toString()
+            session.unlock()
+            buildConnectResult(ConnectStatus.OK, sessionId, mapJson)
         }
-
-        responseObserver.onNext(result.build())
+        responseObserver.onNext(response)
         responseObserver.onCompleted()
+    }
+
+    private fun buildConnectResult(status: Gameservice.ConnectResult.Status,
+                                   sessionId: String,
+                                   mapJson: String): Gameservice.ConnectResult {
+        val connectResult = Gameservice.ConnectResult.newBuilder()
+        connectResult.status = status
+        connectResult.sessionId = sessionId
+        connectResult.mapJson = mapJson
+        return connectResult.build()
     }
 
     private fun addPlayerToSession(playerId: String, sessionId: String) {
@@ -106,7 +126,6 @@ class GameServiceImpl :
         val mapJson = session.game.map.toString()
         session.unlock()
 
-        session.currentMap.set(mapJson)
         val message = Gameservice.JsonString.newBuilder().setJson(mapJson).build()
         val removedObservers = mutableListOf<String>()
         updateObservers.forEach { (id, observer) ->
