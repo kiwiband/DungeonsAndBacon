@@ -56,14 +56,10 @@ class SequenceLayoutVerticalController<Child : ChildView<VerticalSlot>>(
 
     override fun chooseDimension(width: Int, height: Int) = height
 
-    override fun resizeChildren(
-        width: Int,
-        height: Int,
-        fillChildSize: Int,
-        fatChildrenCount: Int
-    ) {
+    override fun resizeChildren(range: IntRange, fillChildSize: Int, fatChildrenCount: Int) {
         var counter = fatChildrenCount
-        for (child in children) {
+        for (i in range) {
+            val child = children[i]
             val view = child.view
             val childWidth = when (child.slot.alignment) {
                 FILL -> width - child.slot.padding.horizontal()

@@ -34,7 +34,7 @@ class InventoryView(
     private val rootView = VerticalLayout(width, height).also { vLayout ->
         header = vLayout.addChild(Spacer(),
             VerticalSlot(padding = Padding(bottom = 1), alignment = HorizontalAlignment.CENTER))
-        vLayout.addChild(itemHolder, VerticalSlot(verticalSize = Size.FILL))
+        vLayout.addChild(itemHolder, VerticalSlot(verticalSize = Size.FILL, alignment = HorizontalAlignment.CENTER))
         vLayout.addChild(HorizontalLayout(width, 1).also { hLayout ->
             pages = hLayout.addChild(Spacer(), HorizontalSlot(Padding(left = 1)))
             hLayout.addChild(Spacer(), HorizontalSlot(horizontalSize = Size.FILL))
@@ -44,7 +44,8 @@ class InventoryView(
 
     init {
         for (item in inventory.items) {
-            itemHolder.addChild(ItemView(width - 2, ROW_HEIGHT - 2, item))
+            itemHolder.addChild(ItemView(78, ROW_HEIGHT - 2, item),
+                VerticalSlot(alignment = HorizontalAlignment.CENTER ))
         }
     }
 
@@ -54,9 +55,9 @@ class InventoryView(
 
         val itemsOnPage = floor(itemHolder.height.toDouble() / ROW_HEIGHT).toInt()
         val maxPages = ceil(inventory.size.toDouble() / itemsOnPage).toInt()
-        val currentPage = if (maxPages == 0) 0 else itemHolder.selected / itemsOnPage + 1
+        val currentPage = if (maxPages == 0 || itemsOnPage == 0) 0 else itemHolder.selected / itemsOnPage + 1
 
-        pages.view = TextView("PAGE $currentPage/$maxPages")
+        pages.view = TextView("PAGE $currentPage/${if (maxPages > inventory.size) "???" else maxPages.toString()}")
 
         val startIndex = (currentPage - 1) * itemsOnPage
         val endIndex = min(inventory.size, startIndex + itemsOnPage)

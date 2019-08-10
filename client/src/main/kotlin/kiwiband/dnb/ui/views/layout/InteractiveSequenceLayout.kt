@@ -16,8 +16,8 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
     var selected: Int = -1
         private set
 
-    override fun addChild(view: View): Child {
-        return super.addChild(view).also {
+    override fun addChild(view: View, slot: S): Child {
+        return super.addChild(view, slot).also {
             if (selected == -1) {
                 next()
             }

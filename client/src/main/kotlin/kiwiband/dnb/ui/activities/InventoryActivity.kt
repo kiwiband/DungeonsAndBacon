@@ -37,7 +37,7 @@ class InventoryActivity(context: GameAppContext, private val playerId: Int) : Ac
                 drawScene()
             }
             'e', 'у' -> {
-                inventoryRootView.itemHolder.current()?.interact(InventoryAction.USE)
+                inventoryRootView.itemHolder.interact(InventoryAction.USE)
                 drawScene()
             }
             'x', 'ч' -> {

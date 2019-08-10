@@ -20,14 +20,14 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 
     protected abstract val controller: SequenceLayoutDirectionController<S, Child>
 
-    fun addChild(view: View, slot: S): Child {
+    open fun addChild(view: View, slot: S): Child {
         return createChild(view, slot).also {
             children.add(it)
             resize(width, height)
         }
     }
 
-    open fun addChild(view: View) = addChild(view, defaultSlot())
+    fun addChild(view: View) = addChild(view, defaultSlot())
 
     protected abstract fun createChild(view: View, slot: S): Child
 
@@ -50,7 +50,8 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
         setSize(width, height)
         var knownSize = 0
         var fillChildCount = 0
-        for (i in range()) {
+        val range = range()
+        for (i in range) {
             val child = children[i]
             val p = child.slot.padding
             knownSize += controller.chooseDimension(p.horizontal(), p.vertical())
@@ -65,7 +66,7 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
         val retainedSize = max(mainSize - knownSize, 0)
         val fillChildSize = if (fillChildCount == 0) 0 else retainedSize / fillChildCount
         val fatChildrenCount = if (fillChildCount == 0) 0 else retainedSize % fillChildCount
-        controller.resizeChildren(width, height, fillChildSize, fatChildrenCount)
+        controller.resizeChildren(range, fillChildSize, fatChildrenCount)
     }
 }
 
@@ -77,10 +78,5 @@ abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>>
     abstract fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer)
     abstract fun addOffsetAfterChildDraw(child: Child, renderer: Renderer)
     abstract fun chooseDimension(width: Int, height: Int): Int
-    abstract fun resizeChildren(
-        width: Int,
-        height: Int,
-        fillChildSize: Int,
-        fatChildrenCount: Int
-    )
+    abstract fun resizeChildren(range: IntRange, fillChildSize: Int, fatChildrenCount: Int)
 }
