@@ -3,42 +3,42 @@ package kiwiband.dnb.ui.views.layout
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.util.*
+import kotlin.math.max
 
 
 /**
  * Base class for sequential layout, horizontal or vertical.
  * Next view left top corner is aligned on the same axis as the layout's left top corner
  * with a shift based on position in children list.
- * @param isHorizontal whether a layout is horizontal or vertical
  */
-abstract class SequenceLayout<S : SequenceSlot>(
-    width: Int, height: Int,
-    private val isHorizontal: Boolean
-) : Layout<S, ChildView<S>>(width, height) {
+abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
+    width: Int, height: Int
+) : Layout<S, Child>(width, height) {
 
-    fun addChild(view: View, slot: S): ChildView<S> {
-        return ChildView(view, slot).also {
+    protected abstract val controller: SequenceLayoutDirectionController<S, Child>
+
+    fun addChild(view: View, slot: S): Child {
+        return createChild(view, slot).also {
             children.add(it)
             resize(width, height)
         }
     }
 
-    fun addChild(view: View) = addChild(view, defaultSlot())
+    open fun addChild(view: View) = addChild(view, defaultSlot())
 
-    abstract fun defaultSlot(): S
+    protected abstract fun createChild(view: View, slot: S): Child
+
+    protected abstract fun defaultSlot(): S
 
     override fun draw(renderer: Renderer) {
         renderer.withOffsetLimited(width, height) {
             for (child in children) {
-                addOffsetBeforeChildDraw(child, renderer)
+                controller.addOffsetBeforeChildDraw(child, renderer)
                 child.view.draw(renderer)
-                addOffsetAfterChildDraw(child, renderer)
+                controller.addOffsetAfterChildDraw(child, renderer)
             }
         }
     }
-
-    protected abstract fun addOffsetBeforeChildDraw(child: ChildView<S>, renderer: Renderer)
-    protected abstract fun addOffsetAfterChildDraw(child: ChildView<S>, renderer: Renderer)
 
     override fun resize(width: Int, height: Int) {
         setSize(width, height)
@@ -46,29 +46,34 @@ abstract class SequenceLayout<S : SequenceSlot>(
         var fillChildCount = 0
         for (child in children) {
             val p = child.slot.padding
-            knownSize += chooseDimension(p.horizontal(), p.vertical())
+            knownSize += controller.chooseDimension(p.horizontal(), p.vertical())
             when (child.slot.size) {
                 Size.CONSTANT -> {
-                    knownSize += chooseDimension(child.view.initWidth, child.view.initHeight)
+                    knownSize += controller.chooseDimension(child.view.initWidth, child.view.initHeight)
                 }
                 Size.FILL -> fillChildCount++
             }
         }
-        val mainSize = chooseDimension(width, height)
-        val retainedSize = Math.max(mainSize - knownSize, 0)
+        val mainSize = controller.chooseDimension(width, height)
+        val retainedSize = max(mainSize - knownSize, 0)
         val fillChildSize = if (fillChildCount == 0) 0 else retainedSize / fillChildCount
         val fatChildrenCount = if (fillChildCount == 0) 0 else retainedSize % fillChildCount
-        resizeChildren(width, height, fillChildSize, fatChildrenCount)
+        controller.resizeChildren(width, height, fillChildSize, fatChildrenCount)
     }
+}
 
-    protected abstract fun chooseDimension(width: Int, height: Int): Int
 
-    protected abstract fun resizeChildren(
+abstract class SequenceSlot(val padding: Padding, val size: Size) : Slot()
+
+
+abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>>() {
+    abstract fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer)
+    abstract fun addOffsetAfterChildDraw(child: Child, renderer: Renderer)
+    abstract fun chooseDimension(width: Int, height: Int): Int
+    abstract fun resizeChildren(
         width: Int,
         height: Int,
         fillChildSize: Int,
         fatChildrenCount: Int
     )
 }
-
-abstract class SequenceSlot(val padding: Padding, val size: Size) : Slot()

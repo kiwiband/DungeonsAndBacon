@@ -6,7 +6,7 @@ import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.BoxSlot
-import kiwiband.dnb.ui.views.layout.TextView
+import kiwiband.dnb.ui.views.TextView
 import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
 import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
 

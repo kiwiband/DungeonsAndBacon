@@ -2,6 +2,9 @@ package kiwiband.dnb.math
 
 import kiwiband.dnb.JSONSerializable
 import org.json.JSONObject
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Immutable two-dimensional point.
@@ -26,9 +29,9 @@ open class Vec2(x: Int, y: Int) : JSONSerializable {
 
     operator fun minus(v: Vec2) = Vec2(x - v.x, y - v.y)
 
-    fun mixMax(v: Vec2): Vec2 = Vec2(Math.max(x, v.x), Math.max(y, v.y))
+    fun mixMax(v: Vec2): Vec2 = Vec2(max(x, v.x), max(y, v.y))
 
-    fun mixMin(v: Vec2): Vec2 = Vec2(Math.min(x, v.x), Math.min(y, v.y))
+    fun mixMin(v: Vec2): Vec2 = Vec2(min(x, v.x), min(y, v.y))
 
     override fun equals(other: Any?): Boolean {
         if (other is Vec2) {
@@ -40,7 +43,7 @@ open class Vec2(x: Int, y: Int) : JSONSerializable {
 
     fun distance(v: Vec2): Int = distance(v.x, v.y)
 
-    fun distance(vx: Int, vy: Int): Int = Math.abs(vx - x) + Math.abs(vy - y)
+    fun distance(vx: Int, vy: Int): Int = abs(vx - x) + abs(vy - y)
 
     fun distanceEuler2(v: Vec2): Int = normEuler2(v.x - x, v.y - y)
 

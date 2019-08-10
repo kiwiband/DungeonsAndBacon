@@ -7,20 +7,34 @@ import kiwiband.dnb.ui.views.layout.util.VerticalAlignment.*
 import kiwiband.dnb.ui.views.layout.util.Padding
 import kiwiband.dnb.ui.views.layout.util.Size
 import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
+import kotlin.math.max
 
 /**
  * Horizontal sequential layout.
  */
-class HorizontalLayout(width: Int, height: Int) : SequenceLayout<HorizontalSlot>(width, height, true) {
+class HorizontalLayout(width: Int, height: Int)
+    : SequenceLayout<HorizontalSlot, ChildView<HorizontalSlot>>(width, height) {
+
+    override val controller = SequenceLayoutHorizontalController(width, height, children)
+
+    override fun createChild(view: View, slot: HorizontalSlot) = ChildView(view, slot)
 
     override fun defaultSlot() = HorizontalSlot()
+}
 
-    override fun addOffsetBeforeChildDraw(child: ChildView<HorizontalSlot>, renderer: Renderer) {
+
+class SequenceLayoutHorizontalController<Child : ChildView<HorizontalSlot>>(
+    val width: Int,
+    val height: Int,
+    private val children: List<Child>
+) : SequenceLayoutDirectionController<HorizontalSlot, Child>() {
+
+    override fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer) {
         val p = child.slot.padding
         renderer.offset.add(p.left, verticalOffset(child.slot.alignment, child.view, p))
     }
 
-    override fun addOffsetAfterChildDraw(child: ChildView<HorizontalSlot>, renderer: Renderer) {
+    override fun addOffsetAfterChildDraw(child: Child, renderer: Renderer) {
         val p = child.slot.padding
         renderer.offset.add(p.right + child.view.width, -verticalOffset(child.slot.alignment, child.view, p))
     }
@@ -28,8 +42,8 @@ class HorizontalLayout(width: Int, height: Int) : SequenceLayout<HorizontalSlot>
     private fun verticalOffset(alignment: VerticalAlignment, view: View, p: Padding): Int {
         return when (alignment) {
             TOP -> p.top
-            CENTER -> Math.max(0, p.top + (height - view.height - p.vertical()) / 2)
-            BOTTOM -> Math.max(0, height - view.height - p.bottom)
+            CENTER -> max(0, p.top + (height - view.height - p.vertical()) / 2)
+            BOTTOM -> max(0, height - view.height - p.bottom)
             FILL -> p.top
         }
     }
@@ -61,7 +75,7 @@ class HorizontalLayout(width: Int, height: Int) : SequenceLayout<HorizontalSlot>
 }
 
 
-class HorizontalSlot(
+open class HorizontalSlot(
     padding: Padding = Padding(),
     horizontalSize: Size = Size.CONSTANT,
     val alignment: VerticalAlignment = FILL

@@ -2,7 +2,7 @@ package kiwiband.dnb.ui.activities
 
 import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.View
-import kiwiband.dnb.ui.views.layout.TextView
+import kiwiband.dnb.ui.views.TextView
 import kiwiband.dnb.ui.views.layout.WrapperLayout
 import kiwiband.dnb.ui.views.layout.WrapperSlot
 import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
@@ -13,7 +13,8 @@ class GameOverActivity(gameContext: GameAppContext):
 
     override fun createRootView(): View {
         val size = context.renderer.screen.terminalSize
-        return WrapperLayout(TextView(TEXT), WrapperSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
+        return WrapperLayout(
+            TextView(TEXT), WrapperSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
             size.columns, size.rows)
     }
 

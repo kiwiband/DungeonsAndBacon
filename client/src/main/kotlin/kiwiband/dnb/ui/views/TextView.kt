@@ -1,9 +1,8 @@
-package kiwiband.dnb.ui.views.layout
+package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
-import kiwiband.dnb.ui.views.View
-import kiwiband.dnb.ui.views.layout.TextAlignment.*
+import kiwiband.dnb.ui.views.TextAlignment.*
 
 class TextView(text: String, private val alignment: TextAlignment) : View(calcSize(text)) {
     private val lines = text.lines()

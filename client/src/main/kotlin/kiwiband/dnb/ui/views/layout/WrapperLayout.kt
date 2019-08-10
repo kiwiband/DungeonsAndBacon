@@ -3,6 +3,8 @@ package kiwiband.dnb.ui.views.layout
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 open class WrapperLayout(
     content: View,
@@ -29,8 +31,8 @@ open class WrapperLayout(
         val freeWidth = width - child.view.width
         return when (child.slot.horizontal) {
             HorizontalAlignment.LEFT -> p.left
-            HorizontalAlignment.CENTER -> Math.max(0, freeWidth - p.horizontal()) / 2 + p.left
-            HorizontalAlignment.RIGHT -> Math.max(1, freeWidth - p.right)
+            HorizontalAlignment.CENTER -> max(0, freeWidth - p.horizontal()) / 2 + p.left
+            HorizontalAlignment.RIGHT -> max(1, freeWidth - p.right)
             HorizontalAlignment.FILL -> p.left
         }
     }
@@ -40,8 +42,8 @@ open class WrapperLayout(
         val freeHeight = height - child.view.height
         return when (child.slot.vertical) {
             VerticalAlignment.TOP -> p.top
-            VerticalAlignment.CENTER -> Math.max(0, freeHeight - p.vertical()) / 2 + p.top
-            VerticalAlignment.BOTTOM -> Math.max(1, freeHeight - p.bottom)
+            VerticalAlignment.CENTER -> max(0, freeHeight - p.vertical()) / 2 + p.top
+            VerticalAlignment.BOTTOM -> max(1, freeHeight - p.bottom)
             VerticalAlignment.FILL -> p.top
         }
     }
@@ -59,7 +61,7 @@ open class WrapperLayout(
     }
 
     private fun size(fill: Boolean, dim: Int, viewDim: Int): Int {
-        return if (fill) dim else Math.min(dim, viewDim)
+        return if (fill) dim else min(dim, viewDim)
     }
 }
 

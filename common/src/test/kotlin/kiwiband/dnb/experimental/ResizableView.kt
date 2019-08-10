@@ -3,6 +3,7 @@ package kiwiband.dnb.experimental
 import kiwiband.dnb.math.Vec2M
 
 import kiwiband.dnb.math.Vec2
+import kotlin.math.max
 
 fun Vec2.str(): String = "($x, $y)"
 class View(val posX: Vec2M, val posY: Vec2M, val sizeX: Vec2M, val sizeY: Vec2M, val char: Char) {
@@ -38,14 +39,14 @@ class View(val posX: Vec2M, val posY: Vec2M, val sizeX: Vec2M, val sizeY: Vec2M,
     private fun getAbsPos(pos: Vec2, pSize: Int) = if (pos.x == 0) pos.y * pSize / 100 else pos.x
     private fun getAbsSize(size: Vec2, pSize: Int, default: Int): Int {
         if (size.y != 0)
-            return Math.max(size.y * pSize / 100, size.x)
+            return max(size.y * pSize / 100, size.x)
         if (size.x != 0)
             return size.x
         return default
     }
 }
 
-fun Vec2M.setMax(v: Vec2): Vec2M = set(Math.max(x, v.x), Math.max(y, v.y))
+fun Vec2M.setMax(v: Vec2): Vec2M = set(max(x, v.x), max(y, v.y))
 
 fun main() {
     val rootView = View(Vec2M(), Vec2M(), Vec2M(80, 0), Vec2M(24, 0), '.')

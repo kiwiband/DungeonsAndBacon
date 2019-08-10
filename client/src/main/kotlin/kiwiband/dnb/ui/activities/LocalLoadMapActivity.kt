@@ -7,7 +7,7 @@ import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
 import kiwiband.dnb.ui.views.layout.BoxSlot
-import kiwiband.dnb.ui.views.layout.TextView
+import kiwiband.dnb.ui.views.TextView
 import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
 import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
 
@@ -22,8 +22,10 @@ class LocalLoadMapActivity(
 
     override fun createRootView(): View {
         val size = context.renderer.screen.terminalSize
-        return BoxLayout(TextView(TEXT), BoxSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
-            size.columns, size.rows)
+        return BoxLayout(
+            TextView(TEXT), BoxSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
+            size.columns, size.rows
+        )
     }
 
     override fun onStart() {

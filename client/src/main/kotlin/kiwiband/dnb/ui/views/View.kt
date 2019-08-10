@@ -2,6 +2,7 @@ package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.ui.Renderer
+import kotlin.math.max
 
 /**
  * View base class.
@@ -23,7 +24,7 @@ abstract class View(val initWidth: Int, val initHeight: Int) {
     open fun resize(width: Int, height: Int) {}
 
     protected fun setSize(width: Int, height: Int) {
-        this.width = Math.max(width, 0)
-        this.height = Math.max(height, 0)
+        this.width = max(width, 0)
+        this.height = max(height, 0)
     }
 }

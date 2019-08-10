@@ -5,6 +5,8 @@ import kiwiband.dnb.math.Borders
 import kiwiband.dnb.math.Vec2
 import kiwiband.dnb.math.VisibilityLevel
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 /**
  * Container for all actors on map
@@ -101,7 +103,7 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
         val sy = if (y0 < y1) 1 else -1
         val dx = x1 - x0
         val dy = y1 - y0
-        val dist = Math.sqrt((dx * dx + dy * dy).toDouble())
+        val dist = sqrt((dx * dx + dy * dy).toDouble())
 
         var xnext = x0
         var ynext = y0
@@ -121,8 +123,8 @@ class MapGrid(val width: Int, val height: Int) : Iterable<MapActor> {
 
             // Line-to-point distance formula < 0.5
             when {
-                Math.abs(dy * (xnext - x0 + sx) - dx * (ynext - y0)) / dist < 0.5f -> xnext += sx
-                Math.abs(dy * (xnext - x0) - dx * (ynext - y0 + sy)) / dist < 0.5f -> ynext += sy
+                abs(dy * (xnext - x0 + sx) - dx * (ynext - y0)) / dist < 0.5f -> xnext += sx
+                abs(dy * (xnext - x0) - dx * (ynext - y0 + sy)) / dist < 0.5f -> ynext += sy
                 else -> {
                     xnext += sx
                     ynext += sy
