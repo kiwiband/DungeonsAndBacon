@@ -24,15 +24,15 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
         }
     }
 
-    fun next() = changeCurrent(1, { it >= children.size }, children.lastIndex, 0)
+    fun next() = changeCurrent(1, children.lastIndex, 0)
 
-    fun previous() = changeCurrent(-1, { it < 0 }, 0, children.lastIndex)
+    fun previous() = changeCurrent(-1, 0, children.lastIndex)
 
-    private fun changeCurrent(step: Int, isOut: (Int) -> Boolean, onStop: Int, onLoop: Int): Child? {
+    private fun changeCurrent(step: Int, onStop: Int, onLoop: Int): Child? {
         if (children.isEmpty()) return null
         current()?.setInactive()
         selected += step
-        if (isOut(selected)) {
+        if (selected !in children.indices) {
             selected = when(lastElementBehavior) {
                 STOP -> onStop
                 LOOP -> onLoop
@@ -42,7 +42,7 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
         return current()?.also { it.setActive() }
     }
 
-    fun current() = if (checkIndex(selected)) children[selected] else null
+    fun current() = children.getOrNull(selected)
 
     fun interact(arg: T): R? = current()?.interact(arg)
 
