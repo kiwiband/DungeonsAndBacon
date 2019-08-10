@@ -21,11 +21,17 @@ class VerticalLayout(width: Int, height: Int) :
     override fun createChild(view: View, slot: VerticalSlot) = ChildView(view, slot)
 
     override fun defaultSlot() = VerticalSlot()
+
+    override fun resize(width: Int, height: Int) {
+        controller.width = width
+        controller.height = height
+        super.resize(width, height)
+    }
 }
 
 class SequenceLayoutVerticalController<Child : ChildView<VerticalSlot>>(
-    val width: Int,
-    val height: Int,
+    var width: Int,
+    var height: Int,
     private val children: List<Child>
 ) :
     SequenceLayoutDirectionController<VerticalSlot, Child>() {
@@ -42,7 +48,7 @@ class SequenceLayoutVerticalController<Child : ChildView<VerticalSlot>>(
     private fun horizontalOffset(alignment: HorizontalAlignment, view: View, p: Padding): Int {
         return when (alignment) {
             LEFT -> p.left
-            CENTER -> max(0, p.left + p.top + (width - view.width) / 2 - p.horizontal())
+            CENTER -> max(0, p.left + (width - view.width - p.horizontal()) / 2)
             RIGHT -> max(0, width - view.width - p.right)
             FILL -> p.left
         }

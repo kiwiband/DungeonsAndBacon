@@ -34,6 +34,6 @@ class InventoryTest {
         for (item in items) {
             inventory.add(item)
         }
-        assertArrayEquals(items.toTypedArray(), inventory.items().toTypedArray())
+        assertArrayEquals(items.toTypedArray(), inventory.items.toTypedArray())
     }
 }

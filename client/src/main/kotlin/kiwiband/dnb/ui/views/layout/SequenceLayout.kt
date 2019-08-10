@@ -4,6 +4,7 @@ import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.util.*
 import kotlin.math.max
+import kotlin.math.min
 
 
 /**
@@ -14,6 +15,8 @@ import kotlin.math.max
 abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
     width: Int, height: Int
 ) : Layout<S, Child>(width, height) {
+
+    var limits: IntRange? = null
 
     protected abstract val controller: SequenceLayoutDirectionController<S, Child>
 
@@ -32,7 +35,8 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 
     override fun draw(renderer: Renderer) {
         renderer.withOffsetLimited(width, height) {
-            for (child in children) {
+            for (i in range()) {
+                val child = children[i]
                 controller.addOffsetBeforeChildDraw(child, renderer)
                 child.view.draw(renderer)
                 controller.addOffsetAfterChildDraw(child, renderer)
@@ -40,11 +44,14 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
         }
     }
 
+    private fun range(): IntRange = max(0, limits?.first ?: 0)..min(children.lastIndex, limits?.last ?: Int.MAX_VALUE)
+
     override fun resize(width: Int, height: Int) {
         setSize(width, height)
         var knownSize = 0
         var fillChildCount = 0
-        for (child in children) {
+        for (i in range()) {
+            val child = children[i]
             val p = child.slot.padding
             knownSize += controller.chooseDimension(p.horizontal(), p.vertical())
             when (child.slot.size) {

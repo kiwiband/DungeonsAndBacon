@@ -65,7 +65,7 @@ class Player(
 
     override fun onDestroy() {
         super.onDestroy()
-        val items = inventory.items()
+        val items = inventory.items
         for (item in items) {
             if (item is EquipmentItem) {
                 item.unequip()
@@ -98,7 +98,7 @@ class Player(
     override fun getType() = TYPE_ID
 
     private fun useItem(itemNum: Int) {
-        val item = inventory.get(itemNum)
+        val item = inventory[itemNum]
         if (item is EquipmentItem) {
             equipment.equip(item)
         }
@@ -123,7 +123,7 @@ class Player(
                 obj.getInt("id")
             )
             player.inventory = Inventory.fromJSON(obj.getJSONObject("inv"), player)
-            for (item in player.inventory.items()) {
+            for (item in player.inventory.items) {
                 if (item is EquipmentItem && item.equipped()) {
                     player.equipment.equip(item)
                 }

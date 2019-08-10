@@ -1,7 +1,10 @@
 package kiwiband.dnb.ui.activities
 
+import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.events.EventPressKey
+import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.ui.GameAppContext
+import kiwiband.dnb.ui.views.InventoryAction
 import kiwiband.dnb.ui.views.InventoryView
 import kiwiband.dnb.ui.views.View
 
@@ -12,29 +15,34 @@ class InventoryActivity(context: GameAppContext, private val playerId: Int) : Ac
 
     override fun createRootView(): View {
         val size = context.renderer.screen.terminalSize
-        inventoryRootView = InventoryView(mgr.getInventory(), size.columns, size.rows)
+        inventoryRootView = InventoryView(mgr, size.columns, size.rows)
         return inventoryRootView
     }
 
     private fun onKeyPressed(pressKey: EventPressKey) {
+        if (pressKey.key.keyType == KeyType.Escape) {
+            finish(Unit)
+            return
+        }
         when (pressKey.key.character) {
             'i', 'ш' -> {
                 finish(Unit)
             }
             'w', 'ц' -> {
-                inventoryRootView.selectPrevious()
+                inventoryRootView.itemHolder.previous()
                 drawScene()
             }
             's', 'ы' -> {
-                inventoryRootView.selectNext()
+                inventoryRootView.itemHolder.next()
                 drawScene()
             }
             'e', 'у' -> {
-                val itemNum = inventoryRootView.getCurrentSelected()
-                if (itemNum >= 0) {
-                    mgr.useItem(itemNum, playerId)//player.useItem(itemNum)
-                    drawScene()
-                }
+                inventoryRootView.itemHolder.current()?.interact(InventoryAction.USE)
+                drawScene()
+            }
+            'x', 'ч' -> {
+                mgr.getPlayer().inventory.add(ItemFactory.getRandomItem())
+                drawScene()
             }
         }
     }

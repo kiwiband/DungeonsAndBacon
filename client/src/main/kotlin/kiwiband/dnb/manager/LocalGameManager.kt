@@ -24,10 +24,6 @@ class LocalGameManager(
         mapSaver.deleteFile(mapFile)
     }
 
-    override fun getInventory(): Inventory {
-        return player.inventory
-    }
-
     override fun getMap(): LocalMap {
         return game.map
     }

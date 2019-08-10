@@ -22,6 +22,8 @@ class TextView(text: String, private val alignment: TextAlignment) : View(calcSi
         }
     }
 
+    override fun resize(width: Int, height: Int) = setSize(width, height)
+
     companion object {
         private fun calcSize(text: String): Vec2 {
             val lines = text.lines()

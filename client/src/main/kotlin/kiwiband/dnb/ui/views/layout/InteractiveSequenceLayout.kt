@@ -13,11 +13,12 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
     private val lastElementBehavior: LastElementBehavior
 ) : SequenceLayout<S, Child>(width, height) {
 
-    var currentChild: Int = -1
+    var selected: Int = -1
+        private set
 
     override fun addChild(view: View): Child {
         return super.addChild(view).also {
-            if (currentChild == -1) {
+            if (selected == -1) {
                 next()
             }
         }
@@ -30,9 +31,9 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
     private fun changeCurrent(step: Int, isOut: (Int) -> Boolean, onStop: Int, onLoop: Int): Child? {
         if (children.isEmpty()) return null
         current()?.setInactive()
-        currentChild += step
-        if (isOut(currentChild)) {
-            currentChild = when(lastElementBehavior) {
+        selected += step
+        if (isOut(selected)) {
+            selected = when(lastElementBehavior) {
                 STOP -> onStop
                 LOOP -> onLoop
                 DESELECT -> -1
@@ -41,7 +42,7 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
         return current()?.also { it.setActive() }
     }
 
-    fun current() = if (checkIndex(currentChild)) children[currentChild] else null
+    fun current() = if (checkIndex(selected)) children[selected] else null
 
     fun interact(arg: T): R? = current()?.interact(arg)
 

@@ -66,9 +66,4 @@ class MultiplayerGameManager(
     override fun getPlayer(): Player {
         return localPlayer
     }
-
-    override fun getInventory(): Inventory {
-        return localPlayer.inventory
-    }
-
 }

@@ -17,6 +17,4 @@ interface GameManager {
     fun getMap(): LocalMap
 
     fun getPlayer(): Player
-
-    fun getInventory(): Inventory
 }

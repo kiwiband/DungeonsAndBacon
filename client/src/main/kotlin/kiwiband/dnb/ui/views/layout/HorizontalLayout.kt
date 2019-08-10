@@ -20,12 +20,18 @@ class HorizontalLayout(width: Int, height: Int)
     override fun createChild(view: View, slot: HorizontalSlot) = ChildView(view, slot)
 
     override fun defaultSlot() = HorizontalSlot()
+
+    override fun resize(width: Int, height: Int) {
+        controller.width = width
+        controller.height = height
+        super.resize(width, height)
+    }
 }
 
 
 class SequenceLayoutHorizontalController<Child : ChildView<HorizontalSlot>>(
-    val width: Int,
-    val height: Int,
+    var width: Int,
+    var height: Int,
     private val children: List<Child>
 ) : SequenceLayoutDirectionController<HorizontalSlot, Child>() {
 

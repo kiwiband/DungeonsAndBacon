@@ -9,8 +9,8 @@ import kotlin.math.min
 open class WrapperLayout(
     content: View,
     slot: WrapperSlot = WrapperSlot(),
-    width: Int = content.width,
-    height: Int = content.height
+    width: Int = content.width + slot.padding.horizontal(),
+    height: Int = content.height + slot.padding.vertical()
 ): Layout<WrapperSlot, ChildView<WrapperSlot>>(width, height) {
 
     init {

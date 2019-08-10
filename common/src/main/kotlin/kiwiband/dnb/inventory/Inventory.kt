@@ -6,32 +6,35 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class Inventory(val capacity: Int) : JSONSerializable {
-    private val items = mutableListOf<Item>()
+    private val myItems = mutableListOf<Item>()
 
     fun add(item: Item): Boolean {
         if (hasSpace()) {
-            items.add(item)
+            myItems.add(item)
             return true
         }
         return false
     }
 
-    fun items(): List<Item> = items
+    val items: List<Item>
+        get() = myItems
 
-    fun get(i: Int): Item? {
-        return if (i < items.size) items[i] else null
+    operator fun get(i: Int): Item? {
+        return if (i < myItems.size) myItems[i] else null
     }
 
-    fun remove(item: Item) = items.remove(item)
+    fun remove(item: Item) = myItems.remove(item)
 
-    fun getSize(): Int = items.size
+    val size: Int
+        get() = myItems.size
+
     fun isFull(): Boolean = !hasSpace()
-    fun hasSpace(): Boolean = items.size < capacity
-    fun isEmpty(): Boolean = items.size == 0
+    fun hasSpace(): Boolean = myItems.size < capacity
+    fun isEmpty(): Boolean = myItems.size == 0
 
     override fun toJSON(): JSONObject = JSONObject()
         .put("cap", capacity)
-        .put("itms", JSONArray().also { arr -> items.forEach { arr.put(it.toJSON()) } })
+        .put("itms", JSONArray().also { arr -> myItems.forEach { arr.put(it.toJSON()) } })
 
     companion object {
         fun fromJSON(obj: JSONObject, owner: Creature? = null): Inventory {

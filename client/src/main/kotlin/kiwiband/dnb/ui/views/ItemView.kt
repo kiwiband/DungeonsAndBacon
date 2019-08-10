@@ -7,15 +7,15 @@ import kiwiband.dnb.ui.Renderer
 class ItemView(width: Int, height: Int, private val item: Item) : View(width, height) {
     override fun draw(renderer: Renderer) {
         if (item is EquipmentItem && item.equipped()) {
-            renderer.writeCharacter('*', Vec2(3, 3))
+            renderer.writeCharacter('*', Vec2(2, 2))
         }
         renderer.withOffset {
-            renderer.offset.add(Vec2(5, 2))
+            renderer.offset.add(Vec2(4, 1))
             renderer.writeMultiLineText(item.icon)
         }
-        renderer.writeText(item.name, Vec2(13, 2))
-        renderer.writeText(itemStatString(), Vec2(13, 3))
-        renderer.writeText(item.description, Vec2(13, 4))
+        renderer.writeText(item.name, Vec2(12, 1))
+        renderer.writeText(itemStatString(), Vec2(12, 2))
+        renderer.writeText(item.description, Vec2(12, 3))
     }
 
     private fun itemStatString() = when (item) {

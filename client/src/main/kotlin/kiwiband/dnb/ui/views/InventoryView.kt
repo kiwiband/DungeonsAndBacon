@@ -1,69 +1,104 @@
 package kiwiband.dnb.ui.views
 
-import kiwiband.dnb.inventory.Inventory
-import kiwiband.dnb.math.Vec2
+import kiwiband.dnb.manager.GameManager
 import kiwiband.dnb.ui.Renderer
-import kiwiband.dnb.ui.views.layout.VerticalLayout
+import kiwiband.dnb.ui.views.layout.*
+import kiwiband.dnb.ui.views.layout.util.*
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.min
 
-class InventoryView(private val inventory: Inventory, width: Int, height: Int) : View(width, height) {
-    private val itemHolder = VerticalLayout(width, height - 5)
+enum class InventoryAction {
+    USE
+}
 
-    private var currentSelected = 0
+class InventoryView(
+    private val mgr: GameManager,
+    width: Int,
+    height: Int
+) : View(width, height) {
 
-    fun selectNext() {
-        if (!inventory.isEmpty())
-            currentSelected = Math.floorMod(currentSelected + 1, inventory.getSize())
+    private val player = mgr.getPlayer()
+    private val inventory = player.inventory
+
+    val itemHolder =
+        object : InteractiveVerticalLayout<InventoryAction, Unit, InventoryChildView>(width, height - 5) {
+            override fun createChild(view: View, slot: VerticalSlot): InventoryChildView {
+                return InventoryChildView(view, slot, children.size)
+            }
+        }
+
+    private val header: ChildView<out Slot>
+    private val pages: ChildView<out Slot>
+
+    private val rootView = VerticalLayout(width, height).also { vLayout ->
+        header = vLayout.addChild(Spacer(),
+            VerticalSlot(padding = Padding(bottom = 1), alignment = HorizontalAlignment.CENTER))
+        vLayout.addChild(itemHolder, VerticalSlot(verticalSize = Size.FILL))
+        vLayout.addChild(HorizontalLayout(width, 1).also { hLayout ->
+            pages = hLayout.addChild(Spacer(), HorizontalSlot(Padding(left = 1)))
+            hLayout.addChild(Spacer(), HorizontalSlot(horizontalSize = Size.FILL))
+            hLayout.addChild(TextView(BOTTOM_TEXT))
+        })
     }
 
-    fun selectPrevious() {
-        if (!inventory.isEmpty())
-            currentSelected = Math.floorMod(currentSelected - 1, inventory.getSize())
+    init {
+        for (item in inventory.items) {
+            itemHolder.addChild(ItemView(width - 2, ROW_HEIGHT - 2, item))
+        }
     }
-
-    fun getCurrentSelected(): Int = if (inventory.isEmpty()) -1 else currentSelected
 
     override fun draw(renderer: Renderer) {
-        val space = "${inventory.getSize()}/${inventory.capacity}"
-        renderer.writeText("----INVENTORY $space----", Vec2((width - 18 - space.length) / 2, 0))
+        val space = "${inventory.size}/${inventory.capacity}"
+        header.view = TextView("----INVENTORY $space----")
 
-        val maxPages = (inventory.getSize() + ITEMS_ON_PAGE - 1) / ITEMS_ON_PAGE
-        val currentPage = if (maxPages == 0) 0 else currentSelected / ITEMS_ON_PAGE + 1
+        val itemsOnPage = floor(itemHolder.height.toDouble() / ROW_HEIGHT).toInt()
+        val maxPages = ceil(inventory.size.toDouble() / itemsOnPage).toInt()
+        val currentPage = if (maxPages == 0) 0 else itemHolder.selected / itemsOnPage + 1
 
-        renderer.writeText(" PAGE $currentPage/$maxPages", Vec2(0, height - 1))
-        renderer.writeText(BOTTOM_TEXT, Vec2(width - BOTTOM_TEXT.length, height - 1))
+        pages.view = TextView("PAGE $currentPage/$maxPages")
 
-        if (inventory.isEmpty())
-            return
+        val startIndex = (currentPage - 1) * itemsOnPage
+        val endIndex = min(inventory.size, startIndex + itemsOnPage)
 
-        val startIndex = (currentPage - 1) * ITEMS_ON_PAGE
-        val endIndex = min(inventory.getSize(), startIndex + ITEMS_ON_PAGE)
+        itemHolder.limits = startIndex until endIndex
 
-        itemHolder.clear()
-        val items = inventory.items()
-        for (i in startIndex until endIndex) {
-            itemHolder.addChild(ItemView(width, ROW_HEIGHT, items[i]))
-        }
-
-        renderer.withOffset {
-            renderer.offset.add(Vec2(0, 2))
-            itemHolder.draw(renderer)
-        }
-
-        val selectedRow = currentSelected % ITEMS_ON_PAGE
-        renderer.withOffset {
-            renderer.offset.add(Vec2(0, 2 + selectedRow * ROW_HEIGHT))
-            renderer.drawBox(width - 2, ROW_HEIGHT)
-        }
+        rootView.resize(rootView.width, rootView.height)
+        rootView.draw(renderer)
     }
 
     override fun resize(width: Int, height: Int) {
         setSize(width, height)
+        rootView.resize(width, height)
     }
 
     companion object {
-        private const val ITEMS_ON_PAGE = 3
         private const val ROW_HEIGHT = 7
         private const val BOTTOM_TEXT = "(W/S) NAVIGATE | (E) EQUIP/UNEQUIP | (I) EXIT INVENTORY "
+    }
+
+    inner class InventoryChildView(
+        view: View,
+        slot: VerticalSlot,
+        private val index: Int
+    ) : InteractiveChildView<VerticalSlot, InventoryAction, Unit>(view, slot, { action ->
+        when(action) {
+            InventoryAction.USE -> mgr.useItem(index, player.playerId)
+        }
+    }) {
+        private val unselectedView = WrapperLayout(view, WrapperSlot(padding = Padding(1)))
+        private val selectedView = BoxLayout(view)
+
+        init {
+            setInactive()
+        }
+
+        override fun setActive() {
+            this.view = selectedView
+        }
+
+        override fun setInactive() {
+            this.view = unselectedView
+        }
     }
 }
