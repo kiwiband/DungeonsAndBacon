@@ -4,7 +4,6 @@ import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.events.EventPressKey
 import kiwiband.dnb.inventory.ItemFactory
 import kiwiband.dnb.ui.GameAppContext
-import kiwiband.dnb.ui.views.InventoryAction
 import kiwiband.dnb.ui.views.InventoryView
 import kiwiband.dnb.ui.views.View
 
@@ -15,7 +14,7 @@ class InventoryActivity(context: GameAppContext, internal val playerId: String) 
 
     override fun createRootView(): View {
         val size = context.renderer.screen.terminalSize
-        inventoryRootView = InventoryView(mgr, size.columns, size.rows)
+        inventoryRootView = InventoryView(mgr.getPlayer().inventory, size.columns, size.rows)
         return inventoryRootView
     }
 
@@ -37,7 +36,9 @@ class InventoryActivity(context: GameAppContext, internal val playerId: String) 
                 drawScene()
             }
             'e', 'у' -> {
-                inventoryRootView.itemHolder.interact(InventoryAction.USE)
+                inventoryRootView.itemHolder.interact {
+                    mgr.useItem(index, mgr.getPlayer().playerId)
+                }
                 drawScene()
             }
             'x', 'ч' -> {

@@ -1,6 +1,6 @@
 package kiwiband.dnb.ui.views
 
-import kiwiband.dnb.manager.GameManager
+import kiwiband.dnb.inventory.Inventory
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.layout.*
 import kiwiband.dnb.ui.views.layout.util.*
@@ -8,21 +8,14 @@ import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
 
-enum class InventoryAction {
-    USE
-}
-
 class InventoryView(
-    private val mgr: GameManager,
+    private val inventory: Inventory,
     width: Int,
     height: Int
 ) : View(width, height) {
 
-    private val player = mgr.getPlayer()
-    private val inventory = player.inventory
-
     val itemHolder =
-        object : InteractiveVerticalLayout<InventoryAction, Unit, InventoryChildView>(width, height - 5) {
+        object : InteractiveVerticalLayout<InventoryChildView>(width, height - 5) {
             override fun createChild(view: View, slot: VerticalSlot): InventoryChildView {
                 return InventoryChildView(view, slot, children.size)
             }
@@ -81,12 +74,8 @@ class InventoryView(
     inner class InventoryChildView(
         view: View,
         slot: VerticalSlot,
-        private val index: Int
-    ) : InteractiveChildView<VerticalSlot, InventoryAction, Unit>(view, slot, { action ->
-        when(action) {
-            InventoryAction.USE -> mgr.useItem(index, player.playerId)
-        }
-    }) {
+        val index: Int
+    ) : InteractiveChildView<VerticalSlot>(view, slot) {
         private val unselectedView = WrapperLayout(view, WrapperSlot(padding = Padding(1)))
         private val selectedView = BoxLayout(view)
 

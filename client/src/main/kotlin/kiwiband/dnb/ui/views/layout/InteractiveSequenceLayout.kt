@@ -7,7 +7,7 @@ enum class LastElementBehavior {
     STOP, LOOP, DESELECT
 }
 
-abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : InteractiveChildView<S, T, R>>(
+abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveChildView<S>>(
     width: Int,
     height: Int,
     private val lastElementBehavior: LastElementBehavior
@@ -44,15 +44,15 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, T, R, Child : Interac
 
     fun current() = children.getOrNull(selected)
 
-    fun interact(arg: T): R? = current()?.interact(arg)
+    fun interact(f: Child.() -> Unit) = current()?.also { it.f() }
 }
 
 
-abstract class InteractiveHorizontalLayout<T, R, Child : InteractiveChildView<HorizontalSlot, T, R>>(
+abstract class InteractiveHorizontalLayout<Child : InteractiveChildView<HorizontalSlot>>(
     width: Int,
     height: Int,
     lastElementBehavior: LastElementBehavior = LOOP
-) : InteractiveSequenceLayout<HorizontalSlot, T, R, Child>(width, height, lastElementBehavior) {
+) : InteractiveSequenceLayout<HorizontalSlot, Child>(width, height, lastElementBehavior) {
 
     override val controller = SequenceLayoutHorizontalController(width, height, children)
 
@@ -60,11 +60,11 @@ abstract class InteractiveHorizontalLayout<T, R, Child : InteractiveChildView<Ho
 }
 
 
-abstract class InteractiveVerticalLayout<T, R, Child : InteractiveChildView<VerticalSlot, T, R>>(
+abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSlot>>(
     width: Int,
     height: Int,
     lastElementBehavior: LastElementBehavior = LOOP
-) : InteractiveSequenceLayout<VerticalSlot, T, R, Child>(width, height, lastElementBehavior) {
+) : InteractiveSequenceLayout<VerticalSlot, Child>(width, height, lastElementBehavior) {
 
     override val controller = SequenceLayoutVerticalController(width, height, children)
 
