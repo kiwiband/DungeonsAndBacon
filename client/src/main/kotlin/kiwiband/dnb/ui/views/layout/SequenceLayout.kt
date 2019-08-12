@@ -74,7 +74,7 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 abstract class SequenceSlot(val padding: Padding, val size: Size) : Slot()
 
 
-abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>>() {
+abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>> {
     abstract fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer)
     abstract fun addOffsetAfterChildDraw(child: Child, renderer: Renderer)
     abstract fun chooseDimension(width: Int, height: Int): Int

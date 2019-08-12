@@ -25,8 +25,9 @@ class InventoryView(
     private val pages: ChildView<out Slot>
 
     private val rootView = VerticalLayout(width, height).also { vLayout ->
-        header = vLayout.addChild(Spacer(),
-            VerticalSlot(padding = Padding(bottom = 1), alignment = HorizontalAlignment.CENTER))
+        header = vLayout.addChild(
+            Spacer(), VerticalSlot(padding = Padding(bottom = 1), alignment = HorizontalAlignment.CENTER)
+        )
         vLayout.addChild(itemHolder, VerticalSlot(verticalSize = Size.FILL, alignment = HorizontalAlignment.CENTER))
         vLayout.addChild(HorizontalLayout(width, 1).also { hLayout ->
             pages = hLayout.addChild(Spacer(), HorizontalSlot(Padding(left = 1)))
