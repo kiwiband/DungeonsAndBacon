@@ -20,20 +20,14 @@ class HorizontalLayout(width: Int, height: Int)
     override fun createChild(view: View, slot: HorizontalSlot) = ChildView(view, slot)
 
     override fun defaultSlot() = HorizontalSlot()
-
-    override fun resize(width: Int, height: Int) {
-        controller.width = width
-        controller.height = height
-        super.resize(width, height)
-    }
 }
 
 
 class SequenceLayoutHorizontalController<Child : ChildView<HorizontalSlot>>(
-    var width: Int,
-    var height: Int,
+    width: Int,
+    height: Int,
     private val children: List<Child>
-) : SequenceLayoutDirectionController<HorizontalSlot, Child>() {
+) : SequenceLayoutDirectionController<HorizontalSlot, Child>(width, height) {
 
     override fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer) {
         val p = child.slot.padding

@@ -21,9 +21,9 @@ abstract class View(val initWidth: Int, val initHeight: Int) {
      */
     abstract fun draw(renderer: Renderer)
 
-    open fun resize(width: Int, height: Int) {}
+    abstract fun resize(width: Int, height: Int)
 
-    protected fun setSize(width: Int, height: Int) {
+    protected open fun setSize(width: Int, height: Int) {
         this.width = max(width, 0)
         this.height = max(height, 0)
     }

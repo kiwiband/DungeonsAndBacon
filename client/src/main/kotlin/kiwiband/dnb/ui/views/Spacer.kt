@@ -1,4 +1,4 @@
-package kiwiband.dnb.ui.views.layout
+package kiwiband.dnb.ui.views
 
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View

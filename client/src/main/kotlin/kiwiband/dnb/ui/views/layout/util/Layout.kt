@@ -23,4 +23,11 @@ abstract class Layout<S : Slot, Child : ChildView<S>>(width: Int, height: Int) :
     open fun clear() {
         children.clear()
     }
+
+    override fun resize(width: Int, height: Int) {
+        setSize(width, height)
+        updateSize()
+    }
+
+    abstract fun updateSize()
 }

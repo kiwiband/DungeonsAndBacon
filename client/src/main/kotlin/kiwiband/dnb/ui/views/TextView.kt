@@ -22,7 +22,7 @@ class TextView(text: String, private val alignment: TextAlignment) : View(calcSi
         }
     }
 
-    override fun resize(width: Int, height: Int) = setSize(width, height)
+    override fun resize(width: Int, height: Int) {}
 
     companion object {
         private fun calcSize(text: String): Vec2 {

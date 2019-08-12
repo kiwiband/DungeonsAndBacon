@@ -48,8 +48,7 @@ open class WrapperLayout(
         }
     }
 
-    final override fun resize(width: Int, height: Int) {
-        setSize(width, height)
+    override fun updateSize() {
         val slot = children[0].slot
         val hFill = slot.horizontal == HorizontalAlignment.FILL
         val vFill = slot.vertical == VerticalAlignment.FILL

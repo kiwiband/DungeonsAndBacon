@@ -24,4 +24,6 @@ class InfoView(private val selection: Selection, width: Int, height: Int) : View
 
         }
     }
+
+    override fun resize(width: Int, height: Int) {}
 }

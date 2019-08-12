@@ -46,8 +46,14 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 
     private fun range(): IntRange = max(0, limits.first)..min(children.lastIndex, limits.last)
 
-    override fun resize(width: Int, height: Int) {
-        setSize(width, height)
+
+    override fun setSize(width: Int, height: Int) {
+        super.setSize(width, height)
+        controller.width = width
+        controller.height = height
+    }
+
+    override fun updateSize() {
         var knownSize = 0
         var fillChildCount = 0
         val range = range()
@@ -74,7 +80,7 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 abstract class SequenceSlot(val padding: Padding, val size: Size) : Slot()
 
 
-abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>> {
+abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>>(var width: Int, var height: Int) {
     abstract fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer)
     abstract fun addOffsetAfterChildDraw(child: Child, renderer: Renderer)
     abstract fun chooseDimension(width: Int, height: Int): Int

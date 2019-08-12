@@ -24,4 +24,5 @@ class ItemView(width: Int, height: Int, private val item: Item) : View(width, he
         else -> ""
     }
 
+    override fun resize(width: Int, height: Int) {}
 }

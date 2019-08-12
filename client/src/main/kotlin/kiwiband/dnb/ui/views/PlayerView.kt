@@ -17,4 +17,6 @@ class PlayerView(private val mgr: GameManager, width: Int, height: Int) : View(w
         renderer.writeText("HERONAME ${player.playerId[0]}", Vec2(3, 4))
         Drawer.drawCreatureStatus(renderer, player.status, 4, 5)
     }
+
+    override fun resize(width: Int, height: Int) {}
 }

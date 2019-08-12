@@ -47,25 +47,6 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveCh
     fun interact(f: Child.() -> Unit) = current()?.also { it.f() }
 }
 
-
-abstract class InteractiveHorizontalLayout<Child : InteractiveChildView<HorizontalSlot>>(
-    width: Int,
-    height: Int,
-    lastElementBehavior: LastElementBehavior = LOOP
-) : InteractiveSequenceLayout<HorizontalSlot, Child>(width, height, lastElementBehavior) {
-
-    override val controller = SequenceLayoutHorizontalController(width, height, children)
-
-    override fun defaultSlot() = HorizontalSlot()
-
-    override fun resize(width: Int, height: Int) {
-        controller.width = width
-        controller.height = height
-        super.resize(width, height)
-    }
-}
-
-
 abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSlot>>(
     width: Int,
     height: Int,
@@ -75,10 +56,4 @@ abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSl
     override val controller = SequenceLayoutVerticalController(width, height, children)
 
     override fun defaultSlot() = VerticalSlot()
-
-    override fun resize(width: Int, height: Int) {
-        controller.width = width
-        controller.height = height
-        super.resize(width, height)
-    }
 }
