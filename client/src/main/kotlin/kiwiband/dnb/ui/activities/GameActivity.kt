@@ -78,9 +78,10 @@ class GameActivity(
     }
 
     private fun onTick() {
-        if (context.activities.peekLast() == this)
+        if (context.activities.peekLast() == this) {
             updateSelection()
             drawScene()
+        }
     }
 
     private fun updateSelection() {
