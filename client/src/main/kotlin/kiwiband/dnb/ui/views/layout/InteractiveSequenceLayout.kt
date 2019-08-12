@@ -57,6 +57,12 @@ abstract class InteractiveHorizontalLayout<Child : InteractiveChildView<Horizont
     override val controller = SequenceLayoutHorizontalController(width, height, children)
 
     override fun defaultSlot() = HorizontalSlot()
+
+    override fun resize(width: Int, height: Int) {
+        controller.width = width
+        controller.height = height
+        super.resize(width, height)
+    }
 }
 
 
@@ -69,4 +75,10 @@ abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSl
     override val controller = SequenceLayoutVerticalController(width, height, children)
 
     override fun defaultSlot() = VerticalSlot()
+
+    override fun resize(width: Int, height: Int) {
+        controller.width = width
+        controller.height = height
+        super.resize(width, height)
+    }
 }

@@ -15,7 +15,7 @@ class InventoryView(
 ) : View(width, height) {
 
     val itemHolder =
-        object : InteractiveVerticalLayout<InventoryChildView>(width, height - 5) {
+        object : InteractiveVerticalLayout<InventoryChildView>(ROW_WIDTH, height - 5) {
             override fun createChild(view: View, slot: VerticalSlot): InventoryChildView {
                 return InventoryChildView(view, slot, children.size)
             }
@@ -38,8 +38,7 @@ class InventoryView(
 
     init {
         for (item in inventory.items) {
-            itemHolder.addChild(ItemView(78, ROW_HEIGHT - 2, item),
-                VerticalSlot(alignment = HorizontalAlignment.CENTER ))
+            itemHolder.addChild(ItemView(ROW_WIDTH - 2, ROW_HEIGHT - 2, item))
         }
     }
 
@@ -69,6 +68,7 @@ class InventoryView(
 
     companion object {
         private const val ROW_HEIGHT = 7
+        private const val ROW_WIDTH = 80
         private const val BOTTOM_TEXT = "(W/S) NAVIGATE | (E) EQUIP/UNEQUIP | (I) EXIT INVENTORY "
     }
 
