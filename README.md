@@ -1,6 +1,6 @@
 # Dungeons and Bacon
 
-[![Build Status](https://travis-ci.com/kiwiband/DungeonsAndBacon.svg)](https://travis-ci.com/kiwiband/DungeonsAndBacon)
+[![Build Status](https://travis-ci.org/kiwiband/DungeonsAndBacon.svg)](https://travis-ci.org/kiwiband/DungeonsAndBacon)
 
 Summary
 -------
