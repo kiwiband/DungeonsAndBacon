@@ -11,7 +11,7 @@ Features
 - Player interacts with the character using their keyboard
 - The game space consists of dungeons randomly generated when the space is created
 - Each character has XP, HP and other stats that influence its ability to fight and defend
-- Inventory with warious funny and useful staff improving (or worsen) player's stats
+- Inventory with various funny and useful staff improving (or worsen) player's stats
 - Several kinds of mobs (NPC) that the player can fight
 - Multiplayer mode where several players can fight each other or team up against mobs or other teams.
 - Server can handle several multiplayer sessions at a time
