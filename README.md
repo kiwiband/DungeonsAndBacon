@@ -1,5 +1,7 @@
 # Dungeons and Bacon
 
+[![Build Status](https://travis-ci.com/kiwiband/DungeonsAndBacon.svg)](https://travis-ci.com/kiwiband/DungeonsAndBacon)
+
 Summary
 -------
 Roguelike rpg with tile console graphics and keyboard interaction.
