@@ -20,11 +20,14 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 
     protected abstract val controller: SequenceLayoutDirectionController<S, Child>
 
-    open fun addChild(view: View, slot: S): Child {
-        return createChild(view, slot).also {
-            children.add(it)
-            resize(width, height)
-        }
+    open fun addChild(child: Child): Child {
+        children.add(child)
+        updateSize()
+        return child
+    }
+
+    fun addChild(view: View, slot: S): Child {
+        return addChild(createChild(view, slot))
     }
 
     fun addChild(view: View) = addChild(view, defaultSlot())

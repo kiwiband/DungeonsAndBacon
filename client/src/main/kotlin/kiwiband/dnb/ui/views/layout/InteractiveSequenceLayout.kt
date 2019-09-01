@@ -16,8 +16,8 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveCh
     var selected: Int = -1
         private set
 
-    override fun addChild(view: View, slot: S): Child {
-        return super.addChild(view, slot).also {
+    override fun addChild(child: Child): Child {
+        return super.addChild(child).also {
             if (selected == -1) {
                 next()
             }
@@ -44,7 +44,7 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveCh
 
     fun current() = children.getOrNull(selected)
 
-    fun interact(f: Child.() -> Unit) = current()?.also { it.f() }
+    fun interact() = current()?.onInteract()
 }
 
 abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSlot>>(

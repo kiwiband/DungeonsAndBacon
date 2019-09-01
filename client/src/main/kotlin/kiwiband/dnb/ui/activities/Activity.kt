@@ -29,9 +29,15 @@ abstract class Activity<T>(protected val context: AppContext,
     fun drawScene() {
         renderer.clearScreen()
         renderer.setOffset(0, 0)
+        beforeDraw()
         rootView.draw(renderer)
         renderer.refreshScreen()
     }
+
+    /**
+     * Calls before each rootView draw
+     */
+    open fun beforeDraw() {}
 
     private fun close() {
         context.eventBus.pressKey.popLayer()
