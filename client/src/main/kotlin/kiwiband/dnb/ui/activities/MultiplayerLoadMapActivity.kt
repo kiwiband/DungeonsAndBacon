@@ -27,8 +27,7 @@ class MultiplayerLoadMapActivity(context: AppContext,
             size.columns, size.rows)
     }
 
-    override fun onStart() {
-        drawScene()
+    override fun afterStart() {
         finish(comm.connect())
     }
 

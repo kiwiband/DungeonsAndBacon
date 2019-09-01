@@ -99,7 +99,6 @@ class InventoryActivity(context: GameAppContext, internal val playerId: String) 
 
     override fun onStart() {
         context.eventBus.pressKey.addHandler { onKeyPressed(it) }
-        drawScene()
     }
 
     companion object {

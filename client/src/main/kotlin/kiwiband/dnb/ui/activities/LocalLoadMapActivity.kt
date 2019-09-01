@@ -34,7 +34,9 @@ class LocalLoadMapActivity(
             finish(createMap())
             return
         }
-        drawScene()
+    }
+
+    override fun afterStart() {
         context.eventBus.pressKey.pushLayer()
         context.eventBus.pressKey.addHandler { event ->
             when (event.key.character) {

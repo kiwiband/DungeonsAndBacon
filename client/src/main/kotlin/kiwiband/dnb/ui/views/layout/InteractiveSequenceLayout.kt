@@ -1,6 +1,5 @@
 package kiwiband.dnb.ui.views.layout
 
-import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.LastElementBehavior.*
 
 enum class LastElementBehavior {
@@ -45,6 +44,11 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveCh
     fun current() = children.getOrNull(selected)
 
     fun interact() = current()?.onInteract()
+
+    override fun clear() {
+        super.clear()
+        selected = -1;
+    }
 }
 
 abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSlot>>(

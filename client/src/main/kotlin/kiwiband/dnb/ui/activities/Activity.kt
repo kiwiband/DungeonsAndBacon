@@ -43,8 +43,16 @@ abstract class Activity<T>(protected val context: AppContext,
         context.eventBus.pressKey.popLayer()
         val activities = context.activities
         activities.removeLast()
-        activities.peekLast()?.drawScene()
+        activities.peekLast()?.also {
+            it.onAppear()
+            it.drawScene()
+        }
     }
+
+    /**
+     * Calls each time when activity appears on the screen
+     */
+    protected open fun onAppear() {}
 
     /**
      * Finishes the activity.
@@ -65,6 +73,9 @@ abstract class Activity<T>(protected val context: AppContext,
         context.eventBus.pressKey.pushLayer()
         context.activities.addLast(this)
         onStart()
+        onAppear()
+        drawScene()
+        afterStart()
     }
 
     /**
@@ -77,6 +88,11 @@ abstract class Activity<T>(protected val context: AppContext,
      * A handler that gets invoked upon activity start.
      */
     open fun onStart() {}
+
+    /**
+     * Calls after activity start and first draw
+     */
+    open fun afterStart() {}
 
     /**
      * A handler that gets invoked upon activity finish.

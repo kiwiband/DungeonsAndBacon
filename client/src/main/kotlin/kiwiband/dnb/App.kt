@@ -3,14 +3,10 @@ package kiwiband.dnb
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import kiwiband.dnb.events.EventBus
-import kiwiband.dnb.manager.GameManager
-import kiwiband.dnb.manager.LocalGameManager
-import kiwiband.dnb.manager.MultiplayerGameManager
-import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.ui.AppContext
-import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.Renderer
-import kiwiband.dnb.ui.activities.*
+import kiwiband.dnb.ui.activities.Activity
+import kiwiband.dnb.ui.activities.MainMenuActivity
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -37,24 +33,12 @@ class App {
 
         inputManager.startKeyHandle()
 
-        val loadMapActivity = loadMapActivity { mgr: GameManager, gameOver: () -> Unit ->
-            eventBus.closeGame.addHandler {
-                mgr.finishGame()
-                inputManager.stop()
-            }
-            val gameContext = GameAppContext(context, mgr, eventBus)
-            val gameActivity = GameActivity(gameContext) { gameResult ->
-                gameOver.invoke()
-                if (gameResult) {
-                    GameOverActivity(gameContext).also {
-                        it.start()
-                        it.drawScene()
-                    }
-                }
-            }
-            gameActivity.start()
+        eventBus.closeGame.addHandler {
+            inputManager.stop()
         }
-        loadMapActivity.start()
+
+
+        MainMenuActivity(context, eventLock).start()
 
         // once the map is loaded, we can start the game activity.
         terminal.addResizeListener { _, newSize ->
@@ -69,20 +53,5 @@ class App {
         inputManager.join()
 
         screen.stopScreen()
-    }
-
-    private fun loadMapActivity(callback: (GameManager,  () -> Unit) -> Unit): Activity<out Any> {
-        return if (ClientSettings.multiplayer) {
-            val commManager = ServerCommunicationManager(Settings.host, Settings.port, eventLock, eventBus,
-                ClientSettings.playerId, ClientSettings.sessionId)
-            MultiplayerLoadMapActivity(context, commManager) { (playerId, map) ->
-                callback(MultiplayerGameManager(commManager, playerId, map, eventBus)) { commManager.disconnect() }
-            }
-        } else {
-            val mapSaver = MapSaver()
-            LocalLoadMapActivity(context, mapSaver, ClientSettings.mapFile) {
-                    map -> callback(LocalGameManager(Game(map, eventBus), mapSaver, ClientSettings.mapFile)) {}
-            }
-        }
     }
 }

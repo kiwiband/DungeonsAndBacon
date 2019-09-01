@@ -10,12 +10,12 @@ import java.io.File
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        fillSettings(args)
+        fillSettings()
         App().start()
     }
 
     @JvmStatic
-    fun fillSettings(args: Array<String>) {
+    fun fillSettings() {
         val settingsFile = File("settings.ini")
         if (settingsFile.exists()) {
             val ini = Ini(settingsFile)
@@ -29,9 +29,6 @@ object Main {
                 getIntFromMap(iniMap, "mobs_count")?.also { Settings.mobsCount = it }
             }
             ini["general"]?.also { iniGeneral ->
-                iniGeneral["multiplayer"]?.toLowerCase()?.also {
-                    ClientSettings.multiplayer = it == "true"
-                }
                 iniGeneral["session_id"]?.also {
                     ClientSettings.sessionId = it
                 }
@@ -43,9 +40,6 @@ object Main {
             }
         } else {
             println("Can't find settings.ini")
-        }
-        if (args.isNotEmpty() && args.first() == "multiplayer") {
-            ClientSettings.multiplayer = true
         }
     }
 }

@@ -57,6 +57,7 @@ class Game(val map: LocalMap, val eventBus: EventBus) {
      */
     fun endGame() {
         eventsRegistrations.forEach { it.finish() }
+        map.actors.forEach { it.destroy() }
     }
 
     fun getOrCreatePlayer(playerId: String): Player = map.findPlayer(playerId) ?: map.spawnPlayer(playerId)

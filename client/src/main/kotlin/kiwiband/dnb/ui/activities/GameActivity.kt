@@ -3,7 +3,6 @@ package kiwiband.dnb.ui.activities
 import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.input.KeyType
 import kiwiband.dnb.Settings
-import kiwiband.dnb.events.EventCloseGame
 import kiwiband.dnb.events.Registration
 import kiwiband.dnb.events.TickOrder
 import kiwiband.dnb.math.Vec2
@@ -73,7 +72,8 @@ class GameActivity(
 
     private fun handleEscapeKey(key: KeyStroke) {
         if (key.keyType == KeyType.Escape) {
-            context.eventBus.run(EventCloseGame())
+            gameContext.gameManager.finishGame()
+            finish(false)
         }
     }
 
@@ -107,7 +107,6 @@ class GameActivity(
 
         mgr.startGame()
         updateSelection()
-        drawScene()
     }
 
     override fun onFinish(result: Boolean) {

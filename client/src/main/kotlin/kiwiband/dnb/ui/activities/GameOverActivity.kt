@@ -1,15 +1,14 @@
 package kiwiband.dnb.ui.activities
 
-import kiwiband.dnb.events.EventCloseGame
 import kiwiband.dnb.ui.GameAppContext
-import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.TextView
+import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.WrapperLayout
 import kiwiband.dnb.ui.views.layout.WrapperSlot
 import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
 import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
 
-class GameOverActivity(gameContext: GameAppContext):
+class GameOverActivity(val gameContext: GameAppContext):
     Activity<Unit>(gameContext, {}) {
 
     override fun createRootView(): View {
@@ -22,7 +21,8 @@ class GameOverActivity(gameContext: GameAppContext):
     override fun onStart() {
         drawScene()
         context.eventBus.pressKey.addHandler {
-            context.eventBus.run(EventCloseGame())
+            gameContext.gameManager.finishGame()
+            finish(Unit)
         }
     }
 
