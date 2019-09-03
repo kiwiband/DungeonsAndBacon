@@ -4,18 +4,17 @@ import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.TextView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.WrapperLayout
-import kiwiband.dnb.ui.views.layout.WrapperSlot
-import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
-import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
+import kiwiband.dnb.ui.views.layout.WrapperNode
+import kiwiband.dnb.ui.views.layout.util.Alignment.CENTER
 
 class GameOverActivity(val gameContext: GameAppContext):
     Activity<Unit>(gameContext, {}) {
 
     override fun createRootView(): View {
-        val size = context.renderer.screen.terminalSize
+        val size = context.renderer.screenSize
         return WrapperLayout(
-            TextView(TEXT), WrapperSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
-            size.columns, size.rows)
+            TextView(TEXT), WrapperNode(CENTER), size.x, size.y
+        )
     }
 
     override fun onStart() {

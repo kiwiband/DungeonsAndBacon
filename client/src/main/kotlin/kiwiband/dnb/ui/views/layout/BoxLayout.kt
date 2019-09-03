@@ -10,10 +10,10 @@ import kiwiband.dnb.ui.views.layout.util.*
  */
 class BoxLayout(
     content: View,
-    slot: BoxSlot = BoxSlot(),
+    slot: BoxNode = BoxNode(),
     width: Int = content.width + 2,
     height: Int = content.height + 2
-): WrapperLayout(content, slot, width, height) {
+) : WrapperLayout(content, slot, width, height) {
     override fun draw(renderer: Renderer) {
         renderer.withOffsetLimited(width, height) {
             renderer.drawBox(width, height)
@@ -25,8 +25,12 @@ class BoxLayout(
         }
     }
 }
-class BoxSlot(
+
+class BoxNode(
     horizontalAlignment: HorizontalAlignment = HorizontalAlignment.FILL,
     verticalAlignment: VerticalAlignment = VerticalAlignment.FILL,
     padding: Padding = Padding()
-) : WrapperSlot(horizontalAlignment, verticalAlignment, padding.add(1))
+) : WrapperNode(horizontalAlignment, verticalAlignment, padding.add(1)) {
+    constructor(alignment: Alignment, padding: Padding = Padding())
+            : this(alignment.horizontal(), alignment.vertical(), padding)
+}

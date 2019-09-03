@@ -3,12 +3,11 @@ package kiwiband.dnb.ui.activities
 import kiwiband.dnb.ServerCommunicationManager
 import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.ui.AppContext
+import kiwiband.dnb.ui.views.TextView
 import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.BoxLayout
-import kiwiband.dnb.ui.views.layout.BoxSlot
-import kiwiband.dnb.ui.views.TextView
-import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
-import kiwiband.dnb.ui.views.layout.util.VerticalAlignment
+import kiwiband.dnb.ui.views.layout.BoxNode
+import kiwiband.dnb.ui.views.layout.util.Alignment.CENTER
 
 
 /**
@@ -21,10 +20,8 @@ class MultiplayerLoadMapActivity(context: AppContext,
     Activity<Pair<String, LocalMap>>(context, callback) {
 
     override fun createRootView(): View {
-        val size = context.renderer.screen.terminalSize
-        return BoxLayout(
-            TextView(TEXT), BoxSlot(HorizontalAlignment.CENTER, VerticalAlignment.CENTER),
-            size.columns, size.rows)
+        val size = context.renderer.screenSize
+        return BoxLayout(TextView(TEXT), BoxNode(CENTER), size.x, size.y)
     }
 
     override fun afterStart() {

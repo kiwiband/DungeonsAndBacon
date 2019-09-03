@@ -14,39 +14,33 @@ import kiwiband.dnb.map.LocalMap
 import kiwiband.dnb.map.MapSaver
 import kiwiband.dnb.ui.AppContext
 import kiwiband.dnb.ui.GameAppContext
-import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.TextView
+import kiwiband.dnb.ui.views.View
 import kiwiband.dnb.ui.views.layout.*
-import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
+import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment.CENTER
 import kiwiband.dnb.ui.views.layout.util.Padding
 import java.util.concurrent.locks.ReentrantLock
 
 class MainMenuActivity(context: AppContext, private val eventLock: ReentrantLock) : Activity<Unit>(context, {}) {
-    private lateinit var menu: InteractiveSequenceLayout<VerticalSlot, MenuButton>
+    private lateinit var menu: InteractiveSequenceLayout<VerticalNode, MenuButton>
 
     override fun createRootView(): View {
-        val size = context.renderer.screen.terminalSize
-        val width = size.columns
-        val height = size.rows
-        return VerticalLayout(width, height).also { root ->
-            root.addChild(
+        val size = context.renderer.screenSize
+        return VerticalLayout(size.x, size.y).also { root ->
+            root.add(
                 TextView("⚑ DUNGEONS AND BACON ⚑"),
-                VerticalSlot(Padding(top = 2), alignment = HorizontalAlignment.CENTER)
+                VerticalNode(CENTER, Padding(top = 2))
             )
-            root.addChild(
+            root.add(
                 TextView("__________________"),
-                VerticalSlot(Padding(bottom = 1), alignment = HorizontalAlignment.CENTER)
+                VerticalNode(CENTER, Padding(bottom = 1))
             )
-            menu = object : InteractiveVerticalLayout<MenuButton>(
-                width,
-                height,
-                LastElementBehavior.STOP
-            ) {
-                override fun createChild(view: View, slot: VerticalSlot): MenuButton {
+            menu = object : InteractiveVerticalLayout<MenuButton>(size.x, size.y, LastElementBehavior.STOP) {
+                override fun createSlot(view: View, node: VerticalNode): MenuButton {
                     throw NotImplementedError()
                 }
             }
-            root.addChild(menu)
+            root.add(menu)
         }
     }
 
@@ -55,15 +49,15 @@ class MainMenuActivity(context: AppContext, private val eventLock: ReentrantLock
         val mapFile = ClientSettings.mapFile
         menu.clear()
         if (mapSaver.checkSaved(mapFile)) {
-            menu.addChild(MenuButton("Continue") {
+            menu.add(MenuButton("Continue") {
                 startSingleplayerGame(mapSaver.loadFromFile(mapFile), mapSaver, mapFile)
             })
         }
-        menu.addChild(MenuButton("New Game") {
+        menu.add(MenuButton("New Game") {
             startSingleplayerGame(createMap(), mapSaver, mapFile)
         })
-        menu.addChild(MenuButton("Connect", this::startMultiplayerGame))
-        menu.addChild(MenuButton("Exit") { exit() })
+        menu.add(MenuButton("Connect", this::startMultiplayerGame))
+        menu.add(MenuButton("Exit") { exit() })
     }
 
     private fun createMap() = LocalMap.generateMap(Settings.mapWidth, Settings.mapHeight)
@@ -132,9 +126,9 @@ class MainMenuActivity(context: AppContext, private val eventLock: ReentrantLock
         context.eventBus.pressKey.addHandler { onKeyPressed(it) }
     }
 
-    private inner class MenuButton(title: String, val interract: () -> Unit): BoxedChildView<VerticalSlot>(
-        WrapperLayout(TextView(title), WrapperSlot(HorizontalAlignment.CENTER), 30, 1),
-        VerticalSlot(alignment = HorizontalAlignment.CENTER)
+    private inner class MenuButton(title: String, val interract: () -> Unit) : BoxedSlot<VerticalNode>(
+        WrapperLayout(TextView(title), WrapperNode(horizontal = CENTER), 30, 1),
+        VerticalNode(CENTER)
     ) {
         override fun onInteract() {
             interract()

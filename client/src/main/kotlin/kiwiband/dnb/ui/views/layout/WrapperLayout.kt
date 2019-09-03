@@ -8,13 +8,13 @@ import kotlin.math.min
 
 open class WrapperLayout(
     content: View,
-    slot: WrapperSlot = WrapperSlot(),
+    slot: WrapperNode = WrapperNode(),
     width: Int = content.width + slot.padding.horizontal(),
     height: Int = content.height + slot.padding.vertical()
-): Layout<WrapperSlot, ChildView<WrapperSlot>>(width, height) {
+) : Layout<WrapperNode, Slot<WrapperNode>>(width, height) {
 
     init {
-        children.add(ChildView(content, slot))
+        children.add(Slot(content, slot))
         resize(width, height)
     }
 
@@ -26,10 +26,10 @@ open class WrapperLayout(
         }
     }
 
-    protected fun horizontalOffset(child: ChildView<WrapperSlot>): Int {
-        val p = child.slot.padding
+    protected fun horizontalOffset(child: Slot<WrapperNode>): Int {
+        val p = child.node.padding
         val freeWidth = width - child.view.width
-        return when (child.slot.horizontal) {
+        return when (child.node.horizontal) {
             HorizontalAlignment.LEFT -> p.left
             HorizontalAlignment.CENTER -> max(0, freeWidth - p.horizontal()) / 2 + p.left
             HorizontalAlignment.RIGHT -> max(1, freeWidth - p.right)
@@ -37,10 +37,10 @@ open class WrapperLayout(
         }
     }
 
-    protected fun verticalOffset(child: ChildView<WrapperSlot>): Int {
-        val p = child.slot.padding
+    protected fun verticalOffset(child: Slot<WrapperNode>): Int {
+        val p = child.node.padding
         val freeHeight = height - child.view.height
-        return when (child.slot.vertical) {
+        return when (child.node.vertical) {
             VerticalAlignment.TOP -> p.top
             VerticalAlignment.CENTER -> max(0, freeHeight - p.vertical()) / 2 + p.top
             VerticalAlignment.BOTTOM -> max(1, freeHeight - p.bottom)
@@ -49,7 +49,7 @@ open class WrapperLayout(
     }
 
     override fun updateSize() {
-        val slot = children[0].slot
+        val slot = children[0].node
         val hFill = slot.horizontal == HorizontalAlignment.FILL
         val vFill = slot.vertical == VerticalAlignment.FILL
         val view = children[0].view
@@ -65,8 +65,11 @@ open class WrapperLayout(
 }
 
 
-open class WrapperSlot(
+open class WrapperNode(
     val horizontal: HorizontalAlignment = HorizontalAlignment.FILL,
     val vertical: VerticalAlignment = VerticalAlignment.FILL,
     val padding: Padding = Padding()
-) :  Slot()
+) : Node() {
+    constructor(alignment: Alignment, padding: Padding = Padding())
+            : this(alignment.horizontal(), alignment.vertical(), padding)
+}

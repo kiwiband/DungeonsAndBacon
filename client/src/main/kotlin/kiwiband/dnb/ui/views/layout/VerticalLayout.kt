@@ -2,7 +2,7 @@ package kiwiband.dnb.ui.views.layout
 
 import kiwiband.dnb.ui.Renderer
 import kiwiband.dnb.ui.views.View
-import kiwiband.dnb.ui.views.layout.util.ChildView
+import kiwiband.dnb.ui.views.layout.util.Slot
 import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment
 import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment.*
 import kiwiband.dnb.ui.views.layout.util.Padding
@@ -14,29 +14,28 @@ import kotlin.math.max
  * Vertical sequential layout.
  */
 class VerticalLayout(width: Int, height: Int) :
-    SequenceLayout<VerticalSlot, ChildView<VerticalSlot>>(width, height) {
+    SequenceLayout<VerticalNode, Slot<VerticalNode>>(width, height) {
 
-    override val controller = SequenceLayoutVerticalController(width, height, children)
+    override val controller = VerticalSlotController(width, height, children)
 
-    override fun createChild(view: View, slot: VerticalSlot) = ChildView(view, slot)
+    override fun createSlot(view: View, node: VerticalNode) = Slot(view, node)
 
-    override fun defaultSlot() = VerticalSlot()
+    override fun defaultNode() = VerticalNode()
 }
 
-class SequenceLayoutVerticalController<Child : ChildView<VerticalSlot>>(
+class VerticalSlotController<S : Slot<VerticalNode>>(
     width: Int,
     height: Int,
-    private val children: List<Child>
-) :
-    SequenceLayoutDirectionController<VerticalSlot, Child>(width, height) {
-    override fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer) {
-        val p = child.slot.padding
-        renderer.offset.add(horizontalOffset(child.slot.alignment, child.view, p), p.top)
+    private val children: List<S>
+) : SequenceSlotController<VerticalNode, S>(width, height) {
+    override fun addOffsetBeforeChildDraw(child: S, renderer: Renderer) {
+        val p = child.node.padding
+        renderer.offset.add(horizontalOffset(child.node.alignment, child.view, p), p.top)
     }
 
-    override fun addOffsetAfterChildDraw(child: Child, renderer: Renderer) {
-        val p = child.slot.padding
-        renderer.offset.add(-horizontalOffset(child.slot.alignment, child.view, p), p.bottom + child.view.height)
+    override fun addOffsetAfterChildDraw(child: S, renderer: Renderer) {
+        val p = child.node.padding
+        renderer.offset.add(-horizontalOffset(child.node.alignment, child.view, p), p.bottom + child.view.height)
     }
 
     private fun horizontalOffset(alignment: HorizontalAlignment, view: View, p: Padding): Int {
@@ -55,11 +54,11 @@ class SequenceLayoutVerticalController<Child : ChildView<VerticalSlot>>(
         for (i in range) {
             val child = children[i]
             val view = child.view
-            val childWidth = when (child.slot.alignment) {
-                FILL -> width - child.slot.padding.horizontal()
+            val childWidth = when (child.node.alignment) {
+                FILL -> width - child.node.padding.horizontal()
                 else -> child.view.initWidth
             }
-            when (child.slot.size) {
+            when (child.node.size) {
                 Size.CONSTANT -> view.resize(childWidth, view.height)
                 Size.FILL -> {
                     val size = if (counter-- > 0) fillChildSize + 1 else fillChildSize
@@ -71,8 +70,8 @@ class SequenceLayoutVerticalController<Child : ChildView<VerticalSlot>>(
 }
 
 
-class VerticalSlot(
+class VerticalNode(
+    val alignment: HorizontalAlignment = FILL,
     padding: Padding = Padding(),
-    verticalSize: Size = Size.CONSTANT,
-    val alignment: HorizontalAlignment = FILL
-) : SequenceSlot(padding, verticalSize)
+    verticalSize: Size = Size.CONSTANT
+) : SequenceNode(padding, verticalSize)

@@ -1,12 +1,11 @@
 package kiwiband.dnb.ui.views.layout
 
 import kiwiband.dnb.ui.views.View
-import kiwiband.dnb.ui.views.layout.util.ChildView
-import kiwiband.dnb.ui.views.layout.util.Padding
 import kiwiband.dnb.ui.views.layout.util.Slot
+import kiwiband.dnb.ui.views.layout.util.Padding
+import kiwiband.dnb.ui.views.layout.util.Node
 
-abstract class InteractiveChildView<S : Slot>(view: View, slot: S) :
-    ChildView<S>(view, slot) {
+abstract class InteractiveSlot<N : Node>(view: View, node: N) : Slot<N>(view, node) {
 
     open fun onInteract() {}
 
@@ -15,11 +14,11 @@ abstract class InteractiveChildView<S : Slot>(view: View, slot: S) :
     abstract fun setInactive()
 }
 
-open class BoxedChildView<S : Slot>(
+open class BoxedSlot<N : Node>(
     view: View,
-    slot: S
-) : InteractiveChildView<S>(view, slot) {
-    private val unselectedView = WrapperLayout(view, WrapperSlot(padding = Padding(1)))
+    node: N
+) : InteractiveSlot<N>(view, node) {
+    private val unselectedView = WrapperLayout(view, WrapperNode(padding = Padding(1)))
     private val selectedView = BoxLayout(view)
 
     init {

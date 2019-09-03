@@ -22,20 +22,20 @@ class GameActivity(
     private val mgr = gameContext.gameManager
 
     override fun createRootView(): View {
-        val size = context.renderer.screen.terminalSize
-        val gameRootView = HorizontalLayout(size.columns, size.rows)
+        val size = context.renderer.screenSize
+        val gameRootView = HorizontalLayout(size.x, size.y)
 
         val mapView = MapView(gameContext, 48, 22)
         val playerView = PlayerView(mgr, 28, 10)
         val infoView = InfoView(gameContext.selection, 28, 10)
 
-        gameRootView.addChild(BoxLayout(mapView), HorizontalSlot(horizontalSize = Size.FILL))
+        gameRootView.add(BoxLayout(mapView), HorizontalNode(horizontalSize = Size.FILL))
 
         val sidebar = VerticalLayout(30, 24)
-        sidebar.addChild(BoxLayout(infoView), VerticalSlot())
-        sidebar.addChild(BoxLayout(playerView), VerticalSlot(verticalSize = Size.FILL))
+        sidebar.add(BoxLayout(infoView), VerticalNode())
+        sidebar.add(BoxLayout(playerView), VerticalNode(verticalSize = Size.FILL))
 
-        gameRootView.addChild(sidebar)
+        gameRootView.add(sidebar)
         return gameRootView
     }
 

@@ -12,7 +12,7 @@ import kiwiband.dnb.math.Vec2
  * Contains the drawing offset and some drawing primitives.
  * @param screen screen to render on
  */
-class Renderer(var screen: Screen) {
+class Renderer(private val screen: Screen) {
     /**
      * Drawing offset of this renderer
      */
@@ -31,6 +31,9 @@ class Renderer(var screen: Screen) {
     fun setOffset(x: Int, y: Int) {
         offset.set(x, y)
     }
+
+    val screenSize: Vec2
+        get() = screen.terminalSize.run { Vec2(columns, rows) }
 
     /**
      * Executes the function, returning the offset to previous state after execution.

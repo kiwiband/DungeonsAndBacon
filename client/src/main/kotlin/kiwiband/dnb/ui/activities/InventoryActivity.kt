@@ -7,6 +7,7 @@ import kiwiband.dnb.ui.GameAppContext
 import kiwiband.dnb.ui.views.*
 import kiwiband.dnb.ui.views.layout.*
 import kiwiband.dnb.ui.views.layout.util.*
+import kiwiband.dnb.ui.views.layout.util.HorizontalAlignment.*
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
@@ -14,36 +15,34 @@ import kotlin.math.min
 class InventoryActivity(context: GameAppContext, internal val playerId: String) : Activity<Unit>(context, {}) {
     private val mgr = context.gameManager
 
-    private lateinit var itemHolder: InteractiveSequenceLayout<out SequenceSlot, InventoryChildView>
-    private lateinit var header: ChildView<out Slot>
-    private lateinit var pages: ChildView<out Slot>
+    private lateinit var itemHolder: InteractiveSequenceLayout<out SequenceNode, InventorySlot>
+    private lateinit var header: Slot<out Node>
+    private lateinit var pages: Slot<out Node>
     private lateinit var rootView: VerticalLayout
 
     override fun createRootView(): View {
-        val size = context.renderer.screen.terminalSize
-        val width = size.columns
-        val height = size.rows
+        val size = context.renderer.screenSize
 
-        itemHolder = object : InteractiveVerticalLayout<InventoryChildView>(ROW_WIDTH, height - 5) {
-            override fun createChild(view: View, slot: VerticalSlot): InventoryChildView {
-                return InventoryChildView(view, slot, children.size)
+        itemHolder = object : InteractiveVerticalLayout<InventorySlot>(ROW_WIDTH, size.y - 5) {
+            override fun createSlot(view: View, node: VerticalNode): InventorySlot {
+                return InventorySlot(view, node, children.size)
             }
         }
 
-        rootView = VerticalLayout(width, height).also { vLayout ->
-            header = vLayout.addChild(
-                Spacer(), VerticalSlot(padding = Padding(bottom = 1), alignment = HorizontalAlignment.CENTER)
+        rootView = VerticalLayout(size.x, size.y).also { vLayout ->
+            header = vLayout.add(
+                Spacer(), VerticalNode(CENTER, Padding(bottom = 1))
             )
-            vLayout.addChild(itemHolder, VerticalSlot(verticalSize = Size.FILL, alignment = HorizontalAlignment.CENTER))
-            vLayout.addChild(HorizontalLayout(width, 1).also { hLayout ->
-                pages = hLayout.addChild(Spacer(), HorizontalSlot(Padding(left = 1)))
-                hLayout.addChild(Spacer(), HorizontalSlot(horizontalSize = Size.FILL))
-                hLayout.addChild(TextView(BOTTOM_TEXT))
+            vLayout.add(itemHolder, VerticalNode(CENTER, verticalSize = Size.FILL))
+            vLayout.add(HorizontalLayout(size.x, 1).also { hLayout ->
+                pages = hLayout.add(Spacer(), HorizontalNode(padding = Padding(left = 1)))
+                hLayout.add(Spacer(), HorizontalNode(horizontalSize = Size.FILL))
+                hLayout.add(TextView(BOTTOM_TEXT))
             })
         }
 
         for (item in getInventory().items) {
-            itemHolder.addChild(ItemView(ROW_WIDTH - 2, ROW_HEIGHT - 2, item))
+            itemHolder.add(ItemView(ROW_WIDTH - 2, ROW_HEIGHT - 2, item))
         }
         return rootView
     }
@@ -107,11 +106,11 @@ class InventoryActivity(context: GameAppContext, internal val playerId: String) 
         private const val BOTTOM_TEXT = "(W/S) NAVIGATE | (E) EQUIP/UNEQUIP | (I) EXIT INVENTORY "
     }
 
-    inner class InventoryChildView(
+    inner class InventorySlot(
         view: View,
-        slot: VerticalSlot,
+        slot: VerticalNode,
         private val index: Int
-    ) : BoxedChildView<VerticalSlot>(view, slot) {
+    ) : BoxedSlot<VerticalNode>(view, slot) {
         override fun onInteract() {
             mgr.useItem(index, mgr.getPlayer().playerId)
         }

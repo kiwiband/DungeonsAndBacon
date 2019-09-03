@@ -6,17 +6,17 @@ enum class LastElementBehavior {
     STOP, LOOP, DESELECT
 }
 
-abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveChildView<S>>(
+abstract class InteractiveSequenceLayout<N : SequenceNode, S : InteractiveSlot<N>>(
     width: Int,
     height: Int,
     private val lastElementBehavior: LastElementBehavior
-) : SequenceLayout<S, Child>(width, height) {
+) : SequenceLayout<N, S>(width, height) {
 
     var selected: Int = -1
         private set
 
-    override fun addChild(child: Child): Child {
-        return super.addChild(child).also {
+    override fun add(child: S): S {
+        return super.add(child).also {
             if (selected == -1) {
                 next()
             }
@@ -27,7 +27,7 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveCh
 
     fun previous() = changeCurrent(-1, 0, children.lastIndex)
 
-    private fun changeCurrent(step: Int, onStop: Int, onLoop: Int): Child? {
+    private fun changeCurrent(step: Int, onStop: Int, onLoop: Int): S? {
         if (children.isEmpty()) return null
         current()?.setInactive()
         selected += step
@@ -51,13 +51,13 @@ abstract class InteractiveSequenceLayout<S : SequenceSlot, Child : InteractiveCh
     }
 }
 
-abstract class InteractiveVerticalLayout<Child : InteractiveChildView<VerticalSlot>>(
+abstract class InteractiveVerticalLayout<S : InteractiveSlot<VerticalNode>>(
     width: Int,
     height: Int,
     lastElementBehavior: LastElementBehavior = LOOP
-) : InteractiveSequenceLayout<VerticalSlot, Child>(width, height, lastElementBehavior) {
+) : InteractiveSequenceLayout<VerticalNode, S>(width, height, lastElementBehavior) {
 
-    override val controller = SequenceLayoutVerticalController(width, height, children)
+    override val controller = VerticalSlotController(width, height, children)
 
-    override fun defaultSlot() = VerticalSlot()
+    override fun defaultNode() = VerticalNode()
 }

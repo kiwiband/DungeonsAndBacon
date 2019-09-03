@@ -12,29 +12,27 @@ import kotlin.math.min
  * Next view left top corner is aligned on the same axis as the layout's left top corner
  * with a shift based on position in children list.
  */
-abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
+abstract class SequenceLayout<N : SequenceNode, S : Slot<N>>(
     width: Int, height: Int
-) : Layout<S, Child>(width, height) {
+) : Layout<N, S>(width, height) {
 
     var limits: IntRange = 0..Int.MAX_VALUE
 
-    protected abstract val controller: SequenceLayoutDirectionController<S, Child>
+    protected abstract val controller: SequenceSlotController<N, S>
 
-    open fun addChild(child: Child): Child {
+    open fun add(child: S): S {
         children.add(child)
         updateSize()
         return child
     }
 
-    fun addChild(view: View, slot: S): Child {
-        return addChild(createChild(view, slot))
+    fun add(view: View, node: N = defaultNode()): S {
+        return add(createSlot(view, node))
     }
 
-    fun addChild(view: View) = addChild(view, defaultSlot())
+    protected abstract fun createSlot(view: View, node: N): S
 
-    protected abstract fun createChild(view: View, slot: S): Child
-
-    protected abstract fun defaultSlot(): S
+    protected abstract fun defaultNode(): N
 
     override fun draw(renderer: Renderer) {
         renderer.withOffsetLimited(width, height) {
@@ -62,9 +60,9 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
         val range = range()
         for (i in range) {
             val child = children[i]
-            val p = child.slot.padding
+            val p = child.node.padding
             knownSize += controller.chooseDimension(p.horizontal(), p.vertical())
-            when (child.slot.size) {
+            when (child.node.size) {
                 Size.CONSTANT -> {
                     knownSize += controller.chooseDimension(child.view.initWidth, child.view.initHeight)
                 }
@@ -80,12 +78,12 @@ abstract class SequenceLayout<S : SequenceSlot, Child : ChildView<S>>(
 }
 
 
-abstract class SequenceSlot(val padding: Padding, val size: Size) : Slot()
+abstract class SequenceNode(val padding: Padding, val size: Size) : Node()
 
 
-abstract class SequenceLayoutDirectionController<S : Slot, Child : ChildView<S>>(var width: Int, var height: Int) {
-    abstract fun addOffsetBeforeChildDraw(child: Child, renderer: Renderer)
-    abstract fun addOffsetAfterChildDraw(child: Child, renderer: Renderer)
+abstract class SequenceSlotController<N : Node, S : Slot<N>>(var width: Int, var height: Int) {
+    abstract fun addOffsetBeforeChildDraw(child: S, renderer: Renderer)
+    abstract fun addOffsetAfterChildDraw(child: S, renderer: Renderer)
     abstract fun chooseDimension(width: Int, height: Int): Int
     abstract fun resizeChildren(range: IntRange, fillChildSize: Int, fatChildrenCount: Int)
 }

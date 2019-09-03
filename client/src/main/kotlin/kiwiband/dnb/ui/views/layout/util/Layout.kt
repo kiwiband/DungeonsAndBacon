@@ -6,16 +6,16 @@ import kiwiband.dnb.ui.views.View
  * Data class containing the information about the child views' positions.
  * @param view view
  */
-open class ChildView<S : Slot>(var view: View, open val slot: S)
+open class Slot<N : Node>(var view: View, open val node: N)
 
 /**
  * Base class for layouts - container views.
  */
-abstract class Layout<S : Slot, Child : ChildView<S>>(width: Int, height: Int) : View(width, height) {
+abstract class Layout<N : Node, S : Slot<N>>(width: Int, height: Int) : View(width, height) {
     /**
      * List of all views in layout
      */
-    protected val children = mutableListOf<Child>()
+    protected val children = mutableListOf<S>()
 
     /**
      * Removes all the children from the layout.
